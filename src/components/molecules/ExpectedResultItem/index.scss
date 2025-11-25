@@ -1,0 +1,33 @@
+.expected-result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover .action-bar {
+    opacity: 1;
+  }
+}
+
+.expected-result-content {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+}
+
+.expected-result-number {
+  font-weight: 600;
+  color: #1890ff;
+  min-width: 20px;
+}
+
+.expected-result-text {
+  color: #1890ff;
+  font-weight: 500;
+}
+

@@ -1,0 +1,39 @@
+.main-layout {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-tabs-header {
+  background: #fff;
+  padding: 0;
+  height: auto;
+  line-height: normal;
+  border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+
+.main-body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+}
+
+.main-sider {
+  border-right: 1px solid #f0f0f0;
+  overflow-y: auto;
+}
+
+.main-header {
+  background: #fff;
+  padding: 0;
+  height: auto;
+  line-height: normal;
+  flex-shrink: 0;
+}
+
+.main-content {
+  background: #fff;
+  overflow-y: auto;
+}
+

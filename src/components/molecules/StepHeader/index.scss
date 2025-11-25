@@ -1,0 +1,32 @@
+.step-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.step-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.step-icon {
+  font-size: 18px;
+  color: #1890ff;
+  line-height: 1;
+}
+
+.step-number {
+  font-weight: 600;
+  font-size: 14px;
+  color: #262626;
+  min-width: auto;
+}
+
+.step-description-text {
+  font-size: 14px;
+  color: #262626;
+  flex: 1;
+}
+
