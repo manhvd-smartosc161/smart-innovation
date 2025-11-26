@@ -1,14 +1,14 @@
-import React from "react";
-import { Space } from "antd";
-import { IconButton } from "@/components/atoms";
+import React from 'react';
+import { Space } from 'antd';
+import { IconButton } from '@/components/atoms';
 import {
   CopyOutlined,
   SettingOutlined,
   CommentOutlined,
   EditOutlined,
   DeleteOutlined,
-} from "@ant-design/icons";
-import "./index.scss";
+} from '@ant-design/icons';
+import './index.scss';
 
 interface ActionBarProps {
   onDelete?: () => void;
@@ -34,13 +34,8 @@ export const ActionBar: React.FC<ActionBarProps> = ({
       <IconButton icon={<CommentOutlined />} onClick={onComment} />
       <IconButton icon={<EditOutlined />} onClick={onEdit} />
       {showDelete && (
-        <IconButton
-          icon={<DeleteOutlined />}
-          onClick={onDelete}
-          danger
-        />
+        <IconButton icon={<DeleteOutlined />} onClick={onDelete} danger />
       )}
     </Space>
   );
 };
-

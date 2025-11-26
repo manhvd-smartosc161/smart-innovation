@@ -1,10 +1,10 @@
-import React from "react";
-import { Button } from "antd";
-import "./index.scss";
+import React from 'react';
+import { Button } from 'antd';
+import './index.scss';
 
 type ButtonProps = React.ComponentProps<typeof Button>;
 
-interface IconButtonProps extends Omit<ButtonProps, "icon"> {
+interface IconButtonProps extends Omit<ButtonProps, 'icon'> {
   icon: React.ReactNode;
   onClick?: (e: React.MouseEvent) => void;
 }
@@ -30,4 +30,3 @@ export const IconButton: React.FC<IconButtonProps> = ({
     />
   );
 };
-

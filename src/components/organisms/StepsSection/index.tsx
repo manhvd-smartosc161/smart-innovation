@@ -1,21 +1,21 @@
-import React, { useState } from "react";
-import { Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import { StepItem } from "@/components/molecules";
-import type { TestStep } from "@/types";
-import "./index.scss";
+import React, { useState } from 'react';
+import { Button } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { StepItem } from '@/components/molecules';
+import type { TestStep } from '@/types';
+import './index.scss';
 
 const initialSteps: TestStep[] = [
   {
     id: 1,
     stepNumber: 1,
-    description: "Navigate to the product page.",
+    description: 'Navigate to the product page.',
     expectedResults: [],
   },
   {
     id: 2,
     stepNumber: 2,
-    description: "Add product to cart with an invalid quantity (e.g., -1).",
+    description: 'Add product to cart with an invalid quantity (e.g., -1).',
     expectedResults: [
       {
         id: 1,
@@ -23,20 +23,20 @@ const initialSteps: TestStep[] = [
       },
       {
         id: 2,
-        description: "Order should not be created.",
+        description: 'Order should not be created.',
       },
     ],
   },
   {
     id: 3,
     stepNumber: 3,
-    description: "Navigate to the product page.",
+    description: 'Navigate to the product page.',
     expectedResults: [],
   },
   {
     id: 4,
     stepNumber: 4,
-    description: "Click on the product link",
+    description: 'Click on the product link',
     expectedResults: [],
   },
 ];
@@ -49,7 +49,7 @@ export const StepsSection: React.FC = () => {
     const newStep: TestStep = {
       id: steps.length + 1,
       stepNumber: steps.length + 1,
-      description: "New step description",
+      description: 'New step description',
       expectedResults: [],
     };
     setSteps([...steps, newStep]);
@@ -69,7 +69,7 @@ export const StepsSection: React.FC = () => {
               ...step.expectedResults,
               {
                 id: step.expectedResults.length + 1,
-                description: "New expected result",
+                description: 'New expected result',
               },
             ],
           };
@@ -129,4 +129,3 @@ export const StepsSection: React.FC = () => {
     </div>
   );
 };
-

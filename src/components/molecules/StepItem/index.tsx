@@ -1,9 +1,9 @@
-import React from "react";
-import { Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import type { ExpectedResult } from "@/types";
-import { StepHeader, ExpectedResultItem } from "../";
-import "./index.scss";
+import React from 'react';
+import { Button } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import type { ExpectedResult } from '@/types';
+import { StepHeader, ExpectedResultItem } from '../';
+import './index.scss';
 
 interface StepItemProps {
   stepNumber: number;
@@ -28,7 +28,7 @@ export const StepItem: React.FC<StepItemProps> = ({
 }) => {
   return (
     <div
-      className={`step-item ${isSelected ? "step-item-selected" : ""}`}
+      className={`step-item ${isSelected ? 'step-item-selected' : ''}`}
       onClick={onSelect}
     >
       <StepHeader
@@ -64,4 +64,3 @@ export const StepItem: React.FC<StepItemProps> = ({
     </div>
   );
 };
-

@@ -1,7 +1,7 @@
-import React from "react";
-import { PlayCircleOutlined } from "@ant-design/icons";
-import { ActionBar } from "../ActionBar";
-import "./index.scss";
+import React from 'react';
+import { PlayCircleOutlined } from '@ant-design/icons';
+import { ActionBar } from '../ActionBar';
+import './index.scss';
 
 interface StepHeaderProps {
   stepNumber: number;
@@ -39,4 +39,3 @@ export const StepHeader: React.FC<StepHeaderProps> = ({
     </div>
   );
 };
-

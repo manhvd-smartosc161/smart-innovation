@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Checkbox } from "antd";
-import { CaretDownOutlined, CaretRightOutlined } from "@ant-design/icons";
-import "./index.scss";
+import React, { useState } from 'react';
+import { Checkbox } from 'antd';
+import { CaretDownOutlined, CaretRightOutlined } from '@ant-design/icons';
+import './index.scss';
 
 interface TreeItemProps {
   title: React.ReactNode;
@@ -40,14 +40,14 @@ export const TreeItem: React.FC<TreeItemProps> = ({
   };
 
   const renderIcon = () => {
-    if (typeof icon === "function") {
+    if (typeof icon === 'function') {
       return icon({ expanded });
     }
     return icon;
   };
 
   // Calculate depth based on key (e.g., "0-0-1" -> depth 2)
-  const depth = nodeKey.split("-").length - 1;
+  const depth = nodeKey.split('-').length - 1;
   const indents = [];
   for (let i = 0; i < depth; i++) {
     indents.push(<div key={i} className="tree-indent" />);
@@ -56,7 +56,7 @@ export const TreeItem: React.FC<TreeItemProps> = ({
   return (
     <div className="tree-node">
       <div
-        className={`tree-node-content ${isSelected ? "selected" : ""}`}
+        className={`tree-node-content ${isSelected ? 'selected' : ''}`}
         onClick={handleSelect}
       >
         {indents}

@@ -1,6 +1,6 @@
-import React from "react";
-import { Form, Select } from "antd";
-import "./index.scss";
+import React from 'react';
+import { Form, Select } from 'antd';
+import './index.scss';
 
 interface FormSelectOption {
   value: string;
@@ -23,7 +23,11 @@ export const FormSelect: React.FC<FormSelectProps> = ({
   span,
 }) => {
   return (
-    <Form.Item label={label} name={name} className={span ? `form-select-span-${span}` : ""}>
+    <Form.Item
+      label={label}
+      name={name}
+      className={span ? `form-select-span-${span}` : ''}
+    >
       <Select defaultValue={defaultValue}>
         {options.map((option) => (
           <Select.Option key={option.value} value={option.value}>
@@ -34,4 +38,3 @@ export const FormSelect: React.FC<FormSelectProps> = ({
     </Form.Item>
   );
 };
-

@@ -1,21 +1,21 @@
-import React from "react";
-import { Tabs } from "antd";
-import { MainLayout } from "@/components/templates";
-import { Sidebar, DetailsForm, StepsSection } from "@/components/organisms";
-import { Badge } from "@/components/atoms";
-import "./TestCaseDrafting.scss";
+import React from 'react';
+import { Tabs } from 'antd';
+import { MainLayout } from '@/components/templates';
+import { Sidebar, DetailsForm, StepsSection } from '@/components/organisms';
+import { Badge } from '@/components/atoms';
+import './TestCaseDrafting.scss';
 
 const tabs = [
-  { key: "Drafting", label: "Drafting" },
-  { key: "Reviewing", label: "Reviewing" },
-  { key: "Cancelled", label: "Cancelled" },
-  { key: "Rejected", label: "Rejected" },
-  { key: "Resolved", label: "Resolved" },
-  { key: "Approved", label: "Approved" },
+  { key: 'Drafting', label: 'Drafting' },
+  { key: 'Reviewing', label: 'Reviewing' },
+  { key: 'Cancelled', label: 'Cancelled' },
+  { key: 'Rejected', label: 'Rejected' },
+  { key: 'Resolved', label: 'Resolved' },
+  { key: 'Approved', label: 'Approved' },
 ];
 
 export const TestCaseDrafting: React.FC = () => {
-  const [activeTab, setActiveTab] = React.useState<string>("Drafting");
+  const [activeTab, setActiveTab] = React.useState<string>('Drafting');
 
   const tabsSection = (
     <div className="tabs-section">

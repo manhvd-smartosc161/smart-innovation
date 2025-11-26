@@ -1,7 +1,7 @@
-import React from "react";
-import { Form, Input, Row, Col, Space, Button } from "antd";
-import { FormSelect, TagsContainer } from "@/components/molecules";
-import "./index.scss";
+import React from 'react';
+import { Form, Input, Row, Col, Space, Button } from 'antd';
+import { FormSelect, TagsContainer } from '@/components/molecules';
+import './index.scss';
 
 export const DetailsForm: React.FC = () => {
   const [form] = Form.useForm();
@@ -36,8 +36,8 @@ export const DetailsForm: React.FC = () => {
               label="Type"
               defaultValue="Test Scenario"
               options={[
-                { value: "Test Scenario", label: "Test Scenario" },
-                { value: "Test Case", label: "Test Case" },
+                { value: 'Test Scenario', label: 'Test Scenario' },
+                { value: 'Test Case', label: 'Test Case' },
               ]}
             />
           </Col>
@@ -46,9 +46,9 @@ export const DetailsForm: React.FC = () => {
               label="Priority"
               defaultValue="Medium"
               options={[
-                { value: "Low", label: "Low" },
-                { value: "Medium", label: "Medium" },
-                { value: "High", label: "High" },
+                { value: 'Low', label: 'Low' },
+                { value: 'Medium', label: 'Medium' },
+                { value: 'High', label: 'High' },
               ]}
             />
           </Col>
@@ -61,8 +61,8 @@ export const DetailsForm: React.FC = () => {
               defaultValue="Smart Open Solution Center"
               options={[
                 {
-                  value: "Smart Open Solution Center",
-                  label: "Smart Open Solution Center",
+                  value: 'Smart Open Solution Center',
+                  label: 'Smart Open Solution Center',
                 },
               ]}
             />
@@ -72,7 +72,7 @@ export const DetailsForm: React.FC = () => {
               label="Module"
               defaultValue="Smart Workspaces"
               options={[
-                { value: "Smart Workspaces", label: "Smart Workspaces" },
+                { value: 'Smart Workspaces', label: 'Smart Workspaces' },
               ]}
             />
           </Col>
@@ -80,7 +80,7 @@ export const DetailsForm: React.FC = () => {
             <FormSelect
               label="Feature"
               defaultValue="Test Composer"
-              options={[{ value: "Test Composer", label: "Test Composer" }]}
+              options={[{ value: 'Test Composer', label: 'Test Composer' }]}
             />
           </Col>
           <Col span={4}>
@@ -88,9 +88,9 @@ export const DetailsForm: React.FC = () => {
               label="Complexity"
               defaultValue="High"
               options={[
-                { value: "High", label: "High" },
-                { value: "Medium", label: "Medium" },
-                { value: "Low", label: "Low" },
+                { value: 'High', label: 'High' },
+                { value: 'Medium', label: 'Medium' },
+                { value: 'Low', label: 'Low' },
               ]}
             />
           </Col>
@@ -99,8 +99,8 @@ export const DetailsForm: React.FC = () => {
               label="Custom"
               defaultValue="No"
               options={[
-                { value: "No", label: "No" },
-                { value: "Yes", label: "Yes" },
+                { value: 'No', label: 'No' },
+                { value: 'Yes', label: 'Yes' },
               ]}
             />
           </Col>
@@ -110,9 +110,9 @@ export const DetailsForm: React.FC = () => {
           <Col span={12}>
             <TagsContainer
               tags={[
-                { label: "Vietnam", color: "green" },
-                { label: "USA", color: "red" },
-                { label: "United Kingdom", color: "blue" },
+                { label: 'Vietnam', color: 'green' },
+                { label: 'USA', color: 'red' },
+                { label: 'United Kingdom', color: 'blue' },
               ]}
             />
           </Col>

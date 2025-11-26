@@ -1,5 +1,5 @@
-import { TestCaseDrafting } from "@/pages/TestCaseDrafting";
-import "@/styles/global.scss";
+import { TestCaseDrafting } from '@/pages/TestCaseDrafting';
+import '@/styles/global.scss';
 
 function App() {
   return (

@@ -1,6 +1,6 @@
-import React from "react";
-import { ActionBar } from "../ActionBar";
-import "./index.scss";
+import React from 'react';
+import { ActionBar } from '../ActionBar';
+import './index.scss';
 
 interface ExpectedResultItemProps {
   number: number;
@@ -37,4 +37,3 @@ export const ExpectedResultItem: React.FC<ExpectedResultItemProps> = ({
     </div>
   );
 };
-

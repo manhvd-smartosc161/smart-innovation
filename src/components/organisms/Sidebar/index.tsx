@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Tooltip } from "antd";
+import React, { useState } from 'react';
+import { Tooltip } from 'antd';
 import {
   PlusOutlined,
   DeleteOutlined,
@@ -7,56 +7,56 @@ import {
   FileTextOutlined,
   FolderOutlined,
   FolderOpenOutlined,
-} from "@ant-design/icons";
-import { TreeItem, ModeSwitch } from "@/components/molecules";
-import { IconButton } from "@/components/atoms";
-import type { TreeNode } from "@/types";
-import "./index.scss";
+} from '@ant-design/icons';
+import { TreeItem, ModeSwitch } from '@/components/molecules';
+import { IconButton } from '@/components/atoms';
+import type { TreeNode } from '@/types';
+import './index.scss';
 
 const initialTreeData: TreeNode[] = [
   {
-    key: "0-0",
-    title: "JIRA_TICKET_001",
-    type: "folder",
+    key: '0-0',
+    title: 'JIRA_TICKET_001',
+    type: 'folder',
     children: [
       {
-        key: "0-0-0",
-        title: "Create order",
-        type: "folder",
+        key: '0-0-0',
+        title: 'Create order',
+        type: 'folder',
         children: [
           {
-            key: "0-0-0-0",
-            title: "Order Senario",
-            type: "folder",
+            key: '0-0-0-0',
+            title: 'Order Senario',
+            type: 'folder',
             children: [
               {
-                key: "0-0-0-0-0",
-                title: "Create order with invalid data",
-                type: "file",
+                key: '0-0-0-0-0',
+                title: 'Create order with invalid data',
+                type: 'file',
                 isLeaf: true,
               },
               {
-                key: "0-0-0-0-1",
-                title: "Create order with invalid data",
-                type: "file",
+                key: '0-0-0-0-1',
+                title: 'Create order with invalid data',
+                type: 'file',
                 isLeaf: true,
               },
               {
-                key: "0-0-0-0-2",
-                title: "Create order with invalid data",
-                type: "file",
+                key: '0-0-0-0-2',
+                title: 'Create order with invalid data',
+                type: 'file',
                 isLeaf: true,
               },
               {
-                key: "0-0-0-0-3",
-                title: "Create order with invalid data",
-                type: "file",
+                key: '0-0-0-0-3',
+                title: 'Create order with invalid data',
+                type: 'file',
                 isLeaf: true,
               },
               {
-                key: "0-0-0-0-4",
-                title: "Create order with invalid data",
-                type: "file",
+                key: '0-0-0-0-4',
+                title: 'Create order with invalid data',
+                type: 'file',
                 isLeaf: true,
               },
             ],
@@ -68,8 +68,8 @@ const initialTreeData: TreeNode[] = [
 ];
 
 export const Sidebar: React.FC = () => {
-  const [selectedKeys, setSelectedKeys] = useState<string[]>(["0-0-0-0-0"]);
-  const [activeMode, setActiveMode] = useState<"edit" | "view">("view");
+  const [selectedKeys, setSelectedKeys] = useState<string[]>(['0-0-0-0-0']);
+  const [activeMode, setActiveMode] = useState<'edit' | 'view'>('view');
 
   const handleSelect = (keys: string[]) => {
     setSelectedKeys(keys);

@@ -1,13 +1,13 @@
-import React from "react";
-import { Form, Input } from "antd";
-import type { Rule } from "antd/es/form";
-import "./index.scss";
+import React from 'react';
+import { Form, Input } from 'antd';
+import type { Rule } from 'antd/es/form';
+import './index.scss';
 
 interface FormFieldProps {
   label: string;
   name: string;
   placeholder?: string;
-  type?: "text" | "password" | "email";
+  type?: 'text' | 'password' | 'email';
   rules?: Rule[];
 }
 
@@ -15,7 +15,7 @@ export const FormField: React.FC<FormFieldProps> = ({
   label,
   name,
   placeholder,
-  type = "text",
+  type = 'text',
   rules,
 }) => {
   return (

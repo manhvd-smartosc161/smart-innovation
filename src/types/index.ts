@@ -20,15 +20,15 @@ export interface TestCase {
 export interface TreeNode {
   key: string;
   title: string;
-  type: "folder" | "file";
+  type: 'folder' | 'file';
   children?: TreeNode[];
   isLeaf?: boolean;
 }
 
 export type TabType =
-  | "Drafting"
-  | "Reviewing"
-  | "Cancelled"
-  | "Rejected"
-  | "Resolved"
-  | "Approved";
+  | 'Drafting'
+  | 'Reviewing'
+  | 'Cancelled'
+  | 'Rejected'
+  | 'Resolved'
+  | 'Approved';
