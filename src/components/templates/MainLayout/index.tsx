@@ -5,13 +5,13 @@ import './index.scss';
 const { Sider, Content, Header } = Layout;
 
 interface MainLayoutProps {
-  sidebar: React.ReactNode;
+  leftSidebar?: React.ReactNode;
   tabs?: React.ReactNode;
   children: React.ReactNode;
 }
 
 export const MainLayout: React.FC<MainLayoutProps> = ({
-  sidebar,
+  leftSidebar,
   tabs,
   children,
 }) => {
@@ -19,9 +19,11 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
     <Layout className="main-layout">
       {tabs && <Header className="main-tabs-header">{tabs}</Header>}
       <Layout className="main-body">
-        <Sider width={330} theme="light" className="main-sider">
-          {sidebar}
-        </Sider>
+        {leftSidebar && (
+          <Sider width={280} theme="light" className="main-sider">
+            {leftSidebar}
+          </Sider>
+        )}
         <Layout>
           <Content className="main-content">{children}</Content>
         </Layout>
