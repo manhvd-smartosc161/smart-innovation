@@ -1,10 +1,10 @@
-import { TestCaseDrafting } from '@/pages/TestCaseDrafting';
+import { TestCaseManagement } from '@/pages/TestCasePage';
 import '@/styles/global.scss';
 
 function App() {
   return (
     <div className="App">
-      <TestCaseDrafting />
+      <TestCaseManagement />
     </div>
   );
 }

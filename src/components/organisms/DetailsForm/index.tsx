@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Input, Row, Col, Space, Button } from 'antd';
-import { FormSelect, TagsContainer } from '@/components/molecules';
+import { FormSelect } from '@/components/molecules';
 import './index.scss';
 
 export const DetailsForm: React.FC = () => {
@@ -22,7 +22,7 @@ export const DetailsForm: React.FC = () => {
 
       <Form form={form} layout="vertical" className="details-form">
         <Row gutter={16}>
-          <Col span={16}>
+          <Col span={12}>
             <Form.Item label="Title" className="form-item-title">
               <Input
                 defaultValue="Create order with invalid data"
@@ -31,7 +31,15 @@ export const DetailsForm: React.FC = () => {
               />
             </Form.Item>
           </Col>
-          <Col span={4}>
+          <Col span={12}>
+            <Form.Item label="ID">
+              <Input defaultValue="TS-0000001" placeholder="ID" disabled />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={6}>
             <FormSelect
               label="Type"
               defaultValue="Test Scenario"
@@ -41,7 +49,7 @@ export const DetailsForm: React.FC = () => {
               ]}
             />
           </Col>
-          <Col span={4}>
+          <Col span={6}>
             <FormSelect
               label="Priority"
               defaultValue="Medium"
@@ -52,38 +60,7 @@ export const DetailsForm: React.FC = () => {
               ]}
             />
           </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={7}>
-            <FormSelect
-              label="System"
-              defaultValue="Smart Open Solution Center"
-              options={[
-                {
-                  value: 'Smart Open Solution Center',
-                  label: 'Smart Open Solution Center',
-                },
-              ]}
-            />
-          </Col>
-          <Col span={5}>
-            <FormSelect
-              label="Module"
-              defaultValue="Smart Workspaces"
-              options={[
-                { value: 'Smart Workspaces', label: 'Smart Workspaces' },
-              ]}
-            />
-          </Col>
-          <Col span={4}>
-            <FormSelect
-              label="Feature"
-              defaultValue="Test Composer"
-              options={[{ value: 'Test Composer', label: 'Test Composer' }]}
-            />
-          </Col>
-          <Col span={4}>
+          <Col span={6}>
             <FormSelect
               label="Complexity"
               defaultValue="High"
@@ -94,7 +71,7 @@ export const DetailsForm: React.FC = () => {
               ]}
             />
           </Col>
-          <Col span={4}>
+          <Col span={6}>
             <FormSelect
               label="Custom"
               defaultValue="No"
@@ -107,14 +84,14 @@ export const DetailsForm: React.FC = () => {
         </Row>
 
         <Row gutter={16}>
-          <Col span={12}>
-            <TagsContainer
-              tags={[
-                { label: 'Vietnam', color: 'green' },
-                { label: 'USA', color: 'red' },
-                { label: 'United Kingdom', color: 'blue' },
-              ]}
-            />
+          <Col span={24}>
+            <Form.Item label="Pre Condition">
+              <Input.TextArea
+                rows={3}
+                defaultValue="1. User is logged in.&#10;2. Product is in stock.&#10;3. Payment gateway is configured."
+                placeholder="Enter pre-conditions"
+              />
+            </Form.Item>
           </Col>
         </Row>
       </Form>

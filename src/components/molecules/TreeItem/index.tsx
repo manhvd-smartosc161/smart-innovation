@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Checkbox } from 'antd';
+import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { CaretDownOutlined, CaretRightOutlined } from '@ant-design/icons';
 import './index.scss';
 
@@ -34,7 +35,7 @@ export const TreeItem: React.FC<TreeItemProps> = ({
     onSelect?.();
   };
 
-  const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCheck = (e: CheckboxChangeEvent) => {
     e.stopPropagation();
     setChecked(e.target.checked);
   };
