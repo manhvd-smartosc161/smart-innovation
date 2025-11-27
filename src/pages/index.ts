@@ -1,1 +1,1 @@
-export * from './TestCaseDrafting';
+export * from './TestCasePage';
