@@ -2,7 +2,7 @@ import React from 'react';
 import { Tabs } from 'antd';
 import { MainLayout } from '@/components/templates';
 import { TicketSidebar, TestCasePanel } from '@/components/organisms';
-import './TestCaseManagement.scss';
+import './index.scss';
 
 const tabs = [
   { key: 'Drafting', label: 'Drafting' },
