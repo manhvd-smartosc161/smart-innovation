@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PlayCircleOutlined } from '@ant-design/icons';
+import { Input } from 'antd';
+import type { InputRef } from 'antd';
 import { ActionBar } from '../ActionBar';
 import './index.scss';
 
@@ -11,6 +13,13 @@ interface StepHeaderProps {
   onSetting?: () => void;
   onComment?: () => void;
   onEdit?: () => void;
+  onDescriptionChange?: (newDescription: string) => void;
+  onAdd?: () => void;
+  onAddExpectedResult?: () => void;
+  onToggleExpand?: () => void;
+  showAdd?: boolean;
+  showAddExpectedResult?: boolean;
+  isExpanded?: boolean;
 }
 
 export const StepHeader: React.FC<StepHeaderProps> = ({
@@ -21,21 +30,88 @@ export const StepHeader: React.FC<StepHeaderProps> = ({
   onSetting,
   onComment,
   onEdit,
+  onDescriptionChange,
+  onAdd,
+  onAddExpectedResult,
+  onToggleExpand,
+  showAdd = false,
+  showAddExpectedResult = false,
+  isExpanded = true,
 }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(description);
+  const inputRef = useRef<InputRef>(null);
+
+  useEffect(() => {
+    setEditValue(description);
+  }, [description]);
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isEditing]);
+
+  const handleEdit = () => {
+    setIsEditing(true);
+    onEdit?.();
+  };
+
+  const handleSave = () => {
+    if (onDescriptionChange) {
+      onDescriptionChange(editValue);
+    }
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditValue(description);
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSave();
+    } else if (e.key === 'Escape') {
+      handleCancel();
+    }
+  };
+
   return (
     <div className="step-header">
       <div className="step-title">
         <span className="step-number">{stepNumber}</span>
         <PlayCircleOutlined className="step-icon" />
-        <span className="step-description-text">{description}</span>
+        {isEditing ? (
+          <Input
+            ref={inputRef}
+            value={editValue}
+            onChange={(e) => setEditValue(e.target.value)}
+            onBlur={handleSave}
+            onKeyDown={handleKeyDown}
+            className="step-description-input"
+            onClick={(e) => e.stopPropagation()}
+          />
+        ) : (
+          <span className="step-description-text">{description}</span>
+        )}
       </div>
-      <ActionBar
-        onDelete={onDelete}
-        onCopy={onCopy}
-        onSetting={onSetting}
-        onComment={onComment}
-        onEdit={onEdit}
-      />
+      <div className="step-actions">
+        <ActionBar
+          onDelete={onDelete}
+          onCopy={onCopy}
+          onSetting={onSetting}
+          onComment={onComment}
+          onEdit={handleEdit}
+          onAdd={onAdd}
+          onAddExpectedResult={onAddExpectedResult}
+          onToggleExpand={onToggleExpand}
+          showAdd={showAdd}
+          showAddExpectedResult={showAddExpectedResult}
+          isExpanded={isExpanded}
+        />
+      </div>
     </div>
   );
 };

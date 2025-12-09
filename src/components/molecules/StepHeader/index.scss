@@ -24,8 +24,58 @@
   min-width: auto;
 }
 
+.step-actions {
+  margin-top: -55px;
+  background: #c3d9fc73;
+  border-radius: 6px;
+  border-width: 1px;
+  border-color: #2563ebff;
+  border-style: solid;
+  padding: 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+
+  .action-bar {
+    .icon-button {
+      color: #1890ff;
+      font-weight: 600;
+
+      &:hover {
+        color: #1890ff !important;
+        background: rgba(24, 144, 255, 0.1);
+      }
+
+      .anticon {
+        color: #1890ff;
+      }
+
+      &:hover .anticon {
+        color: #1890ff !important;
+      }
+    }
+  }
+}
+
 .step-description-text {
   font-size: 14px;
   color: #262626;
   flex: 1;
+}
+
+.step-description-input {
+  flex: 1;
+
+  .ant-input {
+    font-size: 14px;
+    padding: 0;
+    border: none;
+    border-bottom: 1px solid #1890ff;
+    border-radius: 0;
+    box-shadow: none;
+
+    &:focus {
+      border-color: #1890ff;
+      box-shadow: none;
+    }
+  }
 }

@@ -7,4 +7,19 @@
   align-items: center;
   justify-content: center;
   font-size: 12px;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+
+  &:focus,
+  &:active,
+  &:focus-visible {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
+  &::after {
+    display: none !important;
+  }
 }
