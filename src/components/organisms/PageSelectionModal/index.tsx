@@ -66,6 +66,7 @@ export const PageSelectionModal: React.FC<PageSelectionModalProps> = ({
       onOk={handleOk}
       onCancel={handleCancel}
       width={900}
+      style={{ maxWidth: 'calc(100% - 32px)', top: 20 }}
       className="page-selection-modal"
       okText="Select"
       cancelText="Cancel"

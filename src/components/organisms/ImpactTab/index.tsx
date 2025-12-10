@@ -189,7 +189,7 @@ export const ImpactTab: React.FC = () => {
           pagination={false}
           className="impact-table"
           key={dataSource.length}
-          scroll={{ y: 400 }}
+          scroll={{ x: 'max-content', y: 400 }}
         />
       </div>
     </div>

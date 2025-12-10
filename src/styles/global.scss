@@ -10,6 +10,7 @@ body {
     Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol', 'Noto Color Emoji';
   background-color: #f0f2f5;
+  overflow-x: hidden;
 }
 
 /* Ant Design Overrides */
@@ -30,4 +31,116 @@ body {
 
 .ant-layout-content {
   background: #fff;
+}
+
+/* Responsive Table Wrapper */
+.ant-table-wrapper {
+  @media (max-width: 768px) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Responsive Modal */
+.ant-modal {
+  @media (max-width: 768px) {
+    max-width: calc(100vw - 32px) !important;
+    margin: 16px auto;
+  }
+}
+
+.ant-modal-body {
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+}
+
+/* Responsive Drawer */
+.ant-drawer-body {
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+}
+
+/* Responsive Tabs */
+.ant-tabs {
+  @media (max-width: 768px) {
+    .ant-tabs-nav {
+      .ant-tabs-tab {
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+/* Responsive Buttons */
+@media (max-width: 768px) {
+  .ant-btn {
+    padding: 4px 12px;
+    font-size: 14px;
+
+    &.ant-btn-lg {
+      padding: 6px 15px;
+      font-size: 16px;
+    }
+
+    &.ant-btn-sm {
+      padding: 2px 8px;
+      font-size: 12px;
+    }
+  }
+}
+
+/* Responsive Form */
+.ant-form {
+  @media (max-width: 768px) {
+    .ant-form-item {
+      margin-bottom: 12px;
+    }
+
+    .ant-form-item-label {
+      padding-bottom: 2px;
+
+      > label {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+/* Utility Classes */
+.mobile-only {
+  display: none !important;
+
+  @media (max-width: 768px) {
+    display: block !important;
+  }
+}
+
+.desktop-only {
+  display: block !important;
+
+  @media (max-width: 768px) {
+    display: none !important;
+  }
+}
+
+.tablet-and-up {
+  display: none !important;
+
+  @media (min-width: 769px) {
+    display: block !important;
+  }
+}
+
+/* Responsive Spacing */
+@media (max-width: 768px) {
+  .responsive-padding {
+    padding: 16px !important;
+  }
+
+  .responsive-margin {
+    margin: 16px !important;
+  }
 }

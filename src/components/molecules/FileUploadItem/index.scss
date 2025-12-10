@@ -91,4 +91,37 @@
       }
     }
   }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+
+    .upload-type,
+    .upload-area {
+      flex: 1;
+      width: 100%;
+
+      .type-select,
+      .ant-btn {
+        width: 100%;
+      }
+    }
+
+    .upload-prompt {
+      width: 100%;
+    }
+
+    .upload-actions {
+      flex: 1;
+      width: 100%;
+      justify-content: flex-end;
+      padding-top: 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px;
+    gap: 10px;
+  }
 }

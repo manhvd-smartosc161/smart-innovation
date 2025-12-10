@@ -52,6 +52,10 @@
         font-size: 14px;
         color: #1a1a1a;
         font-weight: 500;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       .last-update {
@@ -60,6 +64,7 @@
         white-space: nowrap;
         margin-left: auto;
         margin-right: 12px;
+        flex-shrink: 0;
       }
 
       .tree-checkbox {
@@ -70,5 +75,57 @@
 
   .tree-children {
     margin-left: 0;
+  }
+
+  @media (max-width: 768px) {
+    .confluence-tree-node {
+      .tree-node-content {
+        padding: 6px 8px;
+        gap: 6px;
+
+        .tree-icon {
+          font-size: 14px;
+        }
+
+        .tree-title {
+          font-size: 13px;
+        }
+
+        .last-update {
+          font-size: 11px;
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .confluence-tree-node {
+      .tree-node-content {
+        padding: 4px 6px;
+        gap: 4px;
+
+        .tree-switcher {
+          width: 16px;
+          height: 16px;
+
+          .expand-icon {
+            font-size: 12px;
+          }
+        }
+
+        .tree-icon {
+          font-size: 13px;
+        }
+
+        .tree-title {
+          font-size: 12px;
+        }
+
+        .last-update {
+          display: none;
+        }
+      }
+    }
   }
 }

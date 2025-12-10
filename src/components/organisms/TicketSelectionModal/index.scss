@@ -23,17 +23,20 @@
           width: 100%;
           display: flex;
           align-items: flex-start;
+          gap: 8px;
 
           .ticket-id {
             font-weight: 600;
             color: #1890ff;
             margin-right: 12px;
             min-width: 80px;
+            flex-shrink: 0;
           }
 
           .ticket-title {
             color: #595959;
             flex: 1;
+            word-break: break-word;
           }
         }
       }
@@ -43,6 +46,59 @@
         text-align: center;
         color: #8c8c8c;
         font-style: italic;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .modal-content {
+      .ticket-list {
+        max-height: 300px;
+
+        .ticket-item {
+          padding: 6px;
+
+          .ant-checkbox-wrapper {
+            .ticket-id {
+              font-size: 14px;
+              min-width: 70px;
+            }
+
+            .ticket-title {
+              font-size: 13px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .modal-content {
+      .ticket-list {
+        max-height: 250px;
+        padding: 6px;
+
+        .ticket-item {
+          padding: 4px;
+
+          .ant-checkbox-wrapper {
+            .ticket-id {
+              font-size: 13px;
+              min-width: 60px;
+              margin-right: 8px;
+            }
+
+            .ticket-title {
+              font-size: 12px;
+            }
+          }
+        }
+
+        .empty-state {
+          padding: 16px;
+          font-size: 13px;
+        }
       }
     }
   }

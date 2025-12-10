@@ -2,6 +2,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .step-title {
@@ -9,12 +11,14 @@
   align-items: center;
   gap: 8px;
   flex: 1;
+  min-width: 0;
 }
 
 .step-icon {
   font-size: 18px;
   color: #1890ff;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .step-number {
@@ -22,6 +26,7 @@
   font-size: 14px;
   color: #262626;
   min-width: auto;
+  flex-shrink: 0;
 }
 
 .step-actions {
@@ -34,6 +39,7 @@
   padding: 8px;
   opacity: 0;
   transition: opacity 0.2s;
+  flex-shrink: 0;
 
   .action-bar {
     .icon-button {
@@ -60,10 +66,15 @@
   font-size: 14px;
   color: #262626;
   flex: 1;
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .step-description-input {
   flex: 1;
+  min-width: 0;
 
   .ant-input {
     font-size: 14px;
@@ -76,6 +87,70 @@
     &:focus {
       border-color: #1890ff;
       box-shadow: none;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .step-header {
+    gap: 8px;
+  }
+
+  .step-title {
+    gap: 6px;
+    width: 100%;
+  }
+
+  .step-icon {
+    font-size: 16px;
+  }
+
+  .step-number {
+    font-size: 13px;
+  }
+
+  .step-description-text {
+    font-size: 13px;
+  }
+
+  .step-actions {
+    margin-top: 0;
+    width: 100%;
+
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 4px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .step-title {
+    gap: 4px;
+  }
+
+  .step-icon {
+    font-size: 14px;
+  }
+
+  .step-number {
+    font-size: 12px;
+  }
+
+  .step-description-text {
+    font-size: 12px;
+  }
+
+  .step-actions {
+    padding: 6px;
+
+    .action-bar {
+      .icon-button {
+        font-size: 14px;
+        padding: 4px;
+      }
     }
   }
 }

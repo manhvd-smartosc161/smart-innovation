@@ -8,6 +8,7 @@
   .ticket-sidebar-header {
     padding: 12px 16px;
     border-bottom: 1px solid #f0f0f0;
+    flex-shrink: 0;
 
     .search-box {
       display: flex;
@@ -29,6 +30,7 @@
       .header-icon-btn {
         padding: 4px 8px;
         height: auto;
+        flex-shrink: 0;
 
         &.ant-btn-dangerous {
           color: #ff4d4f;
@@ -40,5 +42,24 @@
   .ticket-list {
     flex: 1;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (max-width: 768px) {
+    .ticket-sidebar-header {
+      padding: 8px 12px;
+
+      .search-box {
+        .ant-input {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .ticket-sidebar-header {
+      padding: 8px;
+    }
   }
 }

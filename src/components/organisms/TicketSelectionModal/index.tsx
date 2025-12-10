@@ -60,6 +60,7 @@ export const TicketSelectionModal: React.FC<TicketSelectionModalProps> = ({
       onOk={handleOk}
       onCancel={handleCancel}
       width={600}
+      style={{ maxWidth: 'calc(100% - 32px)', top: 20 }}
       className="ticket-selection-modal"
     >
       <div className="modal-content">

@@ -26,6 +26,8 @@ export const TestCaseManagement: React.FC = () => {
         onChange={setActiveTab}
         items={tabs}
         className="page-tabs"
+        tabBarGutter={16}
+        moreIcon={null} // Optional: styling preference
       />
     </div>
   );

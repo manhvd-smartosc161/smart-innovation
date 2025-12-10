@@ -133,7 +133,7 @@ export const ChecklistTab: React.FC = () => {
           rowKey="id"
           pagination={false}
           className="checklist-table"
-          scroll={{ y: 400 }}
+          scroll={{ x: 'max-content', y: 400 }}
         />
       </div>
     </div>

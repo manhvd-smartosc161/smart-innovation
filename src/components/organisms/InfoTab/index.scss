@@ -169,6 +169,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
 
             .item-id {
               font-weight: 700;
@@ -190,10 +192,12 @@
               background: #f5f5f5;
               border-radius: 6px;
               font-family: 'Monaco', 'Menlo', monospace;
+              min-width: 0;
             }
 
             .ant-btn {
               transition: all 0.2s ease;
+              flex-shrink: 0;
 
               &:hover {
                 transform: scale(1.15);
@@ -235,7 +239,11 @@
 
   .analyse-section {
     position: sticky;
-    top: -32px;
+    top: 0px;
+
+    @media (min-width: 768px) {
+      top: -20px;
+    }
     z-index: 100;
     display: flex;
     justify-content: center;
@@ -522,10 +530,12 @@
 
   @media (max-width: 768px) {
     padding: 16px;
+    padding-bottom: 40px;
 
     .info-section {
       padding: 16px;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
+      border-radius: 12px;
 
       .section-header {
         flex-direction: column;
@@ -540,14 +550,102 @@
           width: 100%;
         }
       }
+
+      .section-content {
+        .selected-items-list {
+          .selected-item {
+            padding: 12px;
+
+            .item-header {
+              flex-direction: column;
+              align-items: flex-start;
+
+              .item-id {
+                font-size: 14px;
+              }
+
+              .item-url {
+                margin-right: 0;
+                margin-bottom: 8px;
+                font-size: 12px;
+                width: 100%;
+              }
+
+              .ant-btn {
+                align-self: flex-end;
+              }
+            }
+          }
+        }
+      }
     }
 
     .analyse-section {
-      padding: 24px 0 16px;
+      padding: 16px 12px;
+      margin-bottom: 16px;
+      gap: 12px;
+      border-radius: 16px;
+
+      &::before,
+      &::after {
+        display: none;
+      }
+
+      .analyse-icon-left,
+      .analyse-icon-right {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
 
       .analyse-button {
         width: 100%;
         min-width: auto;
+        height: 48px;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+
+        .anticon {
+          font-size: 18px;
+          margin-right: 6px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 12px;
+    padding-bottom: 32px;
+
+    .info-section {
+      padding: 12px;
+      border-radius: 8px;
+
+      .section-header {
+        h3 {
+          font-size: 16px;
+        }
+
+        .ant-btn-primary {
+          height: 32px;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .analyse-section {
+      padding: 12px 8px;
+      flex-direction: column;
+      gap: 8px;
+
+      .analyse-icon-left,
+      .analyse-icon-right {
+        display: none;
+      }
+
+      .analyse-button {
+        height: 44px;
+        font-size: 13px;
       }
     }
   }

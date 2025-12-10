@@ -13,15 +13,26 @@
     .ant-tabs-nav {
       margin-bottom: 0;
     }
+
+    @media (max-width: 768px) {
+      padding: 0 12px;
+    }
+
+    @media (max-width: 480px) {
+      padding: 0 8px;
+    }
   }
 
   .info-tab,
   .scope-tab,
   .impact-tab,
-  .checklist-tab {
+  .checklist-tab,
+  .test-case-tab {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    width: 100%;
+    max-width: 100%;
   }
 }
