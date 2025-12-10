@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Input, Divider, message } from 'antd';
+import { Button, Input, Divider } from 'antd';
 import {
   PlusOutlined,
   ThunderboltOutlined,
@@ -144,6 +144,9 @@ export const InfoTab: React.FC = () => {
   };
 
   // Analysis handler
+  const [showRocket, setShowRocket] = useState(false);
+  const [showFireworks, setShowFireworks] = useState(false);
+
   const handleAnalyse = () => {
     const analysisData: AnalysisData = {
       files: uploads,
@@ -152,15 +155,53 @@ export const InfoTab: React.FC = () => {
       overallObjective,
     };
 
-    // For now, just log the data and show a message
+    // Trigger rocket animation
+    setShowRocket(true);
+
+    // After rocket flies up (1.5s), show fireworks
+    setTimeout(() => {
+      setShowRocket(false);
+      setShowFireworks(true);
+    }, 1500);
+
+    // Hide fireworks after animation (2s)
+    setTimeout(() => {
+      setShowFireworks(false);
+    }, 3500);
+
+    // For now, just log the data
     console.log('Analysis Data:', analysisData);
-    message.success('Data has been collected for analysis!');
 
     // TODO: Add API call or further processing here
   };
 
   return (
     <div className="info-tab">
+      {/* Rocket Animation */}
+      {showRocket && (
+        <div className="rocket-container">
+          <div className="rocket">🚀</div>
+        </div>
+      )}
+
+      {/* Fireworks Animation */}
+      {showFireworks && (
+        <div className="fireworks-container">
+          <div className="firework firework-1"></div>
+          <div className="firework firework-2"></div>
+          <div className="firework firework-3"></div>
+          <div className="firework firework-4"></div>
+          <div className="firework firework-5"></div>
+          <div className="firework firework-6"></div>
+          <div className="firework firework-7"></div>
+          <div className="firework firework-8"></div>
+          <div className="firework firework-9"></div>
+          <div className="firework firework-10"></div>
+          <div className="firework firework-11"></div>
+          <div className="firework firework-12"></div>
+        </div>
+      )}
+
       {/* Analyse Button */}
       <div className="analyse-section">
         <div className="analyse-icon-left">
