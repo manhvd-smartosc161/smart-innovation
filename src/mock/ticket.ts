@@ -1,6 +1,6 @@
-// Mock data for tickets and Confluence pages
+// Mock data for tickets
 
-import type { Ticket, ConfluencePage } from '@/types';
+import type { Ticket } from '@/types';
 
 export const MOCK_TICKETS: Ticket[] = [
   {
@@ -45,68 +45,5 @@ export const MOCK_TICKETS: Ticket[] = [
     id: 'JIRA-015',
     key: 'JIRA-015',
     title: 'Implement real-time notifications',
-  },
-];
-
-export const MOCK_CONFLUENCE_PAGES: ConfluencePage[] = [
-  {
-    id: 'CONF-001',
-    url: 'https://confluence.example.com/display/PROJ/API-Documentation',
-    title: 'API Documentation',
-  },
-  {
-    id: 'CONF-002',
-    url: 'https://confluence.example.com/display/PROJ/Architecture-Overview',
-    title: 'Architecture Overview',
-  },
-  {
-    id: 'CONF-003',
-    url: 'https://confluence.example.com/display/PROJ/User-Guide',
-    title: 'User Guide',
-  },
-  {
-    id: 'CONF-004',
-    url: 'https://confluence.example.com/display/PROJ/Developer-Setup',
-    title: 'Developer Setup Guide',
-  },
-  {
-    id: 'CONF-005',
-    url: 'https://confluence.example.com/display/PROJ/Testing-Strategy',
-    title: 'Testing Strategy',
-  },
-  {
-    id: 'CONF-006',
-    url: 'https://confluence.example.com/display/PROJ/Deployment-Guide',
-    title: 'Deployment Guide',
-  },
-  {
-    id: 'CONF-007',
-    url: 'https://confluence.example.com/display/PROJ/Database-Schema',
-    title: 'Database Schema Documentation',
-  },
-  {
-    id: 'CONF-008',
-    url: 'https://confluence.example.com/display/PROJ/Security-Guidelines',
-    title: 'Security Guidelines',
-  },
-  {
-    id: 'CONF-009',
-    url: 'https://confluence.example.com/display/PROJ/Code-Standards',
-    title: 'Code Standards and Best Practices',
-  },
-  {
-    id: 'CONF-010',
-    url: 'https://confluence.example.com/display/PROJ/Release-Notes',
-    title: 'Release Notes',
-  },
-  {
-    id: 'CONF-011',
-    url: 'https://confluence.example.com/display/PROJ/Troubleshooting',
-    title: 'Troubleshooting Guide',
-  },
-  {
-    id: 'CONF-012',
-    url: 'https://confluence.example.com/display/PROJ/Performance-Metrics',
-    title: 'Performance Metrics Dashboard',
   },
 ];

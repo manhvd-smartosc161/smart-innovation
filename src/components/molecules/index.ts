@@ -1,5 +1,6 @@
 export * from './ActionBar';
 export * from './ConfluencePageSelectorItem';
+export * from './ConfluenceTreeItem';
 export * from './ExpectedResultItem';
 export * from './FileUploadItem';
 export * from './FormField';

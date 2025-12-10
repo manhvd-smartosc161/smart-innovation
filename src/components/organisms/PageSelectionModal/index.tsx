@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { Modal, Checkbox, Input } from 'antd';
-import { MOCK_CONFLUENCE_PAGES } from '@/mock';
+import React, { useState, useCallback } from 'react';
+import { Modal, Input, Button, message } from 'antd';
+import { ReloadOutlined, SearchOutlined } from '@ant-design/icons';
+import { MOCK_CONFLUENCE_PAGES_TREE } from '@/mock';
+import { ConfluenceTreeItem } from '@/components/molecules/ConfluenceTreeItem';
 import './index.scss';
 
 const { Search } = Input;
@@ -30,19 +32,19 @@ export const PageSelectionModal: React.FC<PageSelectionModalProps> = ({
     }
   }, [visible, selectedPageUrls]);
 
-  const filteredPages = MOCK_CONFLUENCE_PAGES.filter(
-    (page) =>
-      page.id.toLowerCase().includes(searchText.toLowerCase()) ||
-      page.title.toLowerCase().includes(searchText.toLowerCase()) ||
-      page.url.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const handleToggle = useCallback((url: string) => {
+    setLocalSelectedUrls((prev) => {
+      if (prev.includes(url)) {
+        return prev.filter((u) => u !== url);
+      } else {
+        return [...prev, url];
+      }
+    });
+  }, []);
 
-  const handleCheckboxChange = (pageUrl: string, checked: boolean) => {
-    if (checked) {
-      setLocalSelectedUrls([...localSelectedUrls, pageUrl]);
-    } else {
-      setLocalSelectedUrls(localSelectedUrls.filter((url) => url !== pageUrl));
-    }
+  const handleRefresh = () => {
+    message.info('Refreshing Confluence pages...');
+    // TODO: Add API call to refresh pages
   };
 
   const handleOk = () => {
@@ -54,41 +56,55 @@ export const PageSelectionModal: React.FC<PageSelectionModalProps> = ({
     onCancel();
   };
 
+  // Count root pages
+  const rootPageCount = MOCK_CONFLUENCE_PAGES_TREE.length;
+
   return (
     <Modal
-      title="Select Related Confluence Pages"
+      title="Confluence Pages"
       open={visible}
       onOk={handleOk}
       onCancel={handleCancel}
-      width={700}
+      width={900}
       className="page-selection-modal"
+      okText="Select"
+      cancelText="Cancel"
     >
       <div className="modal-content">
-        <Search
-          placeholder="Search pages by title or URL..."
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          style={{ marginBottom: 16 }}
-        />
-        <div className="page-list">
-          {filteredPages.map((page) => (
-            <div key={page.id} className="page-item">
-              <Checkbox
-                checked={localSelectedUrls.includes(page.url)}
-                onChange={(e) =>
-                  handleCheckboxChange(page.url, e.target.checked)
-                }
-              >
-                <div className="page-info">
-                  <span className="page-title">{page.title}</span>
-                  <span className="page-url">{page.url}</span>
-                </div>
-              </Checkbox>
-            </div>
-          ))}
-          {filteredPages.length === 0 && (
-            <div className="empty-state">No pages found</div>
-          )}
+        <div className="modal-header">
+          <Search
+            placeholder="Search pages by title or ID..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            prefix={<SearchOutlined />}
+            className="search-input"
+          />
+          <Button
+            type="primary"
+            icon={<ReloadOutlined />}
+            onClick={handleRefresh}
+            className="refresh-button"
+          >
+            Refresh
+          </Button>
+        </div>
+
+        <div className="page-tree-container">
+          <div className="page-tree">
+            {MOCK_CONFLUENCE_PAGES_TREE.map((node) => (
+              <ConfluenceTreeItem
+                key={node.id}
+                node={node}
+                selectedUrls={localSelectedUrls}
+                onToggle={handleToggle}
+                searchText={searchText}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="modal-footer">
+          <span className="page-count">{rootPageCount} root page found</span>
         </div>
       </div>
     </Modal>

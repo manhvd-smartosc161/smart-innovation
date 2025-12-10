@@ -4,3 +4,4 @@ export * from './tree';
 export * from './workflow';
 export * from './fileUpload';
 export * from './scope';
+export * from './confluence';
