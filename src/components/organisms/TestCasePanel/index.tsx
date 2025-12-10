@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Tabs } from 'antd';
 
 import {
@@ -9,9 +9,10 @@ import {
   TestCaseDetailTab,
 } from '@/components/organisms';
 import { TAB_KEYS, TAB_LABELS } from '@/constants';
+import { useAnalysis } from '@/contexts';
 import './index.scss';
 
-const items = [
+const allItems = [
   { key: TAB_KEYS.INITIALIZATION, label: TAB_LABELS.INITIALIZATION },
   { key: TAB_KEYS.SCOPE, label: TAB_LABELS.SCOPE },
   { key: TAB_KEYS.IMPACT, label: TAB_LABELS.IMPACT },
@@ -21,7 +22,17 @@ const items = [
 ];
 
 export const TestCasePanel: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<string>(TAB_KEYS.INITIALIZATION);
+  const { isAnalysed, activeTab, setActiveTab } = useAnalysis();
+
+  useEffect(() => {
+    if (!activeTab) {
+      setActiveTab(TAB_KEYS.INITIALIZATION);
+    }
+  }, [activeTab, setActiveTab]);
+
+  const items = isAnalysed
+    ? allItems
+    : allItems.filter((item) => item.key === TAB_KEYS.INITIALIZATION);
 
   const renderContent = () => {
     switch (activeTab) {

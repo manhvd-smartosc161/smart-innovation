@@ -20,12 +20,14 @@ import type {
   AnalysisData,
 } from '@/types';
 import { FILE_TYPES } from '@/types';
-import { INFO_TAB_LABELS, INFO_TAB_BUTTONS } from '@/constants';
+import { INFO_TAB_LABELS, INFO_TAB_BUTTONS, TAB_KEYS } from '@/constants';
+import { useAnalysis } from '@/contexts';
 import './index.scss';
 
 const { TextArea } = Input;
 
 export const InfoTab: React.FC = () => {
+  const { setIsAnalysed, setActiveTab } = useAnalysis();
   const [uploads, setUploads] = useState<UploadedFile[]>([
     {
       id: '1',
@@ -164,12 +166,12 @@ export const InfoTab: React.FC = () => {
       setShowFireworks(true);
     }, 1500);
 
-    // Hide fireworks after animation (2s)
     setTimeout(() => {
       setShowFireworks(false);
+      setIsAnalysed(true);
+      setActiveTab(TAB_KEYS.SCOPE);
     }, 3500);
 
-    // For now, just log the data
     console.log('Analysis Data:', analysisData);
 
     // TODO: Add API call or further processing here
