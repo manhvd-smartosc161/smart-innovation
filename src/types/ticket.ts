@@ -3,3 +3,11 @@ export interface Ticket {
   key: string;
   title: string;
 }
+
+export interface ConfluencePage {
+  id: string;
+  url: string;
+  title: string;
+  pageUrl?: string; // For compatibility with fileUpload usage
+  prompt?: string; // For compatibility with fileUpload usage
+}

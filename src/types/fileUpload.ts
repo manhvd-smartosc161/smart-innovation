@@ -1,3 +1,5 @@
+import type { ConfluencePage } from './ticket';
+
 export type FileType = 'BRD' | 'TRD' | 'OTHERS';
 
 export const FILE_TYPES = {
@@ -17,13 +19,6 @@ export interface RelatedTicket {
   id: string;
   ticketId: string;
   ticketTitle?: string;
-  prompt: string;
-}
-
-export interface ConfluencePage {
-  id: string;
-  pageUrl: string;
-  pageTitle?: string;
   prompt: string;
 }
 

@@ -117,11 +117,12 @@ export const InfoTab: React.FC = () => {
   const handlePageSelectionOk = (selectedUrls: string[]) => {
     // Create pages from selected URLs, preserving existing prompts
     const newPages = selectedUrls.map((pageUrl) => {
-      const existing = confluencePages.find((p) => p.pageUrl === pageUrl);
+      const existing = confluencePages.find((p) => p.url === pageUrl);
       return (
         existing || {
           id: Date.now().toString() + Math.random(),
-          pageUrl,
+          url: pageUrl,
+          title: '', // Added to satisfy type requirement
           prompt: '',
         }
       );
@@ -133,15 +134,13 @@ export const InfoTab: React.FC = () => {
   const handlePagePromptChange = (pageUrl: string, prompt: string) => {
     setConfluencePages(
       confluencePages.map((page) =>
-        page.pageUrl === pageUrl ? { ...page, prompt } : page
+        page.url === pageUrl ? { ...page, prompt } : page
       )
     );
   };
 
   const handleDeletePage = (pageUrl: string) => {
-    setConfluencePages(
-      confluencePages.filter((page) => page.pageUrl !== pageUrl)
-    );
+    setConfluencePages(confluencePages.filter((page) => page.url !== pageUrl));
   };
 
   // Analysis handler
@@ -311,13 +310,13 @@ export const InfoTab: React.FC = () => {
                 {confluencePages.map((page) => (
                   <div key={page.id} className="selected-item">
                     <div className="item-header">
-                      <span className="item-url">{page.pageUrl}</span>
+                      <span className="item-url">{page.url}</span>
                       <Button
                         type="text"
                         danger
                         size="small"
                         icon={<DeleteOutlined />}
-                        onClick={() => handleDeletePage(page.pageUrl)}
+                        onClick={() => handleDeletePage(page.url)}
                       />
                     </div>
                     <TextArea
@@ -325,7 +324,7 @@ export const InfoTab: React.FC = () => {
                       placeholder="Enter prompt to guide AI about this page..."
                       value={page.prompt}
                       onChange={(e) =>
-                        handlePagePromptChange(page.pageUrl, e.target.value)
+                        handlePagePromptChange(page.url, e.target.value)
                       }
                     />
                   </div>
@@ -345,7 +344,7 @@ export const InfoTab: React.FC = () => {
       />
       <PageSelectionModal
         visible={pageModalVisible}
-        selectedPageUrls={confluencePages.map((p) => p.pageUrl)}
+        selectedPageUrls={confluencePages.map((p) => p.url)}
         onOk={handlePageSelectionOk}
         onCancel={() => setPageModalVisible(false)}
       />

@@ -3,3 +3,4 @@ export * from './ticket';
 export * from './tree';
 export * from './workflow';
 export * from './fileUpload';
+export * from './scope';

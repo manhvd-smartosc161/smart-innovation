@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { Tabs } from 'antd';
-import { TestCaseTree } from '../TestCaseTree';
-import { DetailsForm } from '../DetailsForm';
-import { StepsSection } from '../StepsSection';
-import { InfoTab } from '../InfoTab';
+
+import {
+  InfoTab,
+  ScopeTab,
+  ImpactTab,
+  ChecklistTab,
+  TestCaseDetailTab,
+} from '@/components/organisms';
 import { TAB_KEYS, TAB_LABELS } from '@/constants';
 import './index.scss';
 
@@ -19,6 +23,23 @@ const items = [
 export const TestCasePanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>(TAB_KEYS.INITIALIZATION);
 
+  const renderContent = () => {
+    switch (activeTab) {
+      case TAB_KEYS.INITIALIZATION:
+        return <InfoTab />;
+      case TAB_KEYS.SCOPE:
+        return <ScopeTab />;
+      case TAB_KEYS.IMPACT:
+        return <ImpactTab />;
+      case TAB_KEYS.CHECKLIST:
+        return <ChecklistTab />;
+      case TAB_KEYS.TEST_CASES:
+      case TAB_KEYS.TEST_CASE_DETAILS:
+      default:
+        return <TestCaseDetailTab />;
+    }
+  };
+
   return (
     <div className="test-case-panel">
       <Tabs
@@ -27,26 +48,7 @@ export const TestCasePanel: React.FC = () => {
         items={items}
         className="panel-tabs"
       />
-      {activeTab === TAB_KEYS.INITIALIZATION ? (
-        <InfoTab />
-      ) : (
-        <div className="panel-content">
-          <div className="panel-left">
-            <div className="tree-header">
-              <span className="folder-icon">📂</span>
-              <span className="root-name">JIRA_TICKET_001</span>
-              <span className="more-options">...</span>
-            </div>
-            <TestCaseTree />
-          </div>
-          <div className="panel-right">
-            <DetailsForm />
-            <div className="steps-wrapper">
-              <StepsSection />
-            </div>
-          </div>
-        </div>
-      )}
+      {renderContent()}
     </div>
   );
 };

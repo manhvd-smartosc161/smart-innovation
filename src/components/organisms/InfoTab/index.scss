@@ -1,5 +1,6 @@
 .info-tab {
   padding: 32px;
+  padding-bottom: 60px;
   width: 100%;
   background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
   box-sizing: border-box;
@@ -234,7 +235,7 @@
 
   .analyse-section {
     position: sticky;
-    top: 0;
+    top: -32px;
     z-index: 100;
     display: flex;
     justify-content: center;
