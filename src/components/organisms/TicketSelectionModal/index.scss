@@ -1,0 +1,49 @@
+.ticket-selection-modal {
+  .modal-content {
+    .ticket-list {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #f0f0f0;
+      border-radius: 4px;
+      padding: 8px;
+
+      .ticket-item {
+        padding: 8px;
+        border-bottom: 1px solid #f0f0f0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background-color: #fafafa;
+        }
+
+        .ant-checkbox-wrapper {
+          width: 100%;
+          display: flex;
+          align-items: flex-start;
+
+          .ticket-id {
+            font-weight: 600;
+            color: #1890ff;
+            margin-right: 12px;
+            min-width: 80px;
+          }
+
+          .ticket-title {
+            color: #595959;
+            flex: 1;
+          }
+        }
+      }
+
+      .empty-state {
+        padding: 24px;
+        text-align: center;
+        color: #8c8c8c;
+        font-style: italic;
+      }
+    }
+  }
+}
