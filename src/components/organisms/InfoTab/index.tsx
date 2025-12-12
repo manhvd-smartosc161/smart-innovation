@@ -28,30 +28,27 @@ const { TextArea } = Input;
 
 export const InfoTab: React.FC = () => {
   const { setIsAnalysed, setActiveTab } = useAnalysis();
-  const [uploads, setUploads] = useState<UploadedFile[]>([
-    {
-      id: '1',
-      fileType: FILE_TYPES.BRD,
-      file: null,
-      prompt: '',
-    },
-  ]);
+  const [uploads, setUploads] = useState<UploadedFile[]>([]);
 
   const [tickets, setTickets] = useState<RelatedTicket[]>([]);
   const [confluencePages, setConfluencePages] = useState<ConfluencePage[]>([]);
   const [overallObjective, setOverallObjective] = useState<string>('');
 
-  // Modal visibility state
   const [ticketModalVisible, setTicketModalVisible] = useState(false);
   const [pageModalVisible, setPageModalVisible] = useState(false);
 
-  // File upload handlers
   const handleAddUpload = () => {
+    const hasEditingFile = uploads.some((upload) => upload.isEditing);
+    if (hasEditingFile) {
+      return;
+    }
+
     const newUpload: UploadedFile = {
       id: Date.now().toString(),
       fileType: FILE_TYPES.BRD,
       file: null,
       prompt: '',
+      isEditing: true,
     };
     setUploads([...uploads, newUpload]);
   };
@@ -82,13 +79,36 @@ export const InfoTab: React.FC = () => {
     );
   };
 
+  const handleAcceptUpload = (id: string) => {
+    setUploads(
+      uploads.map((upload) =>
+        upload.id === id ? { ...upload, isEditing: false } : upload
+      )
+    );
+  };
+
+  const handleDiscardUpload = (id: string) => {
+    setUploads(uploads.filter((upload) => upload.id !== id));
+  };
+
+  const handleEditUpload = (id: string) => {
+    const hasEditingFile = uploads.some((upload) => upload.isEditing);
+    if (hasEditingFile) {
+      return;
+    }
+
+    setUploads(
+      uploads.map((upload) =>
+        upload.id === id ? { ...upload, isEditing: true } : upload
+      )
+    );
+  };
+
   const handleDeleteUpload = (id: string) => {
     setUploads(uploads.filter((upload) => upload.id !== id));
   };
 
-  // Ticket selection handlers
   const handleTicketSelectionOk = (selectedIds: string[]) => {
-    // Create tickets from selected IDs, preserving existing prompts
     const newTickets = selectedIds.map((ticketId) => {
       const existing = tickets.find((t) => t.ticketId === ticketId);
       return (
@@ -115,16 +135,14 @@ export const InfoTab: React.FC = () => {
     setTickets(tickets.filter((ticket) => ticket.ticketId !== ticketId));
   };
 
-  // Confluence page selection handlers
   const handlePageSelectionOk = (selectedUrls: string[]) => {
-    // Create pages from selected URLs, preserving existing prompts
     const newPages = selectedUrls.map((pageUrl) => {
       const existing = confluencePages.find((p) => p.url === pageUrl);
       return (
         existing || {
           id: Date.now().toString() + Math.random(),
           url: pageUrl,
-          title: '', // Added to satisfy type requirement
+          title: '',
           prompt: '',
         }
       );
@@ -145,7 +163,6 @@ export const InfoTab: React.FC = () => {
     setConfluencePages(confluencePages.filter((page) => page.url !== pageUrl));
   };
 
-  // Analysis handler
   const [showRocket, setShowRocket] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
 
@@ -157,10 +174,8 @@ export const InfoTab: React.FC = () => {
       overallObjective,
     };
 
-    // Trigger rocket animation
     setShowRocket(true);
 
-    // After rocket flies up (1.5s), show fireworks
     setTimeout(() => {
       setShowRocket(false);
       setShowFireworks(true);
@@ -212,7 +227,6 @@ export const InfoTab: React.FC = () => {
         <Button
           type="primary"
           size="large"
-          // icon={<ThunderboltOutlined />}
           onClick={handleAnalyse}
           className="analyse-button"
         >
@@ -251,25 +265,42 @@ export const InfoTab: React.FC = () => {
             type="primary"
             icon={<PlusOutlined />}
             onClick={handleAddUpload}
+            disabled={uploads.some((upload) => upload.isEditing)}
           >
             {INFO_TAB_BUTTONS.ADD_UPLOAD}
           </Button>
         </div>
         <div className="section-content">
-          <div className="uploads-container">
-            {uploads.map((upload) => (
-              <FileUploadItem
-                key={upload.id}
-                id={upload.id}
-                fileType={upload.fileType}
-                prompt={upload.prompt}
-                onFileTypeChange={handleFileTypeChange}
-                onFileChange={handleFileChange}
-                onPromptChange={handleFilePromptChange}
-                onDelete={handleDeleteUpload}
-              />
-            ))}
-          </div>
+          {uploads.length === 0 ? (
+            <div className="empty-message">
+              No files uploaded yet. Click "Add Upload" to upload a file.
+            </div>
+          ) : (
+            <div className="uploads-container">
+              {uploads.map((upload) => {
+                const hasEditingFile = uploads.some((u) => u.isEditing);
+                const isDisabled = hasEditingFile && !upload.isEditing;
+                return (
+                  <FileUploadItem
+                    key={upload.id}
+                    id={upload.id}
+                    fileType={upload.fileType}
+                    fileName={upload.file?.name || null}
+                    prompt={upload.prompt}
+                    isEditing={upload.isEditing}
+                    isDisabled={isDisabled}
+                    onFileTypeChange={handleFileTypeChange}
+                    onFileChange={handleFileChange}
+                    onPromptChange={handleFilePromptChange}
+                    onAccept={handleAcceptUpload}
+                    onDiscard={handleDiscardUpload}
+                    onEdit={handleEditUpload}
+                    onDelete={handleDeleteUpload}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
 

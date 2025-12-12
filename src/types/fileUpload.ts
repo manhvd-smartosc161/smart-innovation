@@ -13,6 +13,7 @@ export interface UploadedFile {
   fileType: FileType;
   file: File | null;
   prompt: string;
+  isEditing: boolean;
 }
 
 export interface RelatedTicket {
