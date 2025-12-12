@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Input, Divider } from 'antd';
+import { Button, Input, Divider, Tooltip } from 'antd';
 import {
   PlusOutlined,
   ThunderboltOutlined,
@@ -268,6 +268,47 @@ export const InfoTab: React.FC = () => {
     // TODO: Add API call or further processing here
   };
 
+  const isAnalyseDisabled =
+    !overallObjective.trim() ||
+    uploads.filter((upload) => upload.file).length === 0 || // At least one file must be uploaded
+    uploads.some((upload) => upload.isEditing) || // No upload should be in editing mode
+    tickets.some((ticket) => ticket.isEditing) || // No ticket should be in editing mode
+    confluencePages.some((page) => page.isEditing); // No page should be in editing mode
+
+  // Generate tooltip message for disabled Analyse button
+  const getAnalyseTooltip = (): string => {
+    if (!isAnalyseDisabled) return '';
+
+    const reasons: string[] = [];
+
+    if (!overallObjective.trim()) {
+      reasons.push('Please enter the Overall Objective');
+    }
+
+    if (uploads.filter((upload) => upload.file).length === 0) {
+      reasons.push('Please upload at least one file');
+    }
+
+    if (uploads.some((upload) => upload.isEditing)) {
+      reasons.push('Please save or discard file uploads being edited');
+    }
+
+    if (tickets.some((ticket) => ticket.isEditing)) {
+      reasons.push('Please save or discard tickets being edited');
+    }
+
+    if (confluencePages.some((page) => page.isEditing)) {
+      reasons.push('Please save or discard confluence pages being edited');
+    }
+
+    // Only add bullet points if there are 2 or more errors
+    if (reasons.length >= 2) {
+      return reasons.map((reason) => `• ${reason}`).join('\n');
+    }
+
+    return reasons[0] || '';
+  };
+
   return (
     <div className="info-tab">
       {/* Rocket Animation */}
@@ -300,14 +341,30 @@ export const InfoTab: React.FC = () => {
         <div className="analyse-icon-left">
           <ThunderboltOutlined />
         </div>
-        <Button
-          type="primary"
-          size="large"
-          onClick={handleAnalyse}
-          className="analyse-button"
+        <Tooltip
+          title={
+            isAnalyseDisabled ? (
+              <div style={{ whiteSpace: 'pre-line' }}>
+                {getAnalyseTooltip()}
+              </div>
+            ) : (
+              ''
+            )
+          }
+          placement="bottom"
         >
-          {INFO_TAB_LABELS.ANALYSE}
-        </Button>
+          <span>
+            <Button
+              type="primary"
+              size="large"
+              onClick={handleAnalyse}
+              disabled={isAnalyseDisabled}
+              className="analyse-button"
+            >
+              {INFO_TAB_LABELS.ANALYSE}
+            </Button>
+          </span>
+        </Tooltip>
         <div className="analyse-icon-right">
           <RocketOutlined />
         </div>

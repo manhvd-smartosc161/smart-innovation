@@ -154,6 +154,7 @@ export const ConfluenceTreeItem: React.FC<ConfluenceTreeItemProps> = ({
           className={`tree-node-content ${node.url || hasChildren ? 'clickable' : ''}`}
           onMouseEnter={() => setShowSync(true)}
           onMouseLeave={() => setShowSync(false)}
+          onClick={node.url || hasChildren ? handleToggle : undefined}
         >
           <div className="tree-switcher" onClick={handleExpand}>
             {hasChildren ? (
@@ -175,20 +176,12 @@ export const ConfluenceTreeItem: React.FC<ConfluenceTreeItemProps> = ({
 
           {isTitleTruncated ? (
             <Tooltip title={node.title} placement="top" mouseEnterDelay={0.5}>
-              <span
-                ref={titleRef}
-                className="tree-title"
-                onClick={node.url || hasChildren ? handleToggle : undefined}
-              >
+              <span ref={titleRef} className="tree-title">
                 {node.title}
               </span>
             </Tooltip>
           ) : (
-            <span
-              ref={titleRef}
-              className="tree-title"
-              onClick={node.url || hasChildren ? handleToggle : undefined}
-            >
+            <span ref={titleRef} className="tree-title">
               {node.title}
             </span>
           )}
