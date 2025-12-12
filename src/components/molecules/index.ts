@@ -9,6 +9,7 @@ export * from './ModeSwitch';
 export * from './StepHeader';
 export * from './StepItem';
 export * from './TagsContainer';
+export * from './TicketItem';
 export * from './TicketListItem';
 export * from './TicketSelectorItem';
 export * from './TreeItem';

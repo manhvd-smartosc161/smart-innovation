@@ -21,6 +21,7 @@ export interface RelatedTicket {
   ticketId: string;
   ticketTitle?: string;
   prompt: string;
+  isEditing?: boolean;
 }
 
 export interface AnalysisData {

@@ -2,6 +2,7 @@ export interface Ticket {
   id: string;
   key: string;
   title: string;
+  description?: string;
 }
 
 export interface ConfluencePage {

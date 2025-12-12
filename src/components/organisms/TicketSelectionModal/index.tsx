@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { Modal, Checkbox, Input } from 'antd';
+import { Modal, Checkbox, Input, Button, message } from 'antd';
+import {
+  DownCircleOutlined,
+  UpCircleOutlined,
+  SyncOutlined,
+} from '@ant-design/icons';
 import { MOCK_TICKETS } from '@/mock';
 import './index.scss';
 
@@ -21,12 +26,14 @@ export const TicketSelectionModal: React.FC<TicketSelectionModalProps> = ({
   const [searchText, setSearchText] = useState('');
   const [localSelectedIds, setLocalSelectedIds] =
     useState<string[]>(selectedTicketIds);
+  const [expandedTicketId, setExpandedTicketId] = useState<string | null>(null);
 
   // Reset local selection when modal opens
   React.useEffect(() => {
     if (visible) {
       setLocalSelectedIds(selectedTicketIds);
       setSearchText('');
+      setExpandedTicketId(null);
     }
   }, [visible, selectedTicketIds]);
 
@@ -44,6 +51,15 @@ export const TicketSelectionModal: React.FC<TicketSelectionModalProps> = ({
     }
   };
 
+  const handleSyncTicket = (ticketId: string) => {
+    message.success(`Syncing ticket ${ticketId}...`);
+    // TODO: Implement sync logic
+  };
+
+  const handleToggleExpand = (ticketId: string) => {
+    setExpandedTicketId(expandedTicketId === ticketId ? null : ticketId);
+  };
+
   const handleOk = () => {
     onOk(localSelectedIds);
   };
@@ -59,7 +75,7 @@ export const TicketSelectionModal: React.FC<TicketSelectionModalProps> = ({
       open={visible}
       onOk={handleOk}
       onCancel={handleCancel}
-      width={600}
+      width={900}
       style={{ maxWidth: 'calc(100% - 32px)', top: 20 }}
       className="ticket-selection-modal"
     >
@@ -71,19 +87,75 @@ export const TicketSelectionModal: React.FC<TicketSelectionModalProps> = ({
           style={{ marginBottom: 16 }}
         />
         <div className="ticket-list">
-          {filteredTickets.map((ticket) => (
-            <div key={ticket.id} className="ticket-item">
-              <Checkbox
-                checked={localSelectedIds.includes(ticket.id)}
-                onChange={(e) =>
-                  handleCheckboxChange(ticket.id, e.target.checked)
-                }
+          {filteredTickets.map((ticket) => {
+            const isExpanded = expandedTicketId === ticket.id;
+            return (
+              <div
+                key={ticket.id}
+                className={`ticket-item ${isExpanded ? 'expanded' : ''}`}
               >
-                <span className="ticket-id">{ticket.id}</span>
-                <span className="ticket-title">{ticket.title}</span>
-              </Checkbox>
-            </div>
-          ))}
+                <div
+                  className="ticket-header"
+                  onClick={() => {
+                    const isSelected = localSelectedIds.includes(ticket.id);
+                    handleCheckboxChange(ticket.id, !isSelected);
+                  }}
+                >
+                  <Checkbox
+                    checked={localSelectedIds.includes(ticket.id)}
+                    onChange={(e) =>
+                      handleCheckboxChange(ticket.id, e.target.checked)
+                    }
+                    onClick={(e) => e.stopPropagation()}
+                    className="ticket-checkbox"
+                  />
+                  <div className="ticket-info">
+                    <span className="ticket-id">{ticket.id}</span>
+                    <span className="ticket-title">{ticket.title}</span>
+                  </div>
+                  <div className="ticket-header-actions">
+                    <Button
+                      type="primary"
+                      size="small"
+                      className="ticket-sync-btn"
+                      icon={<SyncOutlined />}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSyncTicket(ticket.id);
+                      }}
+                    >
+                      Sync
+                    </Button>
+                    <Button
+                      type="text"
+                      size="small"
+                      className="ticket-expand-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleExpand(ticket.id);
+                      }}
+                    >
+                      {isExpanded ? (
+                        <UpCircleOutlined className="expand-icon expanded" />
+                      ) : (
+                        <DownCircleOutlined className="expand-icon" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+                <div
+                  className={`ticket-details ${isExpanded ? 'expanded' : ''}`}
+                >
+                  <div className="ticket-description">
+                    <div className="description-header">Description:</div>
+                    <div className="description-text">
+                      {ticket.description || 'No description available'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
           {filteredTickets.length === 0 && (
             <div className="empty-state">No tickets found</div>
           )}

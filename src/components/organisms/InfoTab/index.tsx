@@ -7,7 +7,7 @@ import {
   RocketOutlined,
 } from '@ant-design/icons';
 import type { UploadFile } from 'antd';
-import { FileUploadItem } from '@/components/molecules';
+import { FileUploadItem, TicketItem } from '@/components/molecules';
 import {
   TicketSelectionModal,
   PageSelectionModal,
@@ -109,6 +109,11 @@ export const InfoTab: React.FC = () => {
   };
 
   const handleTicketSelectionOk = (selectedIds: string[]) => {
+    const hasEditingTicket = tickets.some((ticket) => ticket.isEditing);
+    if (hasEditingTicket) {
+      return;
+    }
+
     const newTickets = selectedIds.map((ticketId) => {
       const existing = tickets.find((t) => t.ticketId === ticketId);
       return (
@@ -116,6 +121,7 @@ export const InfoTab: React.FC = () => {
           id: Date.now().toString() + Math.random(),
           ticketId,
           prompt: '',
+          isEditing: false,
         }
       );
     });
@@ -127,6 +133,37 @@ export const InfoTab: React.FC = () => {
     setTickets(
       tickets.map((ticket) =>
         ticket.ticketId === ticketId ? { ...ticket, prompt } : ticket
+      )
+    );
+  };
+
+  const handleAcceptTicket = (ticketId: string) => {
+    setTickets(
+      tickets.map((ticket) =>
+        ticket.ticketId === ticketId ? { ...ticket, isEditing: false } : ticket
+      )
+    );
+  };
+
+  const handleDiscardTicket = (ticketId: string) => {
+    setTickets(
+      tickets.map((ticket) =>
+        ticket.ticketId === ticketId
+          ? { ...ticket, isEditing: false, prompt: ticket.prompt }
+          : ticket
+      )
+    );
+  };
+
+  const handleEditTicket = (ticketId: string) => {
+    const hasEditingTicket = tickets.some((ticket) => ticket.isEditing);
+    if (hasEditingTicket) {
+      return;
+    }
+
+    setTickets(
+      tickets.map((ticket) =>
+        ticket.ticketId === ticketId ? { ...ticket, isEditing: true } : ticket
       )
     );
   };
@@ -327,31 +364,22 @@ export const InfoTab: React.FC = () => {
           ) : (
             <div className="selected-items-container">
               <div className="selected-items-list">
-                {tickets.map((ticket) => (
-                  <div key={ticket.id} className="selected-item">
-                    <div className="item-header">
-                      <span className="item-id">{ticket.ticketId}</span>
-                      <Button
-                        type="text"
-                        danger
-                        size="small"
-                        icon={<DeleteOutlined />}
-                        onClick={() => handleDeleteTicket(ticket.ticketId)}
-                      />
-                    </div>
-                    <TextArea
-                      rows={3}
-                      placeholder="Enter prompt to guide AI about this ticket..."
-                      value={ticket.prompt}
-                      onChange={(e) =>
-                        handleTicketPromptChange(
-                          ticket.ticketId,
-                          e.target.value
-                        )
-                      }
+                {tickets.map((ticket) => {
+                  const hasEditingTicket = tickets.some((t) => t.isEditing);
+                  const isDisabled = hasEditingTicket && !ticket.isEditing;
+                  return (
+                    <TicketItem
+                      key={ticket.id}
+                      ticket={ticket}
+                      isDisabled={isDisabled}
+                      onPromptChange={handleTicketPromptChange}
+                      onAccept={handleAcceptTicket}
+                      onDiscard={handleDiscardTicket}
+                      onEdit={handleEditTicket}
+                      onDelete={handleDeleteTicket}
                     />
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}

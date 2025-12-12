@@ -1,4 +1,4 @@
-.file-upload-item {
+.ticket-item {
   padding: 10px;
   border: 1px solid #e8e8e8;
   border-radius: 10px;
@@ -25,82 +25,13 @@
     }
   }
 
-  .upload-header {
+  .ticket-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
-    margin-bottom: 12px;
-    min-width: 0;
-    overflow: hidden;
 
-    .type-select {
-      width: 100px;
-      flex-shrink: 0;
-
-      .ant-select-selector {
-        border-radius: 6px;
-        height: 32px !important;
-      }
-    }
-
-    .file-upload-wrapper {
-      flex: 0 1 auto;
-      min-width: 0;
-      max-width: 400px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-
-      .ant-upload {
-        width: auto;
-        max-width: 100%;
-      }
-
-      .ant-btn {
-        height: 32px;
-      }
-
-      .ant-upload-list {
-        margin: 0;
-        max-width: 100%;
-      }
-
-      .ant-upload-list-item {
-        margin-top: 0;
-        padding: 8px;
-        border: 1px solid #d9d9d9;
-        border-radius: 6px;
-        background: #fafafa;
-        height: 32px;
-        line-height: 16px;
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .ant-upload-list-item-name {
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .upload-info-icon {
-        color: #1890ff;
-        font-size: 16px;
-        cursor: help;
-        flex-shrink: 0;
-        transition: all 0.2s ease;
-
-        &:hover {
-          color: #40a9ff;
-          transform: scale(1.1);
-        }
-      }
-    }
-
-    .file-type-tag {
+    .ticket-id-tag {
       font-weight: 600;
       font-size: 12px;
       padding: 4px 12px;
@@ -108,16 +39,7 @@
       margin: 0;
     }
 
-    .file-name {
-      flex: 1;
-      color: #262626;
-      font-size: 14px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .upload-actions {
+    .ticket-actions {
       display: flex;
       gap: 8px;
       margin-left: auto;
@@ -131,8 +53,9 @@
     }
   }
 
-  .upload-prompt {
+  .ticket-prompt {
     width: 100%;
+    margin: 2px;
 
     .ant-input {
       resize: none;
@@ -151,7 +74,7 @@
     }
   }
 
-  .upload-prompt-display {
+  .ticket-prompt-display {
     padding: 12px;
     background: #fafafa;
     border-radius: 6px;
@@ -181,23 +104,23 @@
     border-color: #1890ff;
     background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
 
-    .upload-header {
+    .ticket-header {
       margin-bottom: 12px;
     }
   }
 
   &.readonly {
-    .upload-header {
+    .ticket-header {
       margin-bottom: 0;
     }
 
     // Add margin when there's a prompt
-    .upload-prompt-display {
+    .ticket-prompt-display {
       margin-top: 12px;
     }
 
     &:hover:not(.disabled) {
-      .upload-actions {
+      .ticket-actions {
         opacity: 1;
       }
     }
@@ -206,16 +129,11 @@
   @media (max-width: 768px) {
     padding: 12px;
 
-    .upload-header {
+    .ticket-header {
       flex-wrap: wrap;
       gap: 8px;
 
-      .type-select,
-      .ant-btn {
-        width: 100%;
-      }
-
-      .upload-actions {
+      .ticket-actions {
         width: 100%;
         justify-content: flex-end;
       }
@@ -225,20 +143,12 @@
   @media (max-width: 480px) {
     padding: 10px;
 
-    .upload-header {
-      gap: 6px;
-
-      .file-type-tag {
-        font-size: 11px;
-        padding: 3px 10px;
-      }
-
-      .file-name {
-        font-size: 13px;
-      }
+    .ticket-id-tag {
+      font-size: 11px;
+      padding: 3px 10px;
     }
 
-    .upload-prompt-display {
+    .ticket-prompt-display {
       padding: 10px;
       font-size: 13px;
     }

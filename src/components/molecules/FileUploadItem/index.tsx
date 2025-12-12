@@ -103,7 +103,7 @@ export const FileUploadItem: React.FC<FileUploadItemProps> = ({
   };
 
   React.useEffect(() => {
-    if (fileName && !fileList.length) {
+    if (fileName && !fileList.length && isEditing) {
       setFileList([
         {
           uid: id,
@@ -112,7 +112,7 @@ export const FileUploadItem: React.FC<FileUploadItemProps> = ({
         } as UploadFile,
       ]);
     }
-  }, [fileName, id, fileList.length]);
+  }, [fileName, id, fileList.length, isEditing]);
 
   const formattedFileList = React.useMemo(() => {
     return fileList.map((file) => ({
@@ -120,6 +120,17 @@ export const FileUploadItem: React.FC<FileUploadItemProps> = ({
       name: truncateFileName(file.name, 40),
     }));
   }, [fileList]);
+
+  const readonlyFileList = React.useMemo(() => {
+    if (!fileName) return [];
+    return [
+      {
+        uid: id,
+        name: fileName,
+        status: 'done',
+      } as UploadFile,
+    ];
+  }, [fileName, id]);
 
   React.useEffect(() => {
     setLocalPrompt(prompt);
@@ -176,7 +187,6 @@ export const FileUploadItem: React.FC<FileUploadItemProps> = ({
           <div className="upload-actions">
             <Button
               type="primary"
-              size="small"
               icon={<CheckOutlined />}
               onClick={handleAccept}
               disabled={
@@ -186,11 +196,7 @@ export const FileUploadItem: React.FC<FileUploadItemProps> = ({
                 !localPrompt.trim()
               }
             />
-            <Button
-              size="small"
-              icon={<CloseOutlined />}
-              onClick={handleDiscard}
-            />
+            <Button icon={<CloseOutlined />} onClick={handleDiscard} />
           </div>
         </div>
         <TextArea
@@ -224,10 +230,19 @@ export const FileUploadItem: React.FC<FileUploadItemProps> = ({
         <Tag color="blue" className="file-type-tag">
           {localFileType}
         </Tag>
+        {fileName && (
+          <div className="file-upload-wrapper">
+            <Upload
+              fileList={readonlyFileList}
+              showUploadList={{
+                showRemoveIcon: false,
+              }}
+            />
+          </div>
+        )}
         <div className="upload-actions">
           <Button
             type="text"
-            size="small"
             icon={<EditOutlined />}
             onClick={handleEditClick}
             disabled={isDisabled}
@@ -235,7 +250,6 @@ export const FileUploadItem: React.FC<FileUploadItemProps> = ({
           <Button
             type="text"
             danger
-            size="small"
             icon={<DeleteOutlined />}
             onClick={handleDeleteClick}
             disabled={isDisabled}
