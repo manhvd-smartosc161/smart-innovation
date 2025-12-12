@@ -11,4 +11,5 @@ export interface ConfluencePage {
   title: string;
   pageUrl?: string; // For compatibility with fileUpload usage
   prompt?: string; // For compatibility with fileUpload usage
+  isEditing?: boolean;
 }

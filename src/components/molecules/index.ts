@@ -1,4 +1,5 @@
 export * from './ActionBar';
+export * from './ConfluencePageItem';
 export * from './ConfluencePageSelectorItem';
 export * from './ConfluenceTreeItem';
 export * from './ExpectedResultItem';

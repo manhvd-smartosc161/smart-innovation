@@ -1,0 +1,158 @@
+.confluence-page-item {
+  padding: 10px;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  background: #fff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover:not(.disabled) {
+    border-color: #1890ff;
+    box-shadow: 0 2px 8px rgba(24, 144, 255, 0.15);
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+
+    * {
+      pointer-events: none;
+    }
+  }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    .page-url-tag {
+      font-weight: 600;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin: 0;
+      word-break: break-all;
+      max-width: 100%;
+    }
+
+    .page-actions {
+      display: flex;
+      gap: 8px;
+      margin-left: auto;
+
+      .ant-btn {
+        min-width: 40px;
+        height: 40px;
+        padding: 0 12px;
+        font-size: 16px;
+      }
+    }
+  }
+
+  .page-prompt {
+    width: 100%;
+    margin: 2px;
+
+    .ant-input {
+      resize: none;
+      border-radius: 6px;
+      border-color: #d9d9d9;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: #40a9ff;
+      }
+
+      &:focus {
+        border-color: #1890ff;
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+      }
+    }
+  }
+
+  .page-prompt-display {
+    padding: 12px;
+    background: #fafafa;
+    border-radius: 6px;
+    color: #595959;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 100px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #d9d9d9;
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+  }
+
+  &.editing {
+    border-color: #1890ff;
+    background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+
+    .page-header {
+      margin-bottom: 12px;
+    }
+  }
+
+  &.readonly {
+    .page-header {
+      margin-bottom: 0;
+    }
+
+    // Add margin when there's a prompt
+    .page-prompt-display {
+      margin-top: 12px;
+    }
+
+    &:hover:not(.disabled) {
+      .page-actions {
+        opacity: 1;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 12px;
+
+    .page-header {
+      flex-wrap: wrap;
+      gap: 8px;
+
+      .page-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px;
+
+    .page-url-tag {
+      font-size: 11px;
+      padding: 3px 10px;
+    }
+
+    .page-prompt-display {
+      padding: 10px;
+      font-size: 13px;
+    }
+  }
+}

@@ -158,10 +158,25 @@
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-          &:hover {
+          &:hover:not(.disabled) {
             border-color: #1890ff;
             box-shadow: 0 4px 12px rgba(24, 144, 255, 0.15);
             transform: translateY(-2px);
+          }
+
+          &.editing {
+            border-color: #1890ff;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+          }
+
+          &.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: not-allowed;
+
+            * {
+              pointer-events: none;
+            }
           }
 
           .item-header {
@@ -170,6 +185,12 @@
             align-items: center;
             margin-bottom: 12px;
             flex-wrap: wrap;
+
+            .item-actions {
+              display: flex;
+              gap: 8px;
+              align-items: center;
+            }
             gap: 8px;
 
             .item-id {

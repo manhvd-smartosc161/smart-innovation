@@ -21,7 +21,8 @@ export const MOCK_CONFLUENCE_PAGES_TREE: ConfluencePageTree[] = [
             children: [
               {
                 id: 'integration-management',
-                title: 'Integration Management',
+                title:
+                  'Integration Management - Comprehensive Guide for Enterprise-Level System Integration with Multiple Third-Party Services and APIs',
                 url: 'https://confluence.example.com/display/PROJ/Integration-Management',
                 type: 'page',
                 lastUpdate: 'Nov 12, 15:36',
@@ -58,7 +59,8 @@ export const MOCK_CONFLUENCE_PAGES_TREE: ConfluencePageTree[] = [
           },
           {
             id: 'knowledge-library',
-            title: 'Knowledge Library',
+            title:
+              'Knowledge Library - Centralized Repository for All Technical Documentation, Best Practices, and Organizational Knowledge Base',
             type: 'folder',
             lastUpdate: 'Nov 12, 15:32',
             children: [

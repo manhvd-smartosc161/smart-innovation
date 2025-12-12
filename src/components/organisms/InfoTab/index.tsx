@@ -3,11 +3,14 @@ import { Button, Input, Divider } from 'antd';
 import {
   PlusOutlined,
   ThunderboltOutlined,
-  DeleteOutlined,
   RocketOutlined,
 } from '@ant-design/icons';
 import type { UploadFile } from 'antd';
-import { FileUploadItem, TicketItem } from '@/components/molecules';
+import {
+  FileUploadItem,
+  TicketItem,
+  ConfluencePageItem,
+} from '@/components/molecules';
 import {
   TicketSelectionModal,
   PageSelectionModal,
@@ -173,6 +176,11 @@ export const InfoTab: React.FC = () => {
   };
 
   const handlePageSelectionOk = (selectedUrls: string[]) => {
+    const hasEditingPage = confluencePages.some((page) => page.isEditing);
+    if (hasEditingPage) {
+      return;
+    }
+
     const newPages = selectedUrls.map((pageUrl) => {
       const existing = confluencePages.find((p) => p.url === pageUrl);
       return (
@@ -181,6 +189,7 @@ export const InfoTab: React.FC = () => {
           url: pageUrl,
           title: '',
           prompt: '',
+          isEditing: false,
         }
       );
     });
@@ -192,6 +201,36 @@ export const InfoTab: React.FC = () => {
     setConfluencePages(
       confluencePages.map((page) =>
         page.url === pageUrl ? { ...page, prompt } : page
+      )
+    );
+  };
+
+  const handleEditPage = (pageUrl: string) => {
+    const hasEditingPage = confluencePages.some((page) => page.isEditing);
+    if (hasEditingPage) {
+      return;
+    }
+    setConfluencePages(
+      confluencePages.map((page) =>
+        page.url === pageUrl ? { ...page, isEditing: true } : page
+      )
+    );
+  };
+
+  const handleAcceptPage = (pageUrl: string) => {
+    setConfluencePages(
+      confluencePages.map((page) =>
+        page.url === pageUrl ? { ...page, isEditing: false } : page
+      )
+    );
+  };
+
+  const handleDiscardPage = (pageUrl: string) => {
+    setConfluencePages(
+      confluencePages.map((page) =>
+        page.url === pageUrl
+          ? { ...page, isEditing: false, prompt: page.prompt || '' }
+          : page
       )
     );
   };
@@ -409,28 +448,23 @@ export const InfoTab: React.FC = () => {
           ) : (
             <div className="selected-items-container">
               <div className="selected-items-list">
-                {confluencePages.map((page) => (
-                  <div key={page.id} className="selected-item">
-                    <div className="item-header">
-                      <span className="item-url">{page.url}</span>
-                      <Button
-                        type="text"
-                        danger
-                        size="small"
-                        icon={<DeleteOutlined />}
-                        onClick={() => handleDeletePage(page.url)}
-                      />
-                    </div>
-                    <TextArea
-                      rows={3}
-                      placeholder="Enter prompt to guide AI about this page..."
-                      value={page.prompt}
-                      onChange={(e) =>
-                        handlePagePromptChange(page.url, e.target.value)
-                      }
+                {confluencePages.map((page) => {
+                  const isDisabled = confluencePages.some(
+                    (p) => p.url !== page.url && p.isEditing
+                  );
+                  return (
+                    <ConfluencePageItem
+                      key={page.id}
+                      page={page}
+                      isDisabled={isDisabled}
+                      onPromptChange={handlePagePromptChange}
+                      onAccept={handleAcceptPage}
+                      onDiscard={handleDiscardPage}
+                      onEdit={handleEditPage}
+                      onDelete={handleDeletePage}
                     />
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}

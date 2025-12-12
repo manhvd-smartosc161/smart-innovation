@@ -1,6 +1,4 @@
 .page-header {
-  background: #fff;
-  padding: 16px 24px;
   border-bottom: 1px solid #f0f0f0;
 }
 
@@ -16,12 +14,11 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 
-  // Ẩn scrollbar nhưng vẫn giữ chức năng scroll
-  scrollbar-width: none; // Firefox
-  -ms-overflow-style: none; // IE and Edge
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 
   &::-webkit-scrollbar {
-    display: none; // Chrome, Safari, Opera
+    display: none;
   }
 }
 

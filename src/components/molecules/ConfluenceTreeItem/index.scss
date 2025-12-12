@@ -53,18 +53,72 @@
         color: #1a1a1a;
         font-weight: 500;
         min-width: 0;
+        max-width: 400px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        cursor: pointer;
       }
 
-      .last-update {
-        font-size: 12px;
-        color: #8c8c8c;
-        white-space: nowrap;
-        margin-left: auto;
-        margin-right: 12px;
+      .tree-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
         flex-shrink: 0;
+        margin-left: auto;
+
+        .last-update {
+          font-size: 12px;
+          color: #8c8c8c;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+      }
+
+      .tree-sync-btn {
+        height: 30px;
+        padding: 0 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+        border: none;
+        box-shadow: 0 2px 4px rgba(24, 144, 255, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        .anticon {
+          font-size: 14px;
+          transition: transform 0.3s ease;
+        }
+
+        &:hover {
+          background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%);
+          box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+
+          .anticon {
+            transform: rotate(180deg);
+          }
+        }
+
+        &:active {
+          transform: translateY(0);
+          box-shadow: 0 2px 4px rgba(24, 144, 255, 0.3);
+        }
+
+        &:focus,
+        &:focus-visible,
+        &:focus-within {
+          outline: none !important;
+          border: none !important;
+          box-shadow: 0 2px 4px rgba(24, 144, 255, 0.2) !important;
+        }
+
+        &::after {
+          display: none !important;
+        }
       }
 
       .tree-checkbox {

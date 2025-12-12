@@ -32,12 +32,24 @@ export const PageSelectionModal: React.FC<PageSelectionModalProps> = ({
     }
   }, [visible, selectedPageUrls]);
 
-  const handleToggle = useCallback((url: string) => {
+  const handleToggle = useCallback((urls: string | string[]) => {
+    const urlArray = Array.isArray(urls) ? urls : [urls];
     setLocalSelectedUrls((prev) => {
-      if (prev.includes(url)) {
-        return prev.filter((u) => u !== url);
+      // Check if all URLs in the array are already selected
+      const allSelected = urlArray.every((url) => prev.includes(url));
+
+      if (allSelected) {
+        // If all are selected, remove all of them
+        return prev.filter((url) => !urlArray.includes(url));
       } else {
-        return [...prev, url];
+        // If not all are selected, add all of them (remove duplicates)
+        const newUrls = [...prev];
+        urlArray.forEach((url) => {
+          if (!newUrls.includes(url)) {
+            newUrls.push(url);
+          }
+        });
+        return newUrls;
       }
     });
   }, []);
@@ -56,16 +68,15 @@ export const PageSelectionModal: React.FC<PageSelectionModalProps> = ({
     onCancel();
   };
 
-  // Count root pages
   const rootPageCount = MOCK_CONFLUENCE_PAGES_TREE.length;
 
   return (
     <Modal
-      title="Confluence Pages"
+      title="Select Related Confluence Pages"
       open={visible}
       onOk={handleOk}
       onCancel={handleCancel}
-      width={900}
+      width={1200}
       style={{ maxWidth: 'calc(100% - 32px)', top: 20 }}
       className="page-selection-modal"
       okText="Select"
