@@ -129,6 +129,11 @@ export const ScopeTab: React.FC = () => {
     )
   );
 
+  // Track changed cells since last save
+  const [changedCells, setChangedCells] = useState<Set<string>>(new Set());
+  // Track cells to highlight after save
+  const [savedCells, setSavedCells] = useState<Set<string>>(new Set());
+
   const handsontableRef = useRef<HotTableClass>(null);
 
   useEffect(() => {
@@ -158,6 +163,13 @@ export const ScopeTab: React.FC = () => {
     return () => clearTimeout(timer);
   }, [scopeData]);
 
+  // Re-render table when savedCells changes to apply highlight
+  useEffect(() => {
+    if (handsontableRef.current?.hotInstance) {
+      handsontableRef.current.hotInstance.render();
+    }
+  }, [savedCells]);
+
   const handleCellValueChange = useCallback(
     (
       changes: Handsontable.CellChange[] | null,
@@ -172,6 +184,16 @@ export const ScopeTab: React.FC = () => {
 
       let hasDataChanged = false;
       const updatedData = [...scopeData];
+      const newChangedCells = new Set(changedCells);
+
+      // Map property names to column indices
+      const propertyToColumnIndex: Record<string, number> = {
+        scope_id: COLUMN_INDEX.SCOPE_ID,
+        system: COLUMN_INDEX.SYSTEM,
+        component: COLUMN_INDEX.COMPONENT,
+        element: COLUMN_INDEX.ELEMENT,
+        description: COLUMN_INDEX.DESCRIPTION,
+      };
 
       changes.forEach(([visualRow, propertyName, oldValue, newValue]) => {
         const physicalRowIndex = hot.toPhysicalRow(visualRow);
@@ -184,23 +206,45 @@ export const ScopeTab: React.FC = () => {
         }
 
         if (String(oldValue) !== String(newValue)) {
-          updatedData[physicalRowIndex] = {
-            ...updatedData[physicalRowIndex],
-            [propertyName as keyof ScopeItem]: newValue,
-          } as ScopeItem;
-          hasDataChanged = true;
-
-          if (propertyName === 'component') {
-            updatedData[physicalRowIndex].element = '';
+          // Track the changed cell
+          const columnIndex = propertyToColumnIndex[propertyName as string];
+          if (columnIndex !== undefined) {
+            const cellKey = `${physicalRowIndex}-${columnIndex}`;
+            newChangedCells.add(cellKey);
           }
+
+          // Reset all columns after system when system changes
+          if (propertyName === 'system') {
+            updatedData[physicalRowIndex] = {
+              ...updatedData[physicalRowIndex],
+              system: newValue,
+              component: '',
+              element: '',
+              description: '',
+            } as ScopeItem;
+          } else if (propertyName === 'component') {
+            updatedData[physicalRowIndex] = {
+              ...updatedData[physicalRowIndex],
+              component: newValue,
+              element: '',
+            } as ScopeItem;
+          } else {
+            updatedData[physicalRowIndex] = {
+              ...updatedData[physicalRowIndex],
+              [propertyName as keyof ScopeItem]: newValue,
+            } as ScopeItem;
+          }
+
+          hasDataChanged = true;
         }
       });
 
       if (hasDataChanged) {
         setScopeData(updatedData);
+        setChangedCells(newChangedCells);
       }
     },
-    [scopeData]
+    [scopeData, changedCells]
   );
 
   const handleAddNewRow = useCallback(() => {
@@ -307,11 +351,14 @@ export const ScopeTab: React.FC = () => {
       return;
     }
 
+    // Move changed cells to saved cells for highlighting
+    setSavedCells(new Set(changedCells));
+    // Clear changed cells
+    setChangedCells(new Set());
+
     console.log('Scope data to save:', scopeData);
-    message.success(
-      `Scope data has been saved successfully! (${scopeData.length} row(s))`
-    );
-  }, [scopeData]);
+    message.success(`Scope data has been saved successfully!`);
+  }, [scopeData, changedCells]);
 
   const handleUndo = useCallback(() => {
     const hot = handsontableRef.current?.hotInstance;
@@ -360,6 +407,12 @@ export const ScopeTab: React.FC = () => {
     ): Partial<Handsontable.CellProperties> => {
       const cellProperties: Partial<Handsontable.CellProperties> = {};
 
+      // Apply highlight to saved cells
+      const cellKey = `${rowIndex}-${columnIndex}`;
+      if (savedCells.has(cellKey)) {
+        cellProperties.className = 'saved-cell-highlight';
+      }
+
       if (columnIndex === COLUMN_INDEX.ELEMENT && scopeData[rowIndex]) {
         const selectedComponent = scopeData[rowIndex].component;
 
@@ -375,7 +428,7 @@ export const ScopeTab: React.FC = () => {
 
       return cellProperties;
     },
-    [scopeData]
+    [scopeData, savedCells]
   );
 
   return (

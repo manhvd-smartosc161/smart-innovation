@@ -169,6 +169,20 @@
       .ht__active_highlight {
         background: #1890ff;
       }
+
+      // Highlight for saved cells
+      .saved-cell-highlight {
+        background: #fffbe6 !important;
+        transition: background-color 0.3s ease;
+
+        &.current {
+          background: #fff7cc !important;
+        }
+
+        &.area {
+          background: #fff9d9 !important;
+        }
+      }
     }
 
     .htDropdownMenu {

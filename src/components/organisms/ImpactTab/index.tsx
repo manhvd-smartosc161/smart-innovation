@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Button, message } from 'antd';
 import {
   PlusOutlined,
@@ -11,8 +11,9 @@ import {
 import { HotTable, HotTableClass } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
 import type { CellChange } from 'handsontable/common';
-import 'handsontable/dist/handsontable.full.min.css';
-import { SYSTEMS, COMPONENTS, ELEMENTS_BY_COMPONENT } from '@/mock';
+import 'handsontable/dist/handsontable.full.css';
+import { SYSTEMS, COMPONENTS } from '@/mock';
+import * as handontableService from '@/services';
 import { MOCK_IMPACT_DATA } from '@/mock';
 import { MOCK_IMPACT_HISTORY } from '@/mock/history';
 import type { ImpactItem } from '@/types';
@@ -39,9 +40,21 @@ export const ImpactTab: React.FC = () => {
     return MOCK_IMPACT_DATA;
   });
 
+  // Track changed cells since last save
+  const [changedCells, setChangedCells] = useState<Set<string>>(new Set());
+  // Track cells to highlight after save
+  const [savedCells, setSavedCells] = useState<Set<string>>(new Set());
+
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }, [data]);
+
+  // Re-render table when savedCells changes to apply highlight
+  useEffect(() => {
+    if (hotTableRef.current?.hotInstance) {
+      hotTableRef.current.hotInstance.render();
+    }
+  }, [savedCells]);
 
   const generateImpactId = (rowIndex: number): string => {
     const idNumber = (rowIndex + 1).toString().padStart(5, '0');
@@ -90,7 +103,7 @@ export const ImpactTab: React.FC = () => {
     message.success(`Removed ${rowsToRemove.length} row(s)`);
   };
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     const validData = data.filter(
       (item) =>
         item.system || item.component || item.element || item.description
@@ -101,9 +114,14 @@ export const ImpactTab: React.FC = () => {
       return;
     }
 
+    // Move changed cells to saved cells for highlighting
+    setSavedCells(new Set(changedCells));
+    // Clear changed cells
+    setChangedCells(new Set());
+
     console.log('Impact data to save:', validData);
     message.success('Impact data has been saved successfully!');
-  };
+  }, [data, changedCells]);
 
   const handleUndo = () => {
     const hot = hotTableRef.current?.hotInstance;
@@ -169,33 +187,74 @@ export const ImpactTab: React.FC = () => {
     }
   };
 
-  const handleAfterChange = (changes: CellChange[] | null, source: string) => {
-    if (!changes || source === 'loadData') return;
+  const handleAfterChange = useCallback(
+    (changes: CellChange[] | null, source: string) => {
+      if (!changes || source === 'loadData') return;
 
-    const hot = hotTableRef.current?.hotInstance;
-    if (!hot) return;
+      const hot = hotTableRef.current?.hotInstance;
+      if (!hot) return;
 
-    setData((prevData) => {
-      const newData = [...prevData];
-      changes.forEach(([row, prop, , newValue]) => {
-        if (row < newData.length) {
-          if (prop === 'component') {
-            newData[row] = {
-              ...newData[row],
-              component: newValue || '',
-              element: '',
-            };
-          } else if (typeof prop === 'string') {
-            newData[row] = {
-              ...newData[row],
-              [prop]: newValue || '',
-            };
+      const newChangedCells = new Set(changedCells);
+      let shouldUpdateChangedCells = false;
+
+      setData((prevData) => {
+        const newData = [...prevData];
+        let hasChanges = false;
+
+        changes.forEach(([row, prop, oldValue, newValue]) => {
+          if (row < newData.length) {
+            // Track changed cell
+            if (String(oldValue) !== String(newValue)) {
+              const colIndex = hot.propToCol(prop as string);
+              if (colIndex !== null && colIndex !== undefined) {
+                const cellKey = `${row}-${colIndex}`;
+                newChangedCells.add(cellKey);
+                shouldUpdateChangedCells = true;
+              }
+            }
+
+            // Reset all columns after system when system changes
+            if (prop === 'system' && String(oldValue) !== String(newValue)) {
+              newData[row] = {
+                ...newData[row],
+                system: newValue || '',
+                component: '',
+                element: '',
+                description: '',
+              };
+              hasChanges = true;
+            } else if (
+              prop === 'component' &&
+              String(oldValue) !== String(newValue)
+            ) {
+              newData[row] = {
+                ...newData[row],
+                component: newValue || '',
+                element: '',
+              };
+              hasChanges = true;
+            } else if (
+              typeof prop === 'string' &&
+              String(oldValue) !== String(newValue)
+            ) {
+              newData[row] = {
+                ...newData[row],
+                [prop]: newValue || '',
+              };
+              hasChanges = true;
+            }
           }
-        }
+        });
+
+        return hasChanges ? newData : prevData;
       });
-      return newData;
-    });
-  };
+
+      if (shouldUpdateChangedCells) {
+        setChangedCells(newChangedCells);
+      }
+    },
+    [changedCells]
+  );
 
   const columns = [
     {
@@ -224,34 +283,10 @@ export const ImpactTab: React.FC = () => {
     {
       data: 'element',
       title: 'Element',
-      type: 'autocomplete',
-      source: (_query: string, process: (items: string[]) => void) => {
-        const hot = hotTableRef.current?.hotInstance;
-        if (!hot) {
-          process([]);
-          return;
-        }
-
-        const selected = hot.getSelected();
-        if (!selected || selected.length === 0) {
-          process([]);
-          return;
-        }
-
-        const row = selected[0][0];
-        const rowData = hot.getSourceDataAtRow(row) as ImpactItem;
-        const component = rowData?.component;
-
-        if (component && ELEMENTS_BY_COMPONENT[component]) {
-          process(ELEMENTS_BY_COMPONENT[component].map((e) => e.value));
-        } else {
-          process([]);
-        }
-      },
+      type: 'dropdown',
+      source: handontableService.getAllElementDropdownOptions(),
       width: 200,
       className: 'htLeft htMiddle',
-      strict: false,
-      allowInvalid: true,
     },
     {
       data: 'description',
@@ -261,6 +296,31 @@ export const ImpactTab: React.FC = () => {
       className: 'htLeft htMiddle',
     },
   ];
+
+  const getCellProperties = useCallback(
+    (row: number, col: number) => {
+      const cellKey = `${row}-${col}`;
+      const cellProperties: Record<string, unknown> = {};
+
+      if (savedCells.has(cellKey)) {
+        cellProperties.className = 'saved-cell-highlight';
+      }
+
+      // Column index 3 corresponds to 'element'
+      if (col === 3) {
+        const rowData = data[row];
+        if (rowData && rowData.component) {
+          cellProperties.source =
+            handontableService.getElementOptionsByComponent(rowData.component);
+        } else {
+          cellProperties.source = [];
+        }
+      }
+
+      return cellProperties;
+    },
+    [savedCells, data]
+  );
 
   return (
     <div className="impact-tab">
@@ -322,6 +382,7 @@ export const ImpactTab: React.FC = () => {
             colHeaders={true}
             rowHeaders={true}
             columns={columns}
+            cells={getCellProperties}
             width="100%"
             height="auto"
             licenseKey="non-commercial-and-evaluation"
