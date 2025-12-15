@@ -1,6 +1,12 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Button, message } from 'antd';
-import { PlusOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
+import {
+  PlusOutlined,
+  DeleteOutlined,
+  SaveOutlined,
+  UndoOutlined,
+  RedoOutlined,
+} from '@ant-design/icons';
 import { HotTable, HotTableClass } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
 import 'handsontable/dist/handsontable.full.css';
@@ -218,21 +224,78 @@ export const ScopeTab: React.FC = () => {
     }
 
     const hot = hotTable.hotInstance;
-    const physicalRowIndicesToRemove =
-      handontableService.getSelectedPhysicalRows(hot);
+    const selected = hot.getSelected();
 
-    if (physicalRowIndicesToRemove.size === 0) {
+    if (!selected || selected.length === 0) {
       message.warning('Please select at least one row to remove');
       return;
     }
 
-    const updatedData = scopeData.filter(
-      (_, index) => !physicalRowIndicesToRemove.has(index)
-    );
-    setScopeData(updatedData);
-    hot.deselectCell();
-    message.success(`Removed ${physicalRowIndicesToRemove.size} row(s)`);
-  }, [scopeData]);
+    // Collect all selected row indices
+    const rowsToRemove: number[] = [];
+    selected.forEach((range) => {
+      const [startRow, , endRow] = range;
+      for (let row = startRow; row <= endRow; row++) {
+        rowsToRemove.push(row);
+      }
+    });
+
+    // Sort in descending order to remove from bottom to top
+    rowsToRemove.sort((a, b) => b - a);
+
+    // Remove rows using Handsontable API (this will be tracked by undo/redo)
+    rowsToRemove.forEach((rowIndex) => {
+      hot.alter('remove_row', rowIndex, 1);
+    });
+
+    message.success(`Removed ${rowsToRemove.length} row(s)`);
+  }, []);
+
+  const handleAfterRemoveRow = useCallback(
+    (
+      _index: number,
+      _amount: number,
+      _physicalRows: number[],
+      source?: string
+    ) => {
+      if (source === 'UndoRedo.undo' || source === 'UndoRedo.redo') {
+        // When undoing/redoing, we need to reindex
+        const hot = handsontableRef.current?.hotInstance;
+        if (!hot) return;
+
+        const currentData = hot.getData() as string[][];
+        const reindexedData = currentData.map((row, idx) => ({
+          scope_id: handontableService.generateNextId(
+            currentData.slice(0, idx) as unknown as ScopeItem[],
+            'scope_id',
+            SCOPE_ID_PREFIX,
+            SCOPE_ID_LENGTH
+          ),
+          system: row[1] || '',
+          component: row[2] || '',
+          element: row[3] || '',
+          description: row[4] || '',
+        }));
+
+        setScopeData(reindexedData);
+      } else {
+        // For normal removal, reindex Scope IDs
+        setTimeout(() => {
+          const hot = handsontableRef.current?.hotInstance;
+          if (!hot) return;
+
+          const currentData = hot.getSourceData() as ScopeItem[];
+          const reindexedData = currentData.map((item, idx) => ({
+            ...item,
+            scope_id: `${SCOPE_ID_PREFIX}${String(idx + 1).padStart(SCOPE_ID_LENGTH, '0')}`,
+          }));
+
+          setScopeData(reindexedData);
+        }, 0);
+      }
+    },
+    []
+  );
 
   const handleSaveData = useCallback(() => {
     if (scopeData.length === 0) {
@@ -245,6 +308,32 @@ export const ScopeTab: React.FC = () => {
       `Scope data has been saved successfully! (${scopeData.length} row(s))`
     );
   }, [scopeData]);
+
+  const handleUndo = useCallback(() => {
+    const hot = handsontableRef.current?.hotInstance;
+    if (!hot) return;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const undoRedo = (hot as any).undoRedo;
+    if (undoRedo && undoRedo.isUndoAvailable()) {
+      undoRedo.undo();
+    } else {
+      message.info('No actions to undo');
+    }
+  }, []);
+
+  const handleRedo = useCallback(() => {
+    const hot = handsontableRef.current?.hotInstance;
+    if (!hot) return;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const undoRedo = (hot as any).undoRedo;
+    if (undoRedo && undoRedo.isRedoAvailable()) {
+      undoRedo.redo();
+    } else {
+      message.info('No actions to redo');
+    }
+  }, []);
 
   const handleBeforeKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -310,6 +399,22 @@ export const ScopeTab: React.FC = () => {
               Remove Row
             </Button>
             <Button
+              type="default"
+              icon={<UndoOutlined />}
+              onClick={handleUndo}
+              title="Undo (Ctrl+Z)"
+            >
+              Undo
+            </Button>
+            <Button
+              type="default"
+              icon={<RedoOutlined />}
+              onClick={handleRedo}
+              title="Redo (Ctrl+Y)"
+            >
+              Redo
+            </Button>
+            <Button
               type="primary"
               icon={<SaveOutlined />}
               onClick={handleSaveData}
@@ -343,6 +448,7 @@ export const ScopeTab: React.FC = () => {
             manualRowMove={true}
             manualColumnMove={true}
             afterChange={handleCellValueChange}
+            afterRemoveRow={handleAfterRemoveRow}
             beforeKeyDown={handleBeforeKeyDown}
             allowInsertRow={true}
             allowRemoveRow={true}
@@ -353,6 +459,7 @@ export const ScopeTab: React.FC = () => {
             viewportColumnRenderingOffset={10}
             columns={getHandsontableColumnConfig}
             cells={getHandsontableCellProperties}
+            undo={true}
           />
         </div>
       </div>

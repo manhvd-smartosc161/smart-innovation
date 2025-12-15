@@ -7,7 +7,7 @@ export interface ScopeItem {
 }
 
 export interface ImpactItem {
-  id: string;
+  impact_id: string;
   system: string;
   component: string;
   element: string;
