@@ -6,6 +6,7 @@ import {
   SaveOutlined,
   UndoOutlined,
   RedoOutlined,
+  HistoryOutlined,
 } from '@ant-design/icons';
 import { HotTable, HotTableClass } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -13,7 +14,9 @@ import type { CellChange } from 'handsontable/common';
 import 'handsontable/dist/handsontable.full.min.css';
 import { SYSTEMS, COMPONENTS, ELEMENTS_BY_COMPONENT } from '@/mock';
 import { MOCK_IMPACT_DATA } from '@/mock';
+import { MOCK_IMPACT_HISTORY } from '@/mock/history';
 import type { ImpactItem } from '@/types';
+import { HistoryPanel } from '@/components/molecules/HistoryPanel';
 import './index.scss';
 
 registerAllModules();
@@ -22,6 +25,7 @@ const STORAGE_KEY = 'impact_table_data';
 
 export const ImpactTab: React.FC = () => {
   const hotTableRef = useRef<HotTableClass>(null);
+  const [historyVisible, setHistoryVisible] = useState(false);
   const [data, setData] = useState<ImpactItem[]>(() => {
     const savedData = localStorage.getItem(STORAGE_KEY);
     if (savedData) {
@@ -298,6 +302,14 @@ export const ImpactTab: React.FC = () => {
             >
               Redo
             </Button>
+            <Button
+              type="default"
+              icon={<HistoryOutlined />}
+              onClick={() => setHistoryVisible(true)}
+              title="View History"
+            >
+              History
+            </Button>
             <Button type="primary" icon={<SaveOutlined />} onClick={handleSave}>
               Save
             </Button>
@@ -343,6 +355,12 @@ export const ImpactTab: React.FC = () => {
           />
         </div>
       </div>
+      <HistoryPanel
+        visible={historyVisible}
+        onClose={() => setHistoryVisible(false)}
+        history={MOCK_IMPACT_HISTORY}
+        title="Impact Change History"
+      />
     </div>
   );
 };

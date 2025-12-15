@@ -447,6 +447,7 @@ export const InfoTab: React.FC = () => {
             type="primary"
             icon={<PlusOutlined />}
             onClick={() => setTicketModalVisible(true)}
+            disabled={tickets.some((ticket) => ticket.isEditing)}
           >
             {INFO_TAB_BUTTONS.ADD_TICKETS}
           </Button>
@@ -492,6 +493,7 @@ export const InfoTab: React.FC = () => {
             type="primary"
             icon={<PlusOutlined />}
             onClick={() => setPageModalVisible(true)}
+            disabled={confluencePages.some((page) => page.isEditing)}
           >
             {INFO_TAB_BUTTONS.ADD_PAGES}
           </Button>

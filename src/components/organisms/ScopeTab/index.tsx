@@ -6,13 +6,16 @@ import {
   SaveOutlined,
   UndoOutlined,
   RedoOutlined,
+  HistoryOutlined,
 } from '@ant-design/icons';
 import { HotTable, HotTableClass } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
 import 'handsontable/dist/handsontable.full.css';
 import { SYSTEMS, COMPONENTS, MOCK_SCOPE_DATA } from '@/mock';
+import { MOCK_SCOPE_HISTORY } from '@/mock/history';
 import type { ScopeItem } from '@/types';
 import * as handontableService from '@/services';
+import { HistoryPanel } from '@/components/molecules/HistoryPanel';
 import './index.scss';
 import type Handsontable from 'handsontable';
 
@@ -115,6 +118,7 @@ const getHandsontableColumnConfig = (
 };
 
 export const ScopeTab: React.FC = () => {
+  const [historyVisible, setHistoryVisible] = useState(false);
   const [scopeData, setScopeData] = useState<ScopeItem[]>(() =>
     handontableService.loadDataFromStorage<ScopeItem>(
       LOCAL_STORAGE_KEY,
@@ -415,6 +419,14 @@ export const ScopeTab: React.FC = () => {
               Redo
             </Button>
             <Button
+              type="default"
+              icon={<HistoryOutlined />}
+              onClick={() => setHistoryVisible(true)}
+              title="View History"
+            >
+              History
+            </Button>
+            <Button
               type="primary"
               icon={<SaveOutlined />}
               onClick={handleSaveData}
@@ -463,6 +475,12 @@ export const ScopeTab: React.FC = () => {
           />
         </div>
       </div>
+      <HistoryPanel
+        visible={historyVisible}
+        onClose={() => setHistoryVisible(false)}
+        history={MOCK_SCOPE_HISTORY}
+        title="Scope Change History"
+      />
     </div>
   );
 };
