@@ -1,5 +1,5 @@
 export interface ScopeItem {
-  id: string;
+  scope_id: string;
   system: string;
   component: string;
   element: string;

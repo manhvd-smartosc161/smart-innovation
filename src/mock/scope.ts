@@ -73,28 +73,28 @@ import type { ScopeItem } from '@/types';
 
 export const MOCK_SCOPE_DATA: ScopeItem[] = [
   {
-    id: '1',
+    scope_id: 'SCO.00001',
     system: 'OMS',
     component: 'queue',
     element: 'order-queue',
     description: 'Order processing queue for handling customer orders',
   },
   {
-    id: '2',
+    scope_id: 'SCO.00002',
     system: 'OMS',
     component: 'database',
     element: 'order-table',
     description: 'Main order table storing all order information',
   },
   {
-    id: '3',
+    scope_id: 'SCO.00003',
     system: 'WMS',
     component: 'flow',
     element: 'fulfillment-flow',
     description: 'Workflow for order fulfillment and shipping',
   },
   {
-    id: '4',
+    scope_id: 'SCO.00004',
     system: 'SOSC',
     component: 'config',
     element: 'api-timeout',

@@ -12,6 +12,7 @@ const AnalysisContext = createContext<AnalysisContextType | undefined>(
   undefined
 );
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAnalysis = () => {
   const context = useContext(AnalysisContext);
   if (!context) {
