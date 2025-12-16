@@ -61,42 +61,42 @@ npm run lint:fix
 smart-innovation/
 ├── public/                 # Static assets
 ├── src/
-│   ├── assets/            # Images and other assets
-│   ├── components/         # React components (Atomic Design)
-│   │   ├── atoms/          # Basic building blocks
-│   │   │   ├── Badge/
-│   │   │   │   ├── index.tsx
-│   │   │   │   └── index.scss
-│   │   │   ├── IconButton/
-│   │   │   │   ├── index.tsx
-│   │   │   │   └── index.scss
-│   │   │   └── Tag/
-│   │   │       └── index.tsx
-│   │   ├── molecules/      # Simple component combinations
-│   │   │   ├── ActionBar/
-│   │   │   ├── ExpectedResultItem/
-│   │   │   ├── FormField/
-│   │   │   ├── FormSelect/
-│   │   │   ├── ModeSwitch/
-│   │   │   ├── StepHeader/
-│   │   │   ├── StepItem/
-│   │   │   ├── TagsContainer/
-│   │   │   └── TreeItem/
-│   │   ├── organisms/      # Complex component combinations
-│   │   │   ├── DetailsForm/
-│   │   │   ├── Sidebar/
-│   │   │   └── StepsSection/
-│   │   └── templates/      # Page-level layouts
-│   │       └── MainLayout/
-│   ├── pages/              # Page components
-│   │   └── TestCaseDrafting.tsx
-│   ├── styles/             # Global styles
-│   │   └── global.scss
-│   ├── types/              # TypeScript type definitions
-│   │   └── index.ts
-│   ├── App.tsx             # Root component
-│   ├── main.tsx            # Application entry point
-│   └── index.scss         # Main stylesheet
+├── assets/            # Images and other assets
+├── components/         # React components (Atomic Design)
+│   ├── atoms/          # Basic building blocks
+│   │   ├── Badge/
+│   │   │   ├── index.tsx
+│   │   │   └── index.scss
+│   │   ├── IconButton/
+│   │   │   ├── index.tsx
+│   │   │   └── index.scss
+│   │   └── Tag/
+│   │       └── index.tsx
+│   ├── molecules/      # Simple component combinations
+│   │   ├── ActionBar/
+│   │   ├── ExpectedResultItem/
+│   │   ├── FormField/
+│   │   ├── FormSelect/
+│   │   ├── ModeSwitch/
+│   │   ├── StepHeader/
+│   │   ├── StepItem/
+│   │   ├── TagsContainer/
+│   │   └── TreeItem/
+│   ├── organisms/      # Complex component combinations
+│   │   ├── DetailsForm/
+│   │   ├── Sidebar/
+│   │   └── StepsSection/
+│   └── templates/      # Page-level layouts
+│       └── MainLayout/
+├── pages/              # Page components
+│   └── TestCaseDrafting.tsx
+├── styles/             # Global styles
+│   └── global.scss
+├── types/              # TypeScript type definitions
+│   └── index.ts
+├── App.tsx             # Root component
+├── main.tsx            # Application entry point
+└── index.scss         # Main stylesheet
 ├── eslint.config.js        # ESLint configuration
 ├── package.json            # Dependencies and scripts
 ├── tsconfig.json           # TypeScript configuration
