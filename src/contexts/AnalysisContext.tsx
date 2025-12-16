@@ -10,6 +10,8 @@ import type { ReactNode } from 'react';
 interface AnalysisContextType {
   isAnalysed: boolean;
   setIsAnalysed: (value: boolean) => void;
+  isChecklistGenerated: boolean;
+  setIsChecklistGenerated: (value: boolean) => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
   hasUnsavedChanges: (tabKey: string) => boolean;
@@ -38,6 +40,7 @@ export const AnalysisProvider: React.FC<AnalysisProviderProps> = ({
   children,
 }) => {
   const [isAnalysed, setIsAnalysed] = useState(false);
+  const [isChecklistGenerated, setIsChecklistGenerated] = useState(false);
   const [activeTab, setActiveTab] = useState('');
 
   // Track unsaved changes per tab
@@ -60,6 +63,8 @@ export const AnalysisProvider: React.FC<AnalysisProviderProps> = ({
       value={{
         isAnalysed,
         setIsAnalysed,
+        isChecklistGenerated,
+        setIsChecklistGenerated,
         activeTab,
         setActiveTab,
         hasUnsavedChanges,

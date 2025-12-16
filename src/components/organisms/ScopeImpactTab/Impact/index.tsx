@@ -21,12 +21,26 @@ import {
   type HistoryItem,
 } from '@/components/molecules/HistoryPanel';
 import { useAnalysis } from '@/contexts';
-import { TAB_KEYS } from '@/constants';
 import './index.scss';
 
 registerAllModules();
 
-export const ImpactTab: React.FC = () => {
+const generateImpactId = (rowIndex: number): string => {
+  const idNumber = (rowIndex + 1).toString().padStart(5, '0');
+  return `IMP.${idNumber}`;
+};
+
+const createEmptyImpactItem = (existingData: ImpactItem[]): ImpactItem => {
+  return {
+    impact_id: generateImpactId(existingData.length),
+    system: '',
+    component: '',
+    element: '',
+    description: '',
+  };
+};
+
+export const Impact: React.FC = () => {
   const { markTabAsChanged, markTabAsSaved } = useAnalysis();
   const hotTableRef = useRef<HotTableClass>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
@@ -62,21 +76,6 @@ export const ImpactTab: React.FC = () => {
     }
   }, [savedCells]);
 
-  const generateImpactId = (rowIndex: number): string => {
-    const idNumber = (rowIndex + 1).toString().padStart(5, '0');
-    return `IMP.${idNumber}`;
-  };
-
-  const createEmptyImpactItem = (existingData: ImpactItem[]): ImpactItem => {
-    return {
-      impact_id: generateImpactId(existingData.length),
-      system: '',
-      component: '',
-      element: '',
-      description: '',
-    };
-  };
-
   const handleAddRow = () => {
     const newRow: ImpactItem = {
       impact_id: generateImpactId(data.length),
@@ -85,11 +84,19 @@ export const ImpactTab: React.FC = () => {
       element: '',
       description: '',
     };
-    setData([...data, newRow]);
+    const updatedData = [...data, newRow];
+    setData(updatedData);
 
     // Track pending add (will be committed on save)
     pendingChangesRef.current.added.push(newRow.impact_id);
-    markTabAsChanged(TAB_KEYS.IMPACT);
+    markTabAsChanged('Impact');
+
+    setTimeout(() => {
+      hotTableRef.current?.hotInstance?.selectCell(updatedData.length - 1, 0);
+      hotTableRef.current?.hotInstance?.scrollViewportTo(
+        updatedData.length - 1
+      );
+    }, 100);
   };
 
   const handleRemoveRow = () => {
@@ -128,7 +135,7 @@ export const ImpactTab: React.FC = () => {
 
     // Track pending delete (will be committed on save)
     pendingChangesRef.current.deleted.push(...deletedIds);
-    markTabAsChanged(TAB_KEYS.IMPACT);
+    markTabAsChanged('Impact');
 
     message.success(`Removed ${rowsToRemove.length} row(s)`);
   };
@@ -212,7 +219,7 @@ export const ImpactTab: React.FC = () => {
     setChangedCells(new Set());
 
     // Mark tab as saved
-    markTabAsSaved(TAB_KEYS.IMPACT);
+    markTabAsSaved('Impact');
 
     console.log('Impact data to save:', validData);
     message.success('Impact data has been saved successfully!');
@@ -398,7 +405,7 @@ export const ImpactTab: React.FC = () => {
 
       if (shouldUpdateChangedCells) {
         setChangedCells(newChangedCells);
-        markTabAsChanged(TAB_KEYS.IMPACT);
+        markTabAsChanged('Impact');
       }
     },
     [changedCells, markTabAsChanged]

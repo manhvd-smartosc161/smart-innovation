@@ -4,8 +4,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import {
   InfoTab,
-  ScopeTab,
-  ImpactTab,
+  ScopeImpactTab,
   ChecklistTab,
   TestCaseDetailTab,
 } from '@/components/organisms';
@@ -15,17 +14,21 @@ import './index.scss';
 
 const allItems = [
   { key: TAB_KEYS.INITIALIZATION, label: TAB_LABELS.INITIALIZATION },
-  { key: TAB_KEYS.SCOPE, label: TAB_LABELS.SCOPE },
-  { key: TAB_KEYS.IMPACT, label: TAB_LABELS.IMPACT },
-  { key: TAB_KEYS.CHECKLIST, label: TAB_LABELS.CHECKLIST },
+  { key: TAB_KEYS.SCOPE_AND_IMPACT, label: TAB_LABELS.SCOPE_AND_IMPACT },
   // Temporarily hidden
+  { key: TAB_KEYS.CHECKLIST, label: TAB_LABELS.CHECKLIST },
   // { key: TAB_KEYS.TEST_CASES, label: TAB_LABELS.TEST_CASES },
   // { key: TAB_KEYS.TEST_CASE_DETAILS, label: TAB_LABELS.TEST_CASE_DETAILS },
 ];
 
 export const TestCasePanel: React.FC = () => {
-  const { isAnalysed, activeTab, setActiveTab, hasUnsavedChanges } =
-    useAnalysis();
+  const {
+    isAnalysed,
+    isChecklistGenerated,
+    activeTab,
+    setActiveTab,
+    hasUnsavedChanges,
+  } = useAnalysis();
 
   useEffect(() => {
     if (!activeTab) {
@@ -33,19 +36,41 @@ export const TestCasePanel: React.FC = () => {
     }
   }, [activeTab, setActiveTab]);
 
-  const items = isAnalysed
-    ? allItems
-    : allItems.filter((item) => item.key === TAB_KEYS.INITIALIZATION);
+  const items = allItems.filter((item) => {
+    if (item.key === TAB_KEYS.INITIALIZATION) return true;
+    if (item.key === TAB_KEYS.SCOPE_AND_IMPACT) return isAnalysed;
+    if (item.key === TAB_KEYS.CHECKLIST)
+      return isAnalysed && isChecklistGenerated;
+    return false; // For other tabs like TEST_CASES if they are enabled later
+  });
 
   const handleTabChange = (newTab: string) => {
-    // Check if current tab has unsaved changes
-    if (activeTab && hasUnsavedChanges(activeTab)) {
+    // Check for unsaved changes
+    const unsavedItems: string[] = [];
+
+    if (activeTab === TAB_KEYS.SCOPE_AND_IMPACT) {
+      if (hasUnsavedChanges('Scope')) unsavedItems.push('Scope');
+      if (hasUnsavedChanges('Impact')) unsavedItems.push('Impact');
+      // Fallback if generic analyse change is set but not specific tables
+      if (
+        unsavedItems.length === 0 &&
+        hasUnsavedChanges(TAB_KEYS.SCOPE_AND_IMPACT)
+      ) {
+        unsavedItems.push('Scope & Impact');
+      }
+    } else if (activeTab && hasUnsavedChanges(activeTab)) {
+      const tabLabel =
+        allItems.find((item) => item.key === activeTab)?.label || 'Current Tab';
+      unsavedItems.push(String(tabLabel));
+    }
+
+    if (unsavedItems.length > 0) {
+      const itemsText = unsavedItems.join(' and ');
       // Show confirmation modal
       Modal.confirm({
         title: 'Unsaved Changes',
         icon: <ExclamationCircleOutlined />,
-        content:
-          'You have unsaved changes. Are you sure you want to leave? Your changes will be lost.',
+        content: `You have unsaved changes in ${itemsText}. Are you sure you want to leave? Your changes will be lost.`,
         okText: 'Leave without saving',
         okType: 'danger',
         cancelText: 'Stay on page',
@@ -71,14 +96,11 @@ export const TestCasePanel: React.FC = () => {
           <InfoTab />
         </div>
         <div
-          style={{ display: activeTab === TAB_KEYS.SCOPE ? 'block' : 'none' }}
+          style={{
+            display: activeTab === TAB_KEYS.SCOPE_AND_IMPACT ? 'block' : 'none',
+          }}
         >
-          <ScopeTab />
-        </div>
-        <div
-          style={{ display: activeTab === TAB_KEYS.IMPACT ? 'block' : 'none' }}
-        >
-          <ImpactTab />
+          <ScopeImpactTab />
         </div>
         <div
           style={{

@@ -25,6 +25,22 @@ import './index.scss';
 
 registerAllModules();
 
+const generateChecklistId = (rowIndex: number): string => {
+  const idNumber = (rowIndex + 1).toString().padStart(5, '0');
+  return `CL.${idNumber}`;
+};
+
+const createEmptyChecklistItem = (
+  existingData: ChecklistItem[]
+): ChecklistItem => {
+  return {
+    checklist_id: generateChecklistId(existingData.length),
+    type: '',
+    item: '',
+    description: '',
+  };
+};
+
 export const ChecklistTab: React.FC = () => {
   const { markTabAsChanged, markTabAsSaved } = useAnalysis();
   const hotTableRef = useRef<HotTableClass>(null);
@@ -60,22 +76,6 @@ export const ChecklistTab: React.FC = () => {
       hotTableRef.current.hotInstance.render();
     }
   }, [savedCells]);
-
-  const generateChecklistId = (rowIndex: number): string => {
-    const idNumber = (rowIndex + 1).toString().padStart(5, '0');
-    return `CL.${idNumber}`;
-  };
-
-  const createEmptyChecklistItem = (
-    existingData: ChecklistItem[]
-  ): ChecklistItem => {
-    return {
-      checklist_id: generateChecklistId(existingData.length),
-      type: '',
-      item: '',
-      description: '',
-    };
-  };
 
   const handleAddRow = useCallback(() => {
     const newRow: ChecklistItem = {
@@ -376,7 +376,7 @@ export const ChecklistTab: React.FC = () => {
         markTabAsChanged(TAB_KEYS.CHECKLIST);
       }
     },
-    [data, changedCells, markTabAsChanged]
+    [changedCells, markTabAsChanged]
   );
 
   const columns = [
@@ -428,7 +428,7 @@ export const ChecklistTab: React.FC = () => {
 
       return cellProperties;
     },
-    [savedCells, data]
+    [savedCells]
   );
 
   const handleBeforeKeyDown = useCallback(

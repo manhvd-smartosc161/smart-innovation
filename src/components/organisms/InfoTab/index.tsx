@@ -260,7 +260,7 @@ export const InfoTab: React.FC = () => {
     setTimeout(() => {
       setShowFireworks(false);
       setIsAnalysed(true);
-      setActiveTab(TAB_KEYS.SCOPE);
+      setActiveTab(TAB_KEYS.SCOPE_AND_IMPACT);
     }, 3500);
 
     console.log('Analysis Data:', analysisData);

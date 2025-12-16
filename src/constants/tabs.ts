@@ -1,8 +1,7 @@
 // Tab constants
 export const TAB_KEYS = {
   INITIALIZATION: 'Initialization',
-  SCOPE: 'Scope',
-  IMPACT: 'Impact',
+  SCOPE_AND_IMPACT: 'Scope & Impact',
   CHECKLIST: 'Checklist',
   TEST_CASES: 'Test Cases',
   TEST_CASE_DETAILS: 'Test Case Details',
@@ -19,8 +18,7 @@ export const WORKFLOW_TAB_KEYS = {
 
 export const TAB_LABELS = {
   INITIALIZATION: 'Initialization',
-  SCOPE: 'Scope',
-  IMPACT: 'Impact',
+  SCOPE_AND_IMPACT: 'Scope & Impact',
   CHECKLIST: 'Checklist',
   TEST_CASES: 'Test Cases',
   TEST_CASE_DETAILS: 'Test Case Details',

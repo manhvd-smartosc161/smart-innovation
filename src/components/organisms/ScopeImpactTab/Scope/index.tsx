@@ -19,7 +19,6 @@ import {
   type HistoryItem,
 } from '@/components/molecules/HistoryPanel';
 import { useAnalysis } from '@/contexts';
-import { TAB_KEYS } from '@/constants';
 import './index.scss';
 import type Handsontable from 'handsontable';
 
@@ -120,7 +119,7 @@ const getHandsontableColumnConfig = (
   }
 };
 
-export const ScopeTab: React.FC = () => {
+export const Scope: React.FC = () => {
   const { markTabAsChanged, markTabAsSaved } = useAnalysis();
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyVisible, setHistoryVisible] = useState(false);
@@ -293,7 +292,7 @@ export const ScopeTab: React.FC = () => {
       if (hasDataChanged) {
         setScopeData(updatedData);
         setChangedCells(newChangedCells);
-        markTabAsChanged(TAB_KEYS.SCOPE);
+        markTabAsChanged('Scope');
       }
     },
     [scopeData, changedCells, markTabAsChanged]
@@ -306,7 +305,7 @@ export const ScopeTab: React.FC = () => {
 
     // Track pending add (will be committed on save)
     pendingChangesRef.current.added.push(newRow.scope_id);
-    markTabAsChanged(TAB_KEYS.SCOPE);
+    markTabAsChanged('Scope');
 
     setTimeout(() => {
       handsontableRef.current?.hotInstance?.selectCell(
@@ -360,7 +359,7 @@ export const ScopeTab: React.FC = () => {
 
     // Track pending delete (will be committed on save)
     pendingChangesRef.current.deleted.push(...deletedIds);
-    markTabAsChanged(TAB_KEYS.SCOPE);
+    markTabAsChanged('Scope');
 
     message.success(`Removed ${rowsToRemove.length} row(s)`);
   }, [scopeData, markTabAsChanged]);
@@ -485,7 +484,7 @@ export const ScopeTab: React.FC = () => {
     setChangedCells(new Set());
 
     // Mark tab as saved
-    markTabAsSaved(TAB_KEYS.SCOPE);
+    markTabAsSaved('Scope');
 
     console.log('Scope data to save:', scopeData);
     message.success(`Scope data has been saved successfully!`);

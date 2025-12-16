@@ -1,7 +1,7 @@
 export * from './DetailsForm';
 export * from './InfoTab';
-export * from './ScopeTab';
-export * from './ImpactTab';
+export * from './ScopeImpactTab';
+
 export * from './TestCaseTab';
 export * from './ChecklistTab';
 export * from './PageSelectionModal';
