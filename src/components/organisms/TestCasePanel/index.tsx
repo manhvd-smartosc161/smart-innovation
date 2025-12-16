@@ -18,8 +18,9 @@ const allItems = [
   { key: TAB_KEYS.SCOPE, label: TAB_LABELS.SCOPE },
   { key: TAB_KEYS.IMPACT, label: TAB_LABELS.IMPACT },
   { key: TAB_KEYS.CHECKLIST, label: TAB_LABELS.CHECKLIST },
-  { key: TAB_KEYS.TEST_CASES, label: TAB_LABELS.TEST_CASES },
-  { key: TAB_KEYS.TEST_CASE_DETAILS, label: TAB_LABELS.TEST_CASE_DETAILS },
+  // Temporarily hidden
+  // { key: TAB_KEYS.TEST_CASES, label: TAB_LABELS.TEST_CASES },
+  // { key: TAB_KEYS.TEST_CASE_DETAILS, label: TAB_LABELS.TEST_CASE_DETAILS },
 ];
 
 export const TestCasePanel: React.FC = () => {

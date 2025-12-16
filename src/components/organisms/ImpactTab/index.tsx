@@ -67,6 +67,16 @@ export const ImpactTab: React.FC = () => {
     return `IMP.${idNumber}`;
   };
 
+  const createEmptyImpactItem = (existingData: ImpactItem[]): ImpactItem => {
+    return {
+      impact_id: generateImpactId(existingData.length),
+      system: '',
+      component: '',
+      element: '',
+      description: '',
+    };
+  };
+
   const handleAddRow = () => {
     const newRow: ImpactItem = {
       impact_id: generateImpactId(data.length),
@@ -423,14 +433,14 @@ export const ImpactTab: React.FC = () => {
       title: 'Element',
       type: 'dropdown',
       source: handontableService.getAllElementDropdownOptions(),
-      width: 200,
+      width: 150,
       className: 'htLeft htMiddle',
     },
     {
       data: 'description',
       title: 'Description',
       type: 'text',
-      width: 400,
+      width: 300,
       className: 'htLeft htMiddle',
     },
   ];
@@ -458,6 +468,20 @@ export const ImpactTab: React.FC = () => {
       return cellProperties;
     },
     [savedCells, data]
+  );
+
+  const handleBeforeKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      const handler = handontableService.createTabKeyHandler(
+        hotTableRef.current?.hotInstance,
+        data,
+        columns.length,
+        createEmptyImpactItem,
+        setData
+      );
+      handler(event);
+    },
+    [data, columns.length]
   );
 
   return (
@@ -526,19 +550,15 @@ export const ImpactTab: React.FC = () => {
             licenseKey="non-commercial-and-evaluation"
             afterChange={handleAfterChange}
             afterRemoveRow={handleAfterRemoveRow}
-            contextMenu={{
-              items: {
-                row_above: {
-                  name: 'Insert row above',
-                },
-                row_below: {
-                  name: 'Insert row below',
-                },
-                remove_row: {
-                  name: 'Remove row',
-                },
-              },
-            }}
+            beforeKeyDown={handleBeforeKeyDown}
+            contextMenu={[
+              'row_above',
+              'row_below',
+              'remove_row',
+              '---------',
+              'cut',
+              'copy',
+            ]}
             dropdownMenu={[
               'filter_by_condition',
               'filter_by_value',

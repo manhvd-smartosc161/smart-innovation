@@ -14,6 +14,7 @@ import type { CellChange } from 'handsontable/common';
 import 'handsontable/dist/handsontable.full.css';
 import { MOCK_CHECKLIST_DATA } from '@/mock';
 import type { ChecklistItem } from '@/types';
+import * as handontableService from '@/services';
 import {
   HistoryPanel,
   type HistoryItem,
@@ -63,6 +64,17 @@ export const ChecklistTab: React.FC = () => {
   const generateChecklistId = (rowIndex: number): string => {
     const idNumber = (rowIndex + 1).toString().padStart(5, '0');
     return `CL.${idNumber}`;
+  };
+
+  const createEmptyChecklistItem = (
+    existingData: ChecklistItem[]
+  ): ChecklistItem => {
+    return {
+      checklist_id: generateChecklistId(existingData.length),
+      type: '',
+      item: '',
+      description: '',
+    };
   };
 
   const handleAddRow = useCallback(() => {
@@ -395,7 +407,7 @@ export const ChecklistTab: React.FC = () => {
       data: 'description',
       title: 'Description',
       type: 'text',
-      width: 400,
+      width: 300,
       className: 'htLeft htMiddle',
     },
   ];
@@ -417,6 +429,20 @@ export const ChecklistTab: React.FC = () => {
       return cellProperties;
     },
     [savedCells, data]
+  );
+
+  const handleBeforeKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      const handler = handontableService.createTabKeyHandler(
+        hotTableRef.current?.hotInstance,
+        data,
+        columns.length,
+        createEmptyChecklistItem,
+        setData
+      );
+      handler(event);
+    },
+    [data, columns.length]
   );
 
   return (
@@ -485,19 +511,15 @@ export const ChecklistTab: React.FC = () => {
             licenseKey="non-commercial-and-evaluation"
             afterChange={handleAfterChange}
             afterRemoveRow={handleAfterRemoveRow}
-            contextMenu={{
-              items: {
-                row_above: {
-                  name: 'Insert row above',
-                },
-                row_below: {
-                  name: 'Insert row below',
-                },
-                remove_row: {
-                  name: 'Remove row',
-                },
-              },
-            }}
+            beforeKeyDown={handleBeforeKeyDown}
+            contextMenu={[
+              'row_above',
+              'row_below',
+              'remove_row',
+              '---------',
+              'cut',
+              'copy',
+            ]}
             dropdownMenu={[
               'filter_by_condition',
               'filter_by_value',

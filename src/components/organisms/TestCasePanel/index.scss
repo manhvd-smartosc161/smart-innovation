@@ -23,6 +23,16 @@
     }
   }
 
+  // All content divs should be scrollable
+  > div:not(.panel-tabs) {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    max-width: 100%;
+  }
+
   .info-tab,
   .scope-tab,
   .impact-tab,

@@ -1,9 +1,12 @@
 .info-tab {
-  padding: 32px;
-  padding-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   width: 100%;
+  padding-top: 10px;
   background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
   box-sizing: border-box;
+  overflow: hidden;
 
   .info-section {
     margin-bottom: 20px;
@@ -258,12 +261,42 @@
     }
   }
 
+  // Scrollable content container
+  .info-tab-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 32px 60px 32px;
+    margin-top: 8px;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f5f5f5;
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #bfbfbf 0%, #8c8c8c 100%);
+      border-radius: 10px;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: linear-gradient(180deg, #8c8c8c 0%, #595959 100%);
+      }
+    }
+  }
+
   .analyse-section {
-    position: sticky;
+    flex-shrink: 0;
+    position: relative;
     top: 0px;
 
     @media (min-width: 768px) {
-      top: -20px;
+      top: 0px;
     }
     z-index: 100;
     display: flex;
@@ -271,7 +304,7 @@
     align-items: center;
     gap: 16px;
     padding: 20px 32px;
-    margin-bottom: 20px;
+    margin: 0 32px 0 32px;
     overflow: hidden;
 
     // Animated gradient background
@@ -734,7 +767,9 @@
 
   // Responsive design
   @media (max-width: 1200px) {
-    padding: 24px;
+    .info-tab-content {
+      padding: 0 24px 60px 24px;
+    }
 
     .info-section {
       padding: 20px;
@@ -742,8 +777,9 @@
   }
 
   @media (max-width: 768px) {
-    padding: 16px;
-    padding-bottom: 40px;
+    .info-tab-content {
+      padding: 0 16px 40px 16px;
+    }
 
     .info-section {
       padding: 16px;
@@ -795,7 +831,7 @@
 
     .analyse-section {
       padding: 16px 12px;
-      margin-bottom: 16px;
+      margin: 0 16px 16px 16px;
       gap: 12px;
       border-radius: 16px;
 
@@ -827,8 +863,9 @@
   }
 
   @media (max-width: 480px) {
-    padding: 12px;
-    padding-bottom: 32px;
+    .info-tab-content {
+      padding: 0 12px 32px 12px;
+    }
 
     .info-section {
       padding: 12px;
@@ -848,6 +885,7 @@
 
     .analyse-section {
       padding: 12px 8px;
+      margin: 0 12px 12px 12px;
       flex-direction: column;
       gap: 8px;
 

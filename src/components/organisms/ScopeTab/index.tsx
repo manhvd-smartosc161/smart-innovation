@@ -630,7 +630,14 @@ export const ScopeTab: React.FC = () => {
             height="auto"
             licenseKey="non-commercial-and-evaluation"
             stretchH="all"
-            contextMenu={true}
+            contextMenu={[
+              'row_above',
+              'row_below',
+              'remove_row',
+              '---------',
+              'cut',
+              'copy',
+            ]}
             columnSorting={true}
             filters={true}
             dropdownMenu={[

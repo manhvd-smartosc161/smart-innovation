@@ -336,7 +336,7 @@ export const InfoTab: React.FC = () => {
         </div>
       )}
 
-      {/* Analyse Button */}
+      {/* Analyse Button - Sticky */}
       <div className="analyse-section">
         <div className="analyse-icon-left">
           <ThunderboltOutlined />
@@ -370,163 +370,166 @@ export const InfoTab: React.FC = () => {
         </div>
       </div>
 
-      <Divider />
+      {/* Scrollable Content */}
+      <div className="info-tab-content">
+        <Divider />
 
-      {/* Overall Objective Section */}
-      <div className="info-section">
-        <div className="section-header">
-          <h3>{INFO_TAB_LABELS.OVERALL_OBJECTIVE}</h3>
+        {/* Overall Objective Section */}
+        <div className="info-section">
+          <div className="section-header">
+            <h3>{INFO_TAB_LABELS.OVERALL_OBJECTIVE}</h3>
+          </div>
+          <div className="section-content">
+            <TextArea
+              rows={4}
+              placeholder="Enter the overall objective description for this test ticket..."
+              value={overallObjective}
+              onChange={(e) => setOverallObjective(e.target.value)}
+              className="overall-objective-input"
+            />
+          </div>
         </div>
-        <div className="section-content">
-          <TextArea
-            rows={4}
-            placeholder="Enter the overall objective description for this test ticket..."
-            value={overallObjective}
-            onChange={(e) => setOverallObjective(e.target.value)}
-            className="overall-objective-input"
-          />
-        </div>
-      </div>
 
-      <Divider />
+        <Divider />
 
-      {/* File Upload Section */}
-      <div className="info-section">
-        <div className="section-header">
-          <h3>{INFO_TAB_LABELS.UPLOAD_FILES}</h3>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={handleAddUpload}
-            disabled={uploads.some((upload) => upload.isEditing)}
-          >
-            {INFO_TAB_BUTTONS.ADD_UPLOAD}
-          </Button>
-        </div>
-        <div className="section-content">
-          {uploads.length === 0 ? (
-            <div className="empty-message">
-              No files uploaded yet. Click "Add Upload" to upload a file.
-            </div>
-          ) : (
-            <div className="uploads-container">
-              {uploads.map((upload) => {
-                const hasEditingFile = uploads.some((u) => u.isEditing);
-                const isDisabled = hasEditingFile && !upload.isEditing;
-                return (
-                  <FileUploadItem
-                    key={upload.id}
-                    id={upload.id}
-                    fileType={upload.fileType}
-                    fileName={upload.file?.name || null}
-                    prompt={upload.prompt}
-                    isEditing={upload.isEditing}
-                    isDisabled={isDisabled}
-                    onFileTypeChange={handleFileTypeChange}
-                    onFileChange={handleFileChange}
-                    onPromptChange={handleFilePromptChange}
-                    onAccept={handleAcceptUpload}
-                    onDiscard={handleDiscardUpload}
-                    onEdit={handleEditUpload}
-                    onDelete={handleDeleteUpload}
-                  />
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div>
-
-      <Divider />
-
-      {/* Related Tickets Section */}
-      <div className="info-section">
-        <div className="section-header">
-          <h3>{INFO_TAB_LABELS.SELECT_RELATED_TICKETS}</h3>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => setTicketModalVisible(true)}
-            disabled={tickets.some((ticket) => ticket.isEditing)}
-          >
-            {INFO_TAB_BUTTONS.ADD_TICKETS}
-          </Button>
-        </div>
-        <div className="section-content">
-          {tickets.length === 0 ? (
-            <p className="empty-message">
-              No tickets selected yet. Click "Add Tickets" to select from
-              available tickets.
-            </p>
-          ) : (
-            <div className="selected-items-container">
-              <div className="selected-items-list">
-                {tickets.map((ticket) => {
-                  const hasEditingTicket = tickets.some((t) => t.isEditing);
-                  const isDisabled = hasEditingTicket && !ticket.isEditing;
+        {/* File Upload Section */}
+        <div className="info-section">
+          <div className="section-header">
+            <h3>{INFO_TAB_LABELS.UPLOAD_FILES}</h3>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={handleAddUpload}
+              disabled={uploads.some((upload) => upload.isEditing)}
+            >
+              {INFO_TAB_BUTTONS.ADD_UPLOAD}
+            </Button>
+          </div>
+          <div className="section-content">
+            {uploads.length === 0 ? (
+              <div className="empty-message">
+                No files uploaded yet. Click "Add Upload" to upload a file.
+              </div>
+            ) : (
+              <div className="uploads-container">
+                {uploads.map((upload) => {
+                  const hasEditingFile = uploads.some((u) => u.isEditing);
+                  const isDisabled = hasEditingFile && !upload.isEditing;
                   return (
-                    <TicketItem
-                      key={ticket.id}
-                      ticket={ticket}
+                    <FileUploadItem
+                      key={upload.id}
+                      id={upload.id}
+                      fileType={upload.fileType}
+                      fileName={upload.file?.name || null}
+                      prompt={upload.prompt}
+                      isEditing={upload.isEditing}
                       isDisabled={isDisabled}
-                      onPromptChange={handleTicketPromptChange}
-                      onAccept={handleAcceptTicket}
-                      onDiscard={handleDiscardTicket}
-                      onEdit={handleEditTicket}
-                      onDelete={handleDeleteTicket}
+                      onFileTypeChange={handleFileTypeChange}
+                      onFileChange={handleFileChange}
+                      onPromptChange={handleFilePromptChange}
+                      onAccept={handleAcceptUpload}
+                      onDiscard={handleDiscardUpload}
+                      onEdit={handleEditUpload}
+                      onDelete={handleDeleteUpload}
                     />
                   );
                 })}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
 
-      <Divider />
+        <Divider />
 
-      {/* Confluence Pages Section */}
-      <div className="info-section">
-        <div className="section-header">
-          <h3>{INFO_TAB_LABELS.SELECT_RELATED_CONFLUENCE_PAGES}</h3>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => setPageModalVisible(true)}
-            disabled={confluencePages.some((page) => page.isEditing)}
-          >
-            {INFO_TAB_BUTTONS.ADD_PAGES}
-          </Button>
-        </div>
-        <div className="section-content">
-          {confluencePages.length === 0 ? (
-            <p className="empty-message">
-              No pages selected yet. Click "Add Pages" to select from available
-              pages.
-            </p>
-          ) : (
-            <div className="selected-items-container">
-              <div className="selected-items-list">
-                {confluencePages.map((page) => {
-                  const isDisabled = confluencePages.some(
-                    (p) => p.url !== page.url && p.isEditing
-                  );
-                  return (
-                    <ConfluencePageItem
-                      key={page.id}
-                      page={page}
-                      isDisabled={isDisabled}
-                      onPromptChange={handlePagePromptChange}
-                      onAccept={handleAcceptPage}
-                      onDiscard={handleDiscardPage}
-                      onEdit={handleEditPage}
-                      onDelete={handleDeletePage}
-                    />
-                  );
-                })}
+        {/* Related Tickets Section */}
+        <div className="info-section">
+          <div className="section-header">
+            <h3>{INFO_TAB_LABELS.SELECT_RELATED_TICKETS}</h3>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setTicketModalVisible(true)}
+              disabled={tickets.some((ticket) => ticket.isEditing)}
+            >
+              {INFO_TAB_BUTTONS.ADD_TICKETS}
+            </Button>
+          </div>
+          <div className="section-content">
+            {tickets.length === 0 ? (
+              <p className="empty-message">
+                No tickets selected yet. Click "Add Tickets" to select from
+                available tickets.
+              </p>
+            ) : (
+              <div className="selected-items-container">
+                <div className="selected-items-list">
+                  {tickets.map((ticket) => {
+                    const hasEditingTicket = tickets.some((t) => t.isEditing);
+                    const isDisabled = hasEditingTicket && !ticket.isEditing;
+                    return (
+                      <TicketItem
+                        key={ticket.id}
+                        ticket={ticket}
+                        isDisabled={isDisabled}
+                        onPromptChange={handleTicketPromptChange}
+                        onAccept={handleAcceptTicket}
+                        onDiscard={handleDiscardTicket}
+                        onEdit={handleEditTicket}
+                        onDelete={handleDeleteTicket}
+                      />
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
+        </div>
+
+        <Divider />
+
+        {/* Confluence Pages Section */}
+        <div className="info-section">
+          <div className="section-header">
+            <h3>{INFO_TAB_LABELS.SELECT_RELATED_CONFLUENCE_PAGES}</h3>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setPageModalVisible(true)}
+              disabled={confluencePages.some((page) => page.isEditing)}
+            >
+              {INFO_TAB_BUTTONS.ADD_PAGES}
+            </Button>
+          </div>
+          <div className="section-content">
+            {confluencePages.length === 0 ? (
+              <p className="empty-message">
+                No pages selected yet. Click "Add Pages" to select from
+                available pages.
+              </p>
+            ) : (
+              <div className="selected-items-container">
+                <div className="selected-items-list">
+                  {confluencePages.map((page) => {
+                    const isDisabled = confluencePages.some(
+                      (p) => p.url !== page.url && p.isEditing
+                    );
+                    return (
+                      <ConfluencePageItem
+                        key={page.id}
+                        page={page}
+                        isDisabled={isDisabled}
+                        onPromptChange={handlePagePromptChange}
+                        onAccept={handleAcceptPage}
+                        onDiscard={handleDiscardPage}
+                        onEdit={handleEditPage}
+                        onDelete={handleDeletePage}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
