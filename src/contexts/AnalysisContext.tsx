@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useRef,
+  useCallback,
+} from 'react';
 import type { ReactNode } from 'react';
 
 interface AnalysisContextType {
@@ -6,6 +12,9 @@ interface AnalysisContextType {
   setIsAnalysed: (value: boolean) => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  hasUnsavedChanges: (tabKey: string) => boolean;
+  markTabAsChanged: (tabKey: string) => void;
+  markTabAsSaved: (tabKey: string) => void;
 }
 
 const AnalysisContext = createContext<AnalysisContextType | undefined>(
@@ -31,9 +40,32 @@ export const AnalysisProvider: React.FC<AnalysisProviderProps> = ({
   const [isAnalysed, setIsAnalysed] = useState(false);
   const [activeTab, setActiveTab] = useState('');
 
+  // Track unsaved changes per tab
+  const unsavedChangesRef = useRef<Map<string, boolean>>(new Map());
+
+  const hasUnsavedChanges = useCallback((tabKey: string) => {
+    return unsavedChangesRef.current.get(tabKey) || false;
+  }, []);
+
+  const markTabAsChanged = useCallback((tabKey: string) => {
+    unsavedChangesRef.current.set(tabKey, true);
+  }, []);
+
+  const markTabAsSaved = useCallback((tabKey: string) => {
+    unsavedChangesRef.current.set(tabKey, false);
+  }, []);
+
   return (
     <AnalysisContext.Provider
-      value={{ isAnalysed, setIsAnalysed, activeTab, setActiveTab }}
+      value={{
+        isAnalysed,
+        setIsAnalysed,
+        activeTab,
+        setActiveTab,
+        hasUnsavedChanges,
+        markTabAsChanged,
+        markTabAsSaved,
+      }}
     >
       {children}
     </AnalysisContext.Provider>

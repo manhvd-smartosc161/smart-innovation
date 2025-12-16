@@ -12,16 +12,19 @@ import { HotTable, HotTableClass } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
 import 'handsontable/dist/handsontable.full.css';
 import { SYSTEMS, COMPONENTS, MOCK_SCOPE_DATA } from '@/mock';
-import { MOCK_SCOPE_HISTORY } from '@/mock/history';
 import type { ScopeItem } from '@/types';
 import * as handontableService from '@/services';
-import { HistoryPanel } from '@/components/molecules/HistoryPanel';
+import {
+  HistoryPanel,
+  type HistoryItem,
+} from '@/components/molecules/HistoryPanel';
+import { useAnalysis } from '@/contexts';
+import { TAB_KEYS } from '@/constants';
 import './index.scss';
 import type Handsontable from 'handsontable';
 
 registerAllModules();
 
-const LOCAL_STORAGE_KEY = 'scope_tab_data';
 const SCOPE_ID_PREFIX = 'SCO.';
 const SCOPE_ID_LENGTH = 5;
 
@@ -118,27 +121,34 @@ const getHandsontableColumnConfig = (
 };
 
 export const ScopeTab: React.FC = () => {
+  const { markTabAsChanged, markTabAsSaved } = useAnalysis();
+  const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyVisible, setHistoryVisible] = useState(false);
-  const [scopeData, setScopeData] = useState<ScopeItem[]>(() =>
-    handontableService.loadDataFromStorage<ScopeItem>(
-      LOCAL_STORAGE_KEY,
-      MOCK_SCOPE_DATA,
-      'scope_id',
-      SCOPE_ID_PREFIX,
-      SCOPE_ID_LENGTH
-    )
-  );
+  const [scopeData, setScopeData] = useState<ScopeItem[]>(MOCK_SCOPE_DATA);
 
   // Track changed cells since last save
   const [changedCells, setChangedCells] = useState<Set<string>>(new Set());
   // Track cells to highlight after save
   const [savedCells, setSavedCells] = useState<Set<string>>(new Set());
 
-  const handsontableRef = useRef<HotTableClass>(null);
+  // Track pending changes to commit to history on save
+  const pendingChangesRef = useRef<{
+    added: string[];
+    edited: Array<{
+      itemId: string;
+      row: number;
+      column: string;
+      oldValue: string;
+      newValue: string;
+    }>;
+    deleted: string[];
+  }>({
+    added: [],
+    edited: [],
+    deleted: [],
+  });
 
-  useEffect(() => {
-    handontableService.saveDataToStorage(LOCAL_STORAGE_KEY, scopeData);
-  }, [scopeData]);
+  const handsontableRef = useRef<HotTableClass>(null);
 
   useEffect(() => {
     if (handsontableRef.current) {
@@ -213,6 +223,21 @@ export const ScopeTab: React.FC = () => {
             newChangedCells.add(cellKey);
           }
 
+          // Track pending edit (skip for empty initial values)
+          if (oldValue !== null && oldValue !== undefined && oldValue !== '') {
+            const itemId = updatedData[physicalRowIndex].scope_id;
+            const columnName =
+              String(propertyName).charAt(0).toUpperCase() +
+              String(propertyName).slice(1);
+            pendingChangesRef.current.edited.push({
+              itemId,
+              row: physicalRowIndex,
+              column: columnName,
+              oldValue: String(oldValue),
+              newValue: String(newValue),
+            });
+          }
+
           // Reset all columns after system when system changes
           if (propertyName === 'system') {
             updatedData[physicalRowIndex] = {
@@ -222,12 +247,38 @@ export const ScopeTab: React.FC = () => {
               element: '',
               description: '',
             } as ScopeItem;
+            // Track reset cells as changed
+            newChangedCells.add(
+              `${physicalRowIndex}-${COLUMN_INDEX.COMPONENT}`
+            );
+            newChangedCells.add(`${physicalRowIndex}-${COLUMN_INDEX.ELEMENT}`);
+            newChangedCells.add(
+              `${physicalRowIndex}-${COLUMN_INDEX.DESCRIPTION}`
+            );
           } else if (propertyName === 'component') {
+            // Reset element and description when component changes
             updatedData[physicalRowIndex] = {
               ...updatedData[physicalRowIndex],
               component: newValue,
               element: '',
+              description: '',
             } as ScopeItem;
+            // Track reset cells as changed
+            newChangedCells.add(`${physicalRowIndex}-${COLUMN_INDEX.ELEMENT}`);
+            newChangedCells.add(
+              `${physicalRowIndex}-${COLUMN_INDEX.DESCRIPTION}`
+            );
+          } else if (propertyName === 'element') {
+            // Reset description when element changes
+            updatedData[physicalRowIndex] = {
+              ...updatedData[physicalRowIndex],
+              element: newValue,
+              description: '',
+            } as ScopeItem;
+            // Track reset cell as changed
+            newChangedCells.add(
+              `${physicalRowIndex}-${COLUMN_INDEX.DESCRIPTION}`
+            );
           } else {
             updatedData[physicalRowIndex] = {
               ...updatedData[physicalRowIndex],
@@ -242,15 +293,20 @@ export const ScopeTab: React.FC = () => {
       if (hasDataChanged) {
         setScopeData(updatedData);
         setChangedCells(newChangedCells);
+        markTabAsChanged(TAB_KEYS.SCOPE);
       }
     },
-    [scopeData, changedCells]
+    [scopeData, changedCells, markTabAsChanged]
   );
 
   const handleAddNewRow = useCallback(() => {
     const newRow = createEmptyScopeItem(scopeData);
     const updatedData = [...scopeData, newRow];
     setScopeData(updatedData);
+
+    // Track pending add (will be committed on save)
+    pendingChangesRef.current.added.push(newRow.scope_id);
+    markTabAsChanged(TAB_KEYS.SCOPE);
 
     setTimeout(() => {
       handsontableRef.current?.hotInstance?.selectCell(
@@ -261,7 +317,7 @@ export const ScopeTab: React.FC = () => {
         updatedData.length - 1
       );
     }, 100);
-  }, [scopeData]);
+  }, [scopeData, markTabAsChanged]);
 
   const handleRemoveSelectedRows = useCallback(() => {
     const hotTable = handsontableRef.current;
@@ -281,10 +337,16 @@ export const ScopeTab: React.FC = () => {
 
     // Collect all selected row indices
     const rowsToRemove: number[] = [];
+    const deletedIds: string[] = [];
+
     selected.forEach((range) => {
       const [startRow, , endRow] = range;
       for (let row = startRow; row <= endRow; row++) {
         rowsToRemove.push(row);
+        // Get the scope_id before removing
+        if (scopeData[row]) {
+          deletedIds.push(scopeData[row].scope_id);
+        }
       }
     });
 
@@ -296,8 +358,12 @@ export const ScopeTab: React.FC = () => {
       hot.alter('remove_row', rowIndex, 1);
     });
 
+    // Track pending delete (will be committed on save)
+    pendingChangesRef.current.deleted.push(...deletedIds);
+    markTabAsChanged(TAB_KEYS.SCOPE);
+
     message.success(`Removed ${rowsToRemove.length} row(s)`);
-  }, []);
+  }, [scopeData, markTabAsChanged]);
 
   const handleAfterRemoveRow = useCallback(
     (
@@ -351,14 +417,79 @@ export const ScopeTab: React.FC = () => {
       return;
     }
 
+    // Commit all pending changes to history
+    const pending = pendingChangesRef.current;
+    const newHistoryItems: HistoryItem[] = [];
+
+    // Helper to create history item
+    const createHistoryItem = (
+      action: 'add' | 'edit' | 'delete',
+      description: string,
+      cell?: HistoryItem['cell']
+    ): HistoryItem => ({
+      id: `history-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      user: { name: 'Mạnh Vũ Duy (KO)', avatar: undefined },
+      timestamp: new Date(),
+      action,
+      description,
+      cell,
+    });
+
+    // Log added items
+    pending.added.forEach((itemId) => {
+      newHistoryItems.push(createHistoryItem('add', `Added ${itemId}`));
+    });
+
+    // Deduplicate edited items - keep only the last edit for each itemId+column
+    const editMap = new Map<string, (typeof pending.edited)[0]>();
+    pending.edited.forEach((edit) => {
+      const key = `${edit.itemId}-${edit.column}`;
+      editMap.set(key, edit);
+    });
+
+    // Log deduplicated edited items
+    editMap.forEach(({ itemId, row, column, oldValue, newValue }) => {
+      newHistoryItems.push(
+        createHistoryItem('edit', `Updated ${column} in ${itemId}`, {
+          row,
+          itemId,
+          column,
+          oldValue,
+          newValue,
+        })
+      );
+    });
+
+    // Log deleted items
+    if (pending.deleted.length > 0) {
+      const description =
+        pending.deleted.length === 1
+          ? `Deleted ${pending.deleted[0]}`
+          : `Deleted ${pending.deleted.length} rows: ${pending.deleted.join(', ')}`;
+      newHistoryItems.push(createHistoryItem('delete', description));
+    }
+
+    // Update history (prepend new items)
+    setHistory((prev) => [...newHistoryItems, ...prev]);
+
+    // Clear pending changes
+    pendingChangesRef.current = {
+      added: [],
+      edited: [],
+      deleted: [],
+    };
+
     // Move changed cells to saved cells for highlighting
     setSavedCells(new Set(changedCells));
     // Clear changed cells
     setChangedCells(new Set());
 
+    // Mark tab as saved
+    markTabAsSaved(TAB_KEYS.SCOPE);
+
     console.log('Scope data to save:', scopeData);
     message.success(`Scope data has been saved successfully!`);
-  }, [scopeData, changedCells]);
+  }, [scopeData, changedCells, markTabAsSaved]);
 
   const handleUndo = useCallback(() => {
     const hot = handsontableRef.current?.hotInstance;
@@ -531,7 +662,7 @@ export const ScopeTab: React.FC = () => {
       <HistoryPanel
         visible={historyVisible}
         onClose={() => setHistoryVisible(false)}
-        history={MOCK_SCOPE_HISTORY}
+        history={history}
         title="Scope Change History"
       />
     </div>

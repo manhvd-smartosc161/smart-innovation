@@ -12,122 +12,46 @@ import { HotTable, HotTableClass } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
 import type { CellChange } from 'handsontable/common';
 import 'handsontable/dist/handsontable.full.css';
-import { MOCK_CHECKLIST_DATA, MOCK_CHECKLIST_HISTORY } from '@/mock';
-import type { ChecklistItem, ScopeItem, ImpactItem } from '@/types';
-import { HistoryPanel } from '@/components/molecules/HistoryPanel';
+import { MOCK_CHECKLIST_DATA } from '@/mock';
+import type { ChecklistItem } from '@/types';
+import {
+  HistoryPanel,
+  type HistoryItem,
+} from '@/components/molecules/HistoryPanel';
+import { useAnalysis } from '@/contexts';
+import { TAB_KEYS } from '@/constants';
 import './index.scss';
 
 registerAllModules();
 
-const STORAGE_KEY = 'checklist_table_data';
-const SCOPE_STORAGE_KEY = 'scope_tab_data';
-const IMPACT_STORAGE_KEY = 'impact_table_data';
-
 export const ChecklistTab: React.FC = () => {
+  const { markTabAsChanged, markTabAsSaved } = useAnalysis();
   const hotTableRef = useRef<HotTableClass>(null);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyVisible, setHistoryVisible] = useState(false);
-  const [data, setData] = useState<ChecklistItem[]>(() => {
-    const savedData = localStorage.getItem(STORAGE_KEY);
-    if (savedData) {
-      try {
-        return JSON.parse(savedData);
-      } catch (error) {
-        console.error('Failed to parse saved data:', error);
-        return MOCK_CHECKLIST_DATA;
-      }
-    }
-    return MOCK_CHECKLIST_DATA;
-  });
+  const [data, setData] = useState<ChecklistItem[]>(MOCK_CHECKLIST_DATA);
 
   // Track changed cells since last save
   const [changedCells, setChangedCells] = useState<Set<string>>(new Set());
   // Track cells to highlight after save
   const [savedCells, setSavedCells] = useState<Set<string>>(new Set());
 
-  // Load scope and impact data for item dropdown
-  const [scopeItems, setScopeItems] = useState<string[]>(() => {
-    const scopeData = localStorage.getItem(SCOPE_STORAGE_KEY);
-    if (scopeData) {
-      try {
-        const parsed: ScopeItem[] = JSON.parse(scopeData);
-        return parsed.map((item) => item.scope_id);
-      } catch (error) {
-        console.error('Failed to load scope data:', error);
-        return [];
-      }
-    }
-    return [];
+  // Track pending changes to commit to history on save
+  const pendingChangesRef = useRef<{
+    added: string[];
+    edited: Array<{
+      itemId: string;
+      row: number;
+      column: string;
+      oldValue: string;
+      newValue: string;
+    }>;
+    deleted: string[];
+  }>({
+    added: [],
+    edited: [],
+    deleted: [],
   });
-
-  const [impactItems, setImpactItems] = useState<string[]>(() => {
-    const impactData = localStorage.getItem(IMPACT_STORAGE_KEY);
-    if (impactData) {
-      try {
-        const parsed: ImpactItem[] = JSON.parse(impactData);
-        return parsed.map((item) => item.impact_id);
-      } catch (error) {
-        console.error('Failed to load impact data:', error);
-        return [];
-      }
-    }
-    return [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }, [data]);
-
-  // Listen for changes in scope data
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const scopeData = localStorage.getItem(SCOPE_STORAGE_KEY);
-      if (scopeData) {
-        try {
-          const parsed: ScopeItem[] = JSON.parse(scopeData);
-          setScopeItems(parsed.map((item) => item.scope_id));
-        } catch (error) {
-          console.error('Failed to load scope data:', error);
-        }
-      }
-    };
-
-    // Listen for storage events from other tabs/windows
-    window.addEventListener('storage', handleStorageChange);
-
-    // Also check periodically for updates in the same tab
-    const interval = setInterval(handleStorageChange, 1000);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      clearInterval(interval);
-    };
-  }, []);
-
-  // Listen for changes in impact data
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const impactData = localStorage.getItem(IMPACT_STORAGE_KEY);
-      if (impactData) {
-        try {
-          const parsed: ImpactItem[] = JSON.parse(impactData);
-          setImpactItems(parsed.map((item) => item.impact_id));
-        } catch (error) {
-          console.error('Failed to load impact data:', error);
-        }
-      }
-    };
-
-    // Listen for storage events from other tabs/windows
-    window.addEventListener('storage', handleStorageChange);
-
-    // Also check periodically for updates in the same tab
-    const interval = setInterval(handleStorageChange, 1000);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      clearInterval(interval);
-    };
-  }, []);
 
   // Re-render table when savedCells changes to apply highlight
   useEffect(() => {
@@ -150,11 +74,15 @@ export const ChecklistTab: React.FC = () => {
     };
     setData([...data, newRow]);
 
+    // Track pending add (will be committed on save)
+    pendingChangesRef.current.added.push(newRow.checklist_id);
+    markTabAsChanged(TAB_KEYS.CHECKLIST);
+
     setTimeout(() => {
       hotTableRef.current?.hotInstance?.selectCell(data.length, 0);
       hotTableRef.current?.hotInstance?.scrollViewportTo(data.length);
     }, 100);
-  }, [data]);
+  }, [data, markTabAsChanged]);
 
   const handleRemoveRow = useCallback(() => {
     const hot = hotTableRef.current?.hotInstance;
@@ -167,10 +95,16 @@ export const ChecklistTab: React.FC = () => {
     }
 
     const rowsToRemove: number[] = [];
+    const deletedIds: string[] = [];
+
     selected.forEach((range) => {
       const [startRow, , endRow] = range;
       for (let row = startRow; row <= endRow; row++) {
         rowsToRemove.push(row);
+        // Get the checklist_id before removing
+        if (data[row]) {
+          deletedIds.push(data[row].checklist_id);
+        }
       }
     });
 
@@ -180,8 +114,12 @@ export const ChecklistTab: React.FC = () => {
       hot.alter('remove_row', rowIndex, 1);
     });
 
+    // Track pending delete (will be committed on save)
+    pendingChangesRef.current.deleted.push(...deletedIds);
+    markTabAsChanged(TAB_KEYS.CHECKLIST);
+
     message.success(`Removed ${rowsToRemove.length} row(s)`);
-  }, []);
+  }, [data, markTabAsChanged]);
 
   const handleSave = useCallback(() => {
     const validData = data.filter(
@@ -193,14 +131,79 @@ export const ChecklistTab: React.FC = () => {
       return;
     }
 
+    // Commit all pending changes to history
+    const pending = pendingChangesRef.current;
+    const newHistoryItems: HistoryItem[] = [];
+
+    // Helper to create history item
+    const createHistoryItem = (
+      action: 'add' | 'edit' | 'delete',
+      description: string,
+      cell?: HistoryItem['cell']
+    ): HistoryItem => ({
+      id: `history-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      user: { name: 'Mạnh Vũ Duy (KO)', avatar: undefined },
+      timestamp: new Date(),
+      action,
+      description,
+      cell,
+    });
+
+    // Log added items
+    pending.added.forEach((itemId) => {
+      newHistoryItems.push(createHistoryItem('add', `Added ${itemId}`));
+    });
+
+    // Deduplicate edited items - keep only the last edit for each itemId+column
+    const editMap = new Map<string, (typeof pending.edited)[0]>();
+    pending.edited.forEach((edit) => {
+      const key = `${edit.itemId}-${edit.column}`;
+      editMap.set(key, edit);
+    });
+
+    // Log deduplicated edited items
+    editMap.forEach(({ itemId, row, column, oldValue, newValue }) => {
+      newHistoryItems.push(
+        createHistoryItem('edit', `Updated ${column} in ${itemId}`, {
+          row,
+          itemId,
+          column,
+          oldValue,
+          newValue,
+        })
+      );
+    });
+
+    // Log deleted items
+    if (pending.deleted.length > 0) {
+      const description =
+        pending.deleted.length === 1
+          ? `Deleted ${pending.deleted[0]}`
+          : `Deleted ${pending.deleted.length} rows: ${pending.deleted.join(', ')}`;
+      newHistoryItems.push(createHistoryItem('delete', description));
+    }
+
+    // Update history (prepend new items)
+    setHistory((prev) => [...newHistoryItems, ...prev]);
+
+    // Clear pending changes
+    pendingChangesRef.current = {
+      added: [],
+      edited: [],
+      deleted: [],
+    };
+
     // Move changed cells to saved cells for highlighting
     setSavedCells(new Set(changedCells));
     // Clear changed cells
     setChangedCells(new Set());
 
+    // Mark tab as saved
+    markTabAsSaved(TAB_KEYS.CHECKLIST);
+
     console.log('Checklist data to save:', validData);
     message.success('Checklist data has been saved successfully!');
-  }, [data, changedCells]);
+  }, [data, changedCells, markTabAsSaved]);
 
   const handleUndo = useCallback(() => {
     const hot = hotTableRef.current?.hotInstance;
@@ -290,6 +293,24 @@ export const ChecklistTab: React.FC = () => {
                 newChangedCells.add(cellKey);
                 shouldUpdateChangedCells = true;
               }
+
+              // Track pending edit (skip for empty initial values)
+              if (
+                oldValue !== null &&
+                oldValue !== undefined &&
+                oldValue !== ''
+              ) {
+                const itemId = newData[row].checklist_id;
+                const columnName =
+                  String(prop).charAt(0).toUpperCase() + String(prop).slice(1);
+                pendingChangesRef.current.edited.push({
+                  itemId,
+                  row,
+                  column: columnName,
+                  oldValue: String(oldValue),
+                  newValue: String(newValue),
+                });
+              }
             }
 
             // Reset item and description when type changes
@@ -300,6 +321,27 @@ export const ChecklistTab: React.FC = () => {
                 item: '',
                 description: '',
               };
+              // Track reset cells as changed
+              const itemCol = hot.propToCol('item');
+              const descCol = hot.propToCol('description');
+              if (itemCol !== null) newChangedCells.add(`${row}-${itemCol}`);
+              if (descCol !== null) newChangedCells.add(`${row}-${descCol}`);
+              shouldUpdateChangedCells = true;
+              hasChanges = true;
+            } else if (
+              prop === 'item' &&
+              String(oldValue) !== String(newValue)
+            ) {
+              // Reset description when item changes
+              newData[row] = {
+                ...newData[row],
+                item: newValue || '',
+                description: '',
+              };
+              // Track reset cell as changed
+              const descCol = hot.propToCol('description');
+              if (descCol !== null) newChangedCells.add(`${row}-${descCol}`);
+              shouldUpdateChangedCells = true;
               hasChanges = true;
             } else if (
               typeof prop === 'string' &&
@@ -319,9 +361,10 @@ export const ChecklistTab: React.FC = () => {
 
       if (shouldUpdateChangedCells) {
         setChangedCells(newChangedCells);
+        markTabAsChanged(TAB_KEYS.CHECKLIST);
       }
     },
-    [changedCells]
+    [data, changedCells, markTabAsChanged]
   );
 
   const columns = [
@@ -366,21 +409,14 @@ export const ChecklistTab: React.FC = () => {
         cellProperties.className = 'saved-cell-highlight';
       }
 
-      // Column index 2 corresponds to 'item'
+      // Column index 2 corresponds to 'item' - empty source for now
       if (col === 2) {
-        const rowData = data[row];
-        if (rowData && rowData.type === 'Scope') {
-          cellProperties.source = scopeItems;
-        } else if (rowData && rowData.type === 'Impact') {
-          cellProperties.source = impactItems;
-        } else {
-          cellProperties.source = [];
-        }
+        cellProperties.source = [];
       }
 
       return cellProperties;
     },
-    [savedCells, data, scopeItems, impactItems]
+    [savedCells, data]
   );
 
   return (
@@ -480,7 +516,7 @@ export const ChecklistTab: React.FC = () => {
       <HistoryPanel
         visible={historyVisible}
         onClose={() => setHistoryVisible(false)}
-        history={MOCK_CHECKLIST_HISTORY}
+        history={history}
         title="Checklist Change History"
       />
     </div>

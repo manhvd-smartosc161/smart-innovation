@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { Tabs } from 'antd';
+import { Tabs, Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import {
   InfoTab,
@@ -22,7 +23,8 @@ const allItems = [
 ];
 
 export const TestCasePanel: React.FC = () => {
-  const { isAnalysed, activeTab, setActiveTab } = useAnalysis();
+  const { isAnalysed, activeTab, setActiveTab, hasUnsavedChanges } =
+    useAnalysis();
 
   useEffect(() => {
     if (!activeTab) {
@@ -34,28 +36,76 @@ export const TestCasePanel: React.FC = () => {
     ? allItems
     : allItems.filter((item) => item.key === TAB_KEYS.INITIALIZATION);
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case TAB_KEYS.INITIALIZATION:
-        return <InfoTab />;
-      case TAB_KEYS.SCOPE:
-        return <ScopeTab />;
-      case TAB_KEYS.IMPACT:
-        return <ImpactTab />;
-      case TAB_KEYS.CHECKLIST:
-        return <ChecklistTab />;
-      case TAB_KEYS.TEST_CASES:
-      case TAB_KEYS.TEST_CASE_DETAILS:
-      default:
-        return <TestCaseDetailTab />;
+  const handleTabChange = (newTab: string) => {
+    // Check if current tab has unsaved changes
+    if (activeTab && hasUnsavedChanges(activeTab)) {
+      // Show confirmation modal
+      Modal.confirm({
+        title: 'Unsaved Changes',
+        icon: <ExclamationCircleOutlined />,
+        content:
+          'You have unsaved changes. Are you sure you want to leave? Your changes will be lost.',
+        okText: 'Leave without saving',
+        okType: 'danger',
+        cancelText: 'Stay on page',
+        onOk: () => {
+          // User chose to leave - just switch tab (keep unsaved flag)
+          setActiveTab(newTab);
+        },
+      });
+    } else {
+      // No unsaved changes - switch tab directly
+      setActiveTab(newTab);
     }
+  };
+
+  const renderContent = () => {
+    return (
+      <>
+        <div
+          style={{
+            display: activeTab === TAB_KEYS.INITIALIZATION ? 'block' : 'none',
+          }}
+        >
+          <InfoTab />
+        </div>
+        <div
+          style={{ display: activeTab === TAB_KEYS.SCOPE ? 'block' : 'none' }}
+        >
+          <ScopeTab />
+        </div>
+        <div
+          style={{ display: activeTab === TAB_KEYS.IMPACT ? 'block' : 'none' }}
+        >
+          <ImpactTab />
+        </div>
+        <div
+          style={{
+            display: activeTab === TAB_KEYS.CHECKLIST ? 'block' : 'none',
+          }}
+        >
+          <ChecklistTab />
+        </div>
+        <div
+          style={{
+            display:
+              activeTab === TAB_KEYS.TEST_CASES ||
+              activeTab === TAB_KEYS.TEST_CASE_DETAILS
+                ? 'block'
+                : 'none',
+          }}
+        >
+          <TestCaseDetailTab />
+        </div>
+      </>
+    );
   };
 
   return (
     <div className="test-case-panel">
       <Tabs
         activeKey={activeTab}
-        onChange={setActiveTab}
+        onChange={handleTabChange}
         items={items}
         className="panel-tabs"
       />

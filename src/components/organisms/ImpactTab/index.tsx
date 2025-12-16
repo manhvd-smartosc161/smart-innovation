@@ -15,39 +15,45 @@ import 'handsontable/dist/handsontable.full.css';
 import { SYSTEMS, COMPONENTS } from '@/mock';
 import * as handontableService from '@/services';
 import { MOCK_IMPACT_DATA } from '@/mock';
-import { MOCK_IMPACT_HISTORY } from '@/mock/history';
 import type { ImpactItem } from '@/types';
-import { HistoryPanel } from '@/components/molecules/HistoryPanel';
+import {
+  HistoryPanel,
+  type HistoryItem,
+} from '@/components/molecules/HistoryPanel';
+import { useAnalysis } from '@/contexts';
+import { TAB_KEYS } from '@/constants';
 import './index.scss';
 
 registerAllModules();
 
-const STORAGE_KEY = 'impact_table_data';
-
 export const ImpactTab: React.FC = () => {
+  const { markTabAsChanged, markTabAsSaved } = useAnalysis();
   const hotTableRef = useRef<HotTableClass>(null);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyVisible, setHistoryVisible] = useState(false);
-  const [data, setData] = useState<ImpactItem[]>(() => {
-    const savedData = localStorage.getItem(STORAGE_KEY);
-    if (savedData) {
-      try {
-        return JSON.parse(savedData);
-      } catch (error) {
-        console.error('Failed to parse saved data:', error);
-        return MOCK_IMPACT_DATA;
-      }
-    }
-    return MOCK_IMPACT_DATA;
-  });
+  const [data, setData] = useState<ImpactItem[]>(MOCK_IMPACT_DATA);
 
   // Track changed cells since last save
   const [changedCells, setChangedCells] = useState<Set<string>>(new Set());
   // Track cells to highlight after save
   const [savedCells, setSavedCells] = useState<Set<string>>(new Set());
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }, [data]);
+  // Track pending changes to commit to history on save
+  const pendingChangesRef = useRef<{
+    added: string[];
+    edited: Array<{
+      itemId: string;
+      row: number;
+      column: string;
+      oldValue: string;
+      newValue: string;
+    }>;
+    deleted: string[];
+  }>({
+    added: [],
+    edited: [],
+    deleted: [],
+  });
 
   // Re-render table when savedCells changes to apply highlight
   useEffect(() => {
@@ -70,6 +76,10 @@ export const ImpactTab: React.FC = () => {
       description: '',
     };
     setData([...data, newRow]);
+
+    // Track pending add (will be committed on save)
+    pendingChangesRef.current.added.push(newRow.impact_id);
+    markTabAsChanged(TAB_KEYS.IMPACT);
   };
 
   const handleRemoveRow = () => {
@@ -84,10 +94,16 @@ export const ImpactTab: React.FC = () => {
 
     // Collect all selected row indices
     const rowsToRemove: number[] = [];
+    const deletedIds: string[] = [];
+
     selected.forEach((range) => {
       const [startRow, , endRow] = range;
       for (let row = startRow; row <= endRow; row++) {
         rowsToRemove.push(row);
+        // Get the impact_id before removing
+        if (data[row]) {
+          deletedIds.push(data[row].impact_id);
+        }
       }
     });
 
@@ -99,6 +115,10 @@ export const ImpactTab: React.FC = () => {
     rowsToRemove.forEach((rowIndex) => {
       hot.alter('remove_row', rowIndex, 1);
     });
+
+    // Track pending delete (will be committed on save)
+    pendingChangesRef.current.deleted.push(...deletedIds);
+    markTabAsChanged(TAB_KEYS.IMPACT);
 
     message.success(`Removed ${rowsToRemove.length} row(s)`);
   };
@@ -114,14 +134,79 @@ export const ImpactTab: React.FC = () => {
       return;
     }
 
+    // Commit all pending changes to history
+    const pending = pendingChangesRef.current;
+    const newHistoryItems: HistoryItem[] = [];
+
+    // Helper to create history item
+    const createHistoryItem = (
+      action: 'add' | 'edit' | 'delete',
+      description: string,
+      cell?: HistoryItem['cell']
+    ): HistoryItem => ({
+      id: `history-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      user: { name: 'Mạnh Vũ Duy (KO)', avatar: undefined },
+      timestamp: new Date(),
+      action,
+      description,
+      cell,
+    });
+
+    // Log added items
+    pending.added.forEach((itemId) => {
+      newHistoryItems.push(createHistoryItem('add', `Added ${itemId}`));
+    });
+
+    // Deduplicate edited items - keep only the last edit for each itemId+column
+    const editMap = new Map<string, (typeof pending.edited)[0]>();
+    pending.edited.forEach((edit) => {
+      const key = `${edit.itemId}-${edit.column}`;
+      editMap.set(key, edit);
+    });
+
+    // Log deduplicated edited items
+    editMap.forEach(({ itemId, row, column, oldValue, newValue }) => {
+      newHistoryItems.push(
+        createHistoryItem('edit', `Updated ${column} in ${itemId}`, {
+          row,
+          itemId,
+          column,
+          oldValue,
+          newValue,
+        })
+      );
+    });
+
+    // Log deleted items
+    if (pending.deleted.length > 0) {
+      const description =
+        pending.deleted.length === 1
+          ? `Deleted ${pending.deleted[0]}`
+          : `Deleted ${pending.deleted.length} rows: ${pending.deleted.join(', ')}`;
+      newHistoryItems.push(createHistoryItem('delete', description));
+    }
+
+    // Update history (prepend new items)
+    setHistory((prev) => [...newHistoryItems, ...prev]);
+
+    // Clear pending changes
+    pendingChangesRef.current = {
+      added: [],
+      edited: [],
+      deleted: [],
+    };
+
     // Move changed cells to saved cells for highlighting
     setSavedCells(new Set(changedCells));
     // Clear changed cells
     setChangedCells(new Set());
 
+    // Mark tab as saved
+    markTabAsSaved(TAB_KEYS.IMPACT);
+
     console.log('Impact data to save:', validData);
     message.success('Impact data has been saved successfully!');
-  }, [data, changedCells]);
+  }, [data, changedCells, markTabAsSaved]);
 
   const handleUndo = () => {
     const hot = hotTableRef.current?.hotInstance;
@@ -211,6 +296,24 @@ export const ImpactTab: React.FC = () => {
                 newChangedCells.add(cellKey);
                 shouldUpdateChangedCells = true;
               }
+
+              // Track pending edit (skip for empty initial values)
+              if (
+                oldValue !== null &&
+                oldValue !== undefined &&
+                oldValue !== ''
+              ) {
+                const itemId = newData[row].impact_id;
+                const columnName =
+                  String(prop).charAt(0).toUpperCase() + String(prop).slice(1);
+                pendingChangesRef.current.edited.push({
+                  itemId,
+                  row,
+                  column: columnName,
+                  oldValue: String(oldValue),
+                  newValue: String(newValue),
+                });
+              }
             }
 
             // Reset all columns after system when system changes
@@ -222,16 +325,50 @@ export const ImpactTab: React.FC = () => {
                 element: '',
                 description: '',
               };
+              // Track reset cells as changed
+              const componentCol = hot.propToCol('component');
+              const elementCol = hot.propToCol('element');
+              const descCol = hot.propToCol('description');
+              if (componentCol !== null)
+                newChangedCells.add(`${row}-${componentCol}`);
+              if (elementCol !== null)
+                newChangedCells.add(`${row}-${elementCol}`);
+              if (descCol !== null) newChangedCells.add(`${row}-${descCol}`);
+              shouldUpdateChangedCells = true;
               hasChanges = true;
             } else if (
               prop === 'component' &&
               String(oldValue) !== String(newValue)
             ) {
+              // Reset element and description when component changes
               newData[row] = {
                 ...newData[row],
                 component: newValue || '',
                 element: '',
+                description: '',
               };
+              // Track reset cells as changed
+              const elementCol = hot.propToCol('element');
+              const descCol = hot.propToCol('description');
+              if (elementCol !== null)
+                newChangedCells.add(`${row}-${elementCol}`);
+              if (descCol !== null) newChangedCells.add(`${row}-${descCol}`);
+              shouldUpdateChangedCells = true;
+              hasChanges = true;
+            } else if (
+              prop === 'element' &&
+              String(oldValue) !== String(newValue)
+            ) {
+              // Reset description when element changes
+              newData[row] = {
+                ...newData[row],
+                element: newValue || '',
+                description: '',
+              };
+              // Track reset cell as changed
+              const descCol = hot.propToCol('description');
+              if (descCol !== null) newChangedCells.add(`${row}-${descCol}`);
+              shouldUpdateChangedCells = true;
               hasChanges = true;
             } else if (
               typeof prop === 'string' &&
@@ -251,9 +388,10 @@ export const ImpactTab: React.FC = () => {
 
       if (shouldUpdateChangedCells) {
         setChangedCells(newChangedCells);
+        markTabAsChanged(TAB_KEYS.IMPACT);
       }
     },
-    [changedCells]
+    [changedCells, markTabAsChanged]
   );
 
   const columns = [
@@ -419,7 +557,7 @@ export const ImpactTab: React.FC = () => {
       <HistoryPanel
         visible={historyVisible}
         onClose={() => setHistoryVisible(false)}
-        history={MOCK_IMPACT_HISTORY}
+        history={history}
         title="Impact Change History"
       />
     </div>
