@@ -15,7 +15,8 @@ export interface ImpactItem {
 }
 
 export interface ChecklistItem {
-  id: string;
-  element: string;
-  verification: string;
+  checklist_id: string;
+  type: 'Scope' | 'Impact' | '';
+  item: string;
+  description: string;
 }

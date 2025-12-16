@@ -75,3 +75,4 @@ const generateFakeHistory = (
 
 export const MOCK_IMPACT_HISTORY = generateFakeHistory('IMP.');
 export const MOCK_SCOPE_HISTORY = generateFakeHistory('SCO.');
+export const MOCK_CHECKLIST_HISTORY = generateFakeHistory('CHK.');

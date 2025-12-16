@@ -2,20 +2,23 @@ import type { ChecklistItem } from '@/types';
 
 export const MOCK_CHECKLIST_DATA: ChecklistItem[] = [
   {
-    id: '1',
-    element: 'order-queue',
-    verification:
+    checklist_id: 'CL.00001',
+    type: 'Scope',
+    item: 'SCO.00001',
+    description:
       'Verify order queue processes messages correctly after changes',
   },
   {
-    id: '2',
-    element: 'order-table',
-    verification:
-      'Verify order table queries return correct data with new schema',
+    checklist_id: 'CL.00002',
+    type: 'Impact',
+    item: 'IMP.00001',
+    description: 'Verify impact on order queue processing',
   },
   {
-    id: '3',
-    element: 'fulfillment-flow',
-    verification: 'Verify fulfillment flow completes end-to-end without errors',
+    checklist_id: 'CL.00003',
+    type: 'Scope',
+    item: 'SCO.00002',
+    description:
+      'Verify order table queries return correct data with new schema',
   },
 ];
