@@ -1,2 +1,2 @@
-export * from './handsontable';
+export * from './common';
 export * from './historyService';

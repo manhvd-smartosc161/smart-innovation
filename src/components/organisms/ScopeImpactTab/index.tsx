@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Divider } from 'antd';
 import { FileDoneOutlined } from '@ant-design/icons';
-import { Scope } from './Scope';
+import { ScopeNew as Scope } from './ScopeNew';
 import { Impact } from './Impact';
 import { useAnalysis } from '@/contexts';
 import { TAB_KEYS } from '@/constants';

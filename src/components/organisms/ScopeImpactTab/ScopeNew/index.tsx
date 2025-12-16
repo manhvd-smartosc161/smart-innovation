@@ -1,27 +1,33 @@
-import React, { useState, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { message } from 'antd';
-import {
-  EditableTable,
-  type EditableColumnConfig,
-} from '@/components/molecules/EditableTable';
-import { SYSTEMS, COMPONENTS, MOCK_IMPACT_DATA } from '@/mock';
-import * as handontableService from '@/services';
-import type { ImpactItem } from '@/types';
+import { SYSTEMS, COMPONENTS, MOCK_SCOPE_DATA } from '@/mock';
+import type { ScopeItem } from '@/types';
+import * as tableService from '@/services';
 import {
   HistoryPanel,
   type HistoryItem,
 } from '@/components/molecules/HistoryPanel';
+import {
+  EditableTable,
+  type EditableColumnConfig,
+} from '@/components/molecules/EditableTable';
 import { useAnalysis } from '@/contexts';
 import './index.scss';
 
-const generateImpactId = (rowIndex: number): string => {
-  const idNumber = (rowIndex + 1).toString().padStart(5, '0');
-  return `IMP.${idNumber}`;
-};
+const SCOPE_ID_PREFIX = 'SCO.';
+const SCOPE_ID_LENGTH = 5;
 
-const createEmptyImpactItem = (existingData: ImpactItem[]): ImpactItem => {
+const systemDropdownOptions = SYSTEMS.map((s) => s.value);
+const componentDropdownOptions = COMPONENTS.map((c) => c.value);
+
+const createEmptyScopeItem = (existingData: ScopeItem[]): ScopeItem => {
   return {
-    impact_id: generateImpactId(existingData.length),
+    scope_id: tableService.generateNextId(
+      existingData,
+      'scope_id',
+      SCOPE_ID_PREFIX,
+      SCOPE_ID_LENGTH
+    ),
     system: '',
     component: '',
     element: '',
@@ -29,18 +35,16 @@ const createEmptyImpactItem = (existingData: ImpactItem[]): ImpactItem => {
   };
 };
 
-export const Impact: React.FC = () => {
-  const { markTabAsSaved } = useAnalysis();
-  const [data, setData] = useState<ImpactItem[]>(MOCK_IMPACT_DATA);
+export const ScopeNew: React.FC = () => {
+  const { markTabAsChanged, markTabAsSaved } = useAnalysis();
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyVisible, setHistoryVisible] = useState(false);
-
-  // Track changed cells since last save (for highlighting)
-  const [changedCells, setChangedCells] = useState<Set<string>>(new Set());
+  const [scopeData, setScopeData] = useState<ScopeItem[]>(MOCK_SCOPE_DATA);
   const [savedCells, setSavedCells] = useState<Set<string>>(new Set());
+  const [changedCells, setChangedCells] = useState<Set<string>>(new Set());
 
   // Track pending changes to commit to history on save
-  const pendingChangesRef = useRef<{
+  const pendingChangesRef = React.useRef<{
     added: string[];
     edited: Array<{
       itemId: string;
@@ -56,13 +60,14 @@ export const Impact: React.FC = () => {
     deleted: [],
   });
 
-  const columns: EditableColumnConfig<ImpactItem>[] = useMemo(
+  const columns: EditableColumnConfig<ScopeItem>[] = useMemo(
     () => [
       {
-        key: 'impact_id',
-        title: 'Impact ID',
-        dataIndex: 'impact_id',
+        key: 'scope_id',
+        title: 'Scope ID',
+        dataIndex: 'scope_id',
         width: 120,
+        editable: false,
         readOnly: true,
       },
       {
@@ -72,12 +77,12 @@ export const Impact: React.FC = () => {
         width: 150,
         editable: true,
         type: 'dropdown',
-        options: SYSTEMS.map((s) => s.value),
+        options: systemDropdownOptions,
         onCellChange: (record, value) => {
+          // Only reset dependent fields if system actually changed
           if (record.system === value) {
             return { system: value };
           }
-          // Reset dependent fields
           return {
             system: value,
             component: '',
@@ -93,13 +98,12 @@ export const Impact: React.FC = () => {
         width: 150,
         editable: true,
         type: 'dropdown',
-        options: COMPONENTS.map((c) => c.value),
-        readOnly: (record) => !record.system,
+        options: componentDropdownOptions,
         onCellChange: (record, value) => {
+          // Only reset dependent fields if component actually changed
           if (record.component === value) {
             return { component: value };
           }
-          // Reset dependent fields
           return {
             component: value,
             element: '',
@@ -115,16 +119,17 @@ export const Impact: React.FC = () => {
         editable: true,
         type: 'dropdown',
         options: (record) => {
-          return record.component
-            ? handontableService.getElementOptionsByComponent(record.component)
-            : [];
+          if (record.component) {
+            return tableService.getElementOptionsByComponent(record.component);
+          }
+          return [];
         },
         readOnly: (record) => !record.component,
         onCellChange: (record, value) => {
+          // Only reset description if element actually changed
           if (record.element === value) {
             return { element: value };
           }
-          // Reset dependent fields
           return {
             element: value,
             description: '',
@@ -138,28 +143,20 @@ export const Impact: React.FC = () => {
         width: 300,
         editable: true,
         type: 'text',
-        readOnly: (record) => !record.element,
-        // No dependent fields to reset
       },
     ],
     []
   );
 
   const handleDataChange = useCallback(
-    (newData: ImpactItem[]) => {
-      // Re-index IDs if necessary
-      const reindexedData = newData.map((item, index) => ({
-        ...item,
-        impact_id: generateImpactId(index),
-      }));
-
+    (newData: ScopeItem[]) => {
       // Detect all changes (including cascading resets) for highlighting
-      if (data.length === reindexedData.length) {
+      if (scopeData.length === newData.length) {
         const newChangedCells = new Set(changedCells);
         let hasChanges = false;
 
-        reindexedData.forEach((newItem, index) => {
-          const oldItem = data[index];
+        newData.forEach((newItem, index) => {
+          const oldItem = scopeData[index];
           (['system', 'component', 'element', 'description'] as const).forEach(
             (key) => {
               if (newItem[key] !== oldItem[key]) {
@@ -175,19 +172,11 @@ export const Impact: React.FC = () => {
         }
       }
 
-      setData(reindexedData);
+      setScopeData(newData);
+      markTabAsChanged('Scope');
     },
-    [data, changedCells]
+    [scopeData, changedCells, markTabAsChanged]
   );
-
-  const handleRowAdd = useCallback((newRow: ImpactItem) => {
-    pendingChangesRef.current.added.push(newRow.impact_id);
-  }, []);
-
-  const handleRowDelete = useCallback((deletedRows: ImpactItem[]) => {
-    const deletedIds = deletedRows.map((r) => r.impact_id);
-    pendingChangesRef.current.deleted.push(...deletedIds);
-  }, []);
 
   const handleCellEdit = useCallback(
     (
@@ -195,42 +184,45 @@ export const Impact: React.FC = () => {
       columnKey: string,
       oldValue: string,
       newValue: string,
-      record: ImpactItem
+      record: ScopeItem
     ) => {
-      const itemId = record.impact_id;
+      // Track edited cell for history
+      const itemId = record.scope_id;
       const columnTitle =
         columns.find((col) => col.key === columnKey)?.title || columnKey;
 
       pendingChangesRef.current.edited.push({
         itemId,
         row: rowIndex,
-        column: columnTitle as string,
+        column: columnTitle,
         oldValue,
         newValue,
       });
-
-      // Track changed cell
-      const cellKey = `${rowIndex}-${columnKey}`;
-      setChangedCells((prev) => new Set(prev).add(cellKey));
     },
     [columns]
   );
 
-  const handleSave = useCallback(
-    (dataToSave: ImpactItem[]) => {
-      const validData = dataToSave.filter(
-        (item) =>
-          item.system || item.component || item.element || item.description
-      );
+  const handleRowAdd = useCallback((newRow: ScopeItem) => {
+    pendingChangesRef.current.added.push(newRow.scope_id);
+  }, []);
 
-      if (validData.length === 0) {
-        message.warning('Please add at least one row with data before saving.');
+  const handleRowDelete = useCallback((deletedRows: ScopeItem[]) => {
+    const deletedIds = deletedRows.map((row) => row.scope_id);
+    pendingChangesRef.current.deleted.push(...deletedIds);
+  }, []);
+
+  const handleSave = useCallback(
+    (data: ScopeItem[]) => {
+      if (data.length === 0) {
+        message.warning('Please add at least one row before saving.');
         return;
       }
 
+      // Commit all pending changes to history
       const pending = pendingChangesRef.current;
       const newHistoryItems: HistoryItem[] = [];
 
+      // Helper to create history item
       const createHistoryItem = (
         action: 'add' | 'edit' | 'delete',
         description: string,
@@ -244,16 +236,19 @@ export const Impact: React.FC = () => {
         cell,
       });
 
+      // Log added items
       pending.added.forEach((itemId) => {
         newHistoryItems.push(createHistoryItem('add', `Added ${itemId}`));
       });
 
+      // Deduplicate edited items - keep only the last edit for each itemId+column
       const editMap = new Map<string, (typeof pending.edited)[0]>();
       pending.edited.forEach((edit) => {
         const key = `${edit.itemId}-${edit.column}`;
         editMap.set(key, edit);
       });
 
+      // Log deduplicated edited items
       editMap.forEach(({ itemId, row, column, oldValue, newValue }) => {
         newHistoryItems.push(
           createHistoryItem('edit', `Updated ${column} in ${itemId}`, {
@@ -266,6 +261,7 @@ export const Impact: React.FC = () => {
         );
       });
 
+      // Log deleted items
       if (pending.deleted.length > 0) {
         const description =
           pending.deleted.length === 1
@@ -274,14 +270,17 @@ export const Impact: React.FC = () => {
         newHistoryItems.push(createHistoryItem('delete', description));
       }
 
+      // Update history (prepend new items)
       setHistory((prev) => [...newHistoryItems, ...prev]);
 
+      // Clear pending changes
       pendingChangesRef.current = {
         added: [],
         edited: [],
         deleted: [],
       };
 
+      // Move changed cells to saved cells for highlighting (cumulative)
       setSavedCells((prev) => {
         const newSaved = new Set(prev);
         changedCells.forEach((cell) => newSaved.add(cell));
@@ -289,8 +288,8 @@ export const Impact: React.FC = () => {
         // Identify added rows and mark all their cells as saved/highlighted
         const addedIds = new Set(pending.added);
         if (addedIds.size > 0) {
-          dataToSave.forEach((row, rowIndex) => {
-            if (addedIds.has(row.impact_id)) {
+          data.forEach((row, rowIndex) => {
+            if (addedIds.has(row.scope_id)) {
               newSaved.add(`${rowIndex}-system`);
               newSaved.add(`${rowIndex}-component`);
               newSaved.add(`${rowIndex}-element`);
@@ -298,30 +297,33 @@ export const Impact: React.FC = () => {
             }
           });
         }
+
         return newSaved;
       });
+      // Clear changed cells
       setChangedCells(new Set());
 
-      markTabAsSaved('Impact');
+      // Mark tab as saved
+      markTabAsSaved('Scope');
 
-      console.log('Impact data to save:', validData);
+      console.log('Scope data to save:', data);
     },
     [changedCells, markTabAsSaved]
   );
 
   return (
-    <div className="impact-tab">
-      <div className="impact-content">
-        <EditableTable
-          title="Impact"
+    <div className="scope-tab">
+      <div className="scope-content">
+        <EditableTable<ScopeItem>
           columns={columns}
-          dataSource={data}
+          dataSource={scopeData}
+          createEmptyRow={createEmptyScopeItem}
           onDataChange={handleDataChange}
-          onSave={handleSave}
           onCellEdit={handleCellEdit}
           onRowAdd={handleRowAdd}
           onRowDelete={handleRowDelete}
-          createEmptyRow={createEmptyImpactItem}
+          onSave={handleSave}
+          title="Scope"
           showHistory={true}
           onHistoryClick={() => setHistoryVisible(true)}
           highlightedCells={savedCells}
@@ -331,7 +333,7 @@ export const Impact: React.FC = () => {
         visible={historyVisible}
         onClose={() => setHistoryVisible(false)}
         history={history}
-        title="Impact Change History"
+        title="Scope Change History"
       />
     </div>
   );

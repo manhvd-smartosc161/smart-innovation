@@ -1,0 +1,12 @@
+.scope-tab {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 24px;
+  background: #fff;
+
+  .scope-content {
+    flex: 1;
+    overflow: hidden;
+  }
+}
