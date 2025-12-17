@@ -129,6 +129,16 @@ export function useTableColumns<T extends Record<string, any>>({
                   </div>
                 )
               : undefined,
+          onFilter: (value, record) => {
+            const cellValue = String(record[col.dataIndex] || '').toLowerCase();
+            const filterValue = String(value).toLowerCase();
+
+            if (col.type === 'dropdown') {
+              return cellValue === filterValue;
+            } else {
+              return cellValue.includes(filterValue);
+            }
+          },
           filterIcon: (filtered) => (
             <svg
               width="16"
