@@ -664,8 +664,12 @@ export function EditableTable<T extends Record<string, any>>({
       <Table<T>
         columns={tableColumns}
         dataSource={data}
-        rowKey={(_, index) => index as number}
-        rowSelection={{ selectedRowKeys, onChange: setSelectedRowKeys }}
+        rowKey={(record) => String(record[columns[0].dataIndex])}
+        rowSelection={{
+          selectedRowKeys,
+          onChange: setSelectedRowKeys,
+          preserveSelectedRowKeys: true,
+        }}
         pagination={false}
         bordered
         size="small"
