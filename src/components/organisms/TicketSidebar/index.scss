@@ -31,9 +31,39 @@
         padding: 4px 8px;
         height: auto;
         flex-shrink: 0;
+        border: none;
+        box-shadow: none !important;
+        outline: none !important;
+
+        &:focus {
+          border: none;
+          box-shadow: none !important;
+          outline: none !important;
+        }
+
+        &:active,
+        &.ant-dropdown-open {
+          border: none;
+          box-shadow: none !important;
+          outline: none !important;
+          background-color: rgba(0, 0, 0, 0.04);
+          color: #1f1f1f;
+        }
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.06);
+          color: #1f1f1f;
+        }
 
         &.ant-btn-dangerous {
           color: #ff4d4f;
+
+          &:hover,
+          &:focus,
+          &:active {
+            background-color: #fff1f0;
+            color: #ff4d4f;
+          }
         }
       }
     }
@@ -60,6 +90,166 @@
   @media (max-width: 480px) {
     .ticket-sidebar-header {
       padding: 8px;
+    }
+  }
+}
+
+// Modern Dropdown Menu Styling
+// Premium Dropdown Menu Styling
+.ant-dropdown.ticket-sidebar-dropdown {
+  // Dropdown Container
+  .ant-dropdown-menu {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 12px !important;
+    padding: 4px !important;
+    box-shadow:
+      0 10px 40px -10px rgba(0, 0, 0, 0.15),
+      0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    overflow: hidden;
+    animation: dropdownSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+
+    @keyframes dropdownSlideUp {
+      0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.96);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+  }
+
+  // Dividers
+  .ant-dropdown-menu-item-divider {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 0, 0, 0.1),
+      transparent
+    ) !important;
+    margin: 4px 0 !important;
+  }
+
+  // General Item Styling
+  .ant-dropdown-menu-item {
+    border-radius: 6px !important;
+    padding: 6px 10px !important;
+    margin-bottom: 0 !important;
+    color: #334155 !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+
+    &:hover {
+      background: #f1f5f9 !important;
+      transform: translateX(4px);
+    }
+
+    .anticon {
+      font-size: 16px !important;
+      margin-right: 12px !important;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    }
+  }
+
+  // --- COLORFUL THEMES ---
+
+  // Green: Request Review
+  .menu-item-request-review {
+    .anticon {
+      color: #10b981 !important;
+    }
+    &:hover {
+      background: #ecfdf5 !important; // green-50
+      color: #047857 !important; // green-700
+      .anticon {
+        transform: scale(1.2);
+      }
+    }
+  }
+
+  // Red: Cancel Review
+  .menu-item-cancel-review {
+    .anticon {
+      color: #ef4444 !important;
+    }
+    &:hover {
+      background: #fef2f2 !important; // red-50
+      color: #b91c1c !important; // red-700
+      .anticon {
+        transform: rotate(90deg) scale(1.1);
+      }
+    }
+  }
+
+  // Blue/Indigo: Import
+  .menu-item-import {
+    .anticon {
+      color: #6366f1 !important;
+    }
+    &:hover {
+      background: #eef2ff !important; // indigo-50
+      color: #4338ca !important; // indigo-700
+      .anticon {
+        transform: translateX(3px);
+      }
+    }
+  }
+
+  // Orange/Amber: Export
+  .menu-item-export {
+    .anticon {
+      color: #f59e0b !important;
+    }
+    &:hover {
+      background: #fffbeb !important; // amber-50
+      color: #b45309 !important; // amber-700
+      .anticon {
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  // --- HEADERS ---
+  .menu-item-section-header {
+    background: transparent !important;
+    cursor: default !important;
+    padding: 8px 12px 2px !important;
+
+    &:hover {
+      background: transparent !important;
+      transform: none !important;
+    }
+
+    .ant-dropdown-menu-title-content {
+      font-size: 11px !important;
+      text-transform: uppercase !important;
+      letter-spacing: 1px !important;
+      color: #94a3b8 !important;
+      font-weight: 700 !important;
+    }
+  }
+
+  // Dark Mode
+  @media (prefers-color-scheme: dark) {
+    .ant-dropdown-menu {
+      background: rgba(30, 41, 59, 0.95) !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+
+      .ant-dropdown-menu-item {
+        color: #cbd5e1 !important;
+      }
+
+      .menu-item-request-review {
+        &:hover {
+          background: rgba(5, 150, 105, 0.2) !important;
+          color: #6ee7b7 !important;
+        }
+      }
+      // ... similar mapping for others if needed, but strict mode handles most
     }
   }
 }
