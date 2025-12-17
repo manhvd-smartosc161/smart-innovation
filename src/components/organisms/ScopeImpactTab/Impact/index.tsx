@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useMemo, useRef } from 'react';
 import { message } from 'antd';
 import {
-  EditableTable,
-  type EditableColumnConfig,
-} from '@/components/molecules/EditableTable';
+  HandsonTable,
+  type HandsonColumnConfig,
+} from '@/components/molecules/HandsonTable';
 import { SYSTEMS, COMPONENTS, MOCK_IMPACT_DATA } from '@/mock';
 import * as handontableService from '@/services';
 import type { ImpactItem } from '@/types';
@@ -56,7 +56,7 @@ export const Impact: React.FC = () => {
     deleted: [],
   });
 
-  const columns: EditableColumnConfig<ImpactItem>[] = useMemo(
+  const columns: HandsonColumnConfig<ImpactItem>[] = useMemo(
     () => [
       {
         key: 'impact_id',
@@ -312,7 +312,7 @@ export const Impact: React.FC = () => {
   return (
     <div className="impact-tab">
       <div className="impact-content">
-        <EditableTable
+        <HandsonTable
           title="Impact"
           columns={columns}
           dataSource={data}

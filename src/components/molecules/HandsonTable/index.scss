@@ -1,4 +1,4 @@
-.editable-table-container {
+.handson-table-container {
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -9,7 +9,7 @@
   padding: 2px;
   user-select: none; // Prevent text selection when dragging rows
 
-  .editable-table-header {
+  .handson-table-header {
     flex-shrink: 0;
     display: flex;
     justify-content: space-between;
@@ -25,7 +25,7 @@
       font-weight: 700;
     }
 
-    .editable-table-actions {
+    .handson-table-actions {
       display: flex;
       gap: 8px;
     }
@@ -46,7 +46,7 @@
       0 2px 4px 0 rgba(0, 0, 0, 0.02);
   }
 
-  .editable-table-cell {
+  .handson-table-cell {
     display: flex;
     align-items: center;
     justify-content: space-between;

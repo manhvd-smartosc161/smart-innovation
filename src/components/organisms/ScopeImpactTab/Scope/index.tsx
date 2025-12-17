@@ -8,9 +8,9 @@ import {
   type HistoryItem,
 } from '@/components/molecules/HistoryPanel';
 import {
-  EditableTable,
-  type EditableColumnConfig,
-} from '@/components/molecules/EditableTable';
+  HandsonTable,
+  type HandsonColumnConfig,
+} from '@/components/molecules/HandsonTable';
 import { useAnalysis } from '@/contexts';
 import './index.scss';
 
@@ -35,7 +35,7 @@ const createEmptyScopeItem = (existingData: ScopeItem[]): ScopeItem => {
   };
 };
 
-export const ScopeNew: React.FC = () => {
+export const Scope: React.FC = () => {
   const { markTabAsChanged, markTabAsSaved } = useAnalysis();
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyVisible, setHistoryVisible] = useState(false);
@@ -60,7 +60,7 @@ export const ScopeNew: React.FC = () => {
     deleted: [],
   });
 
-  const columns: EditableColumnConfig<ScopeItem>[] = useMemo(
+  const columns: HandsonColumnConfig<ScopeItem>[] = useMemo(
     () => [
       {
         key: 'scope_id',
@@ -314,7 +314,7 @@ export const ScopeNew: React.FC = () => {
   return (
     <div className="scope-tab">
       <div className="scope-content">
-        <EditableTable<ScopeItem>
+        <HandsonTable<ScopeItem>
           columns={columns}
           dataSource={scopeData}
           createEmptyRow={createEmptyScopeItem}

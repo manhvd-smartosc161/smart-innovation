@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Input, Select } from 'antd';
 import type { InputRef, SelectProps } from 'antd';
 
-interface EditableCellProps {
+interface HandsonCellProps {
   value: string;
   onChange: (value: string) => void;
   onSave: () => void;
@@ -16,7 +16,7 @@ interface EditableCellProps {
   autoFocus?: boolean;
 }
 
-export const EditableCell: React.FC<EditableCellProps> = ({
+export const HandsonCell: React.FC<HandsonCellProps> = ({
   value,
   onChange,
   onSave,
@@ -145,7 +145,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
   };
 
   if (readOnly) {
-    return <div className="editable-cell-readonly">{value || '-'}</div>;
+    return <div className="handson-cell-readonly">{value || '-'}</div>;
   }
 
   if (type === 'dropdown') {

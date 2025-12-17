@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useMemo, useRef } from 'react';
 import { message } from 'antd';
 import {
-  EditableTable,
-  type EditableColumnConfig,
-} from '@/components/molecules/EditableTable';
+  HandsonTable,
+  type HandsonColumnConfig,
+} from '@/components/molecules/HandsonTable';
 import { MOCK_CHECKLIST_DATA, MOCK_SCOPE_DATA, MOCK_IMPACT_DATA } from '@/mock';
 import type { ChecklistItem } from '@/types';
 import {
@@ -57,7 +57,7 @@ export const ChecklistTab: React.FC = () => {
     deleted: [],
   });
 
-  const columns: EditableColumnConfig<ChecklistItem>[] = useMemo(
+  const columns: HandsonColumnConfig<ChecklistItem>[] = useMemo(
     () => [
       {
         key: 'checklist_id',
@@ -289,7 +289,7 @@ export const ChecklistTab: React.FC = () => {
   return (
     <div className="checklist-tab">
       <div className="checklist-content">
-        <EditableTable
+        <HandsonTable
           title="Checklist"
           columns={columns}
           dataSource={data}
