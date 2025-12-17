@@ -14,14 +14,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 4px 8px 16px 8px;
+    padding: 4px 8px 10px 8px;
     border-bottom: 1px solid #f0f0f0;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
     z-index: 200;
 
     h3 {
       margin: 0;
-      font-size: 20px;
+      font-size: 16px;
       font-weight: 700;
     }
 
@@ -50,8 +50,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 12px;
-    min-height: 32px;
+    padding: 6px 10px;
+    min-height: 28px;
     cursor: pointer;
     transition: all 0.2s;
     outline: none;
@@ -122,7 +122,7 @@
       z-index: 100;
 
       > tr > th {
-        padding: 12px 16px !important;
+        padding: 8px 12px !important;
         background: linear-gradient(
           180deg,
           #fafafa 0%,
@@ -135,8 +135,8 @@
 
         .ant-table-filter-trigger {
           color: rgba(0, 0, 0, 0.45);
-          font-size: 16px !important;
-          margin-left: 8px;
+          font-size: 14px !important;
+          margin-left: 6px;
           vertical-align: middle !important;
           display: inline-flex !important;
           align-items: center !important;

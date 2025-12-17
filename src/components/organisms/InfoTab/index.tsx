@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Input, Divider, Tooltip } from 'antd';
+import { Button, Input, Divider, Tooltip, message, Progress } from 'antd';
 import {
   PlusOutlined,
   ThunderboltOutlined,
   RocketOutlined,
+  EditOutlined,
+  SaveOutlined,
 } from '@ant-design/icons';
 import type { UploadFile } from 'antd';
 import {
@@ -39,6 +41,64 @@ export const InfoTab: React.FC = () => {
 
   const [ticketModalVisible, setTicketModalVisible] = useState(false);
   const [pageModalVisible, setPageModalVisible] = useState(false);
+
+  // Read-only mode state
+  const [isReadOnly, setIsReadOnly] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Saved state for cancel functionality
+
+  const [savedState, setSavedState] = useState({
+    uploads: [] as UploadedFile[],
+    tickets: [] as RelatedTicket[],
+    confluencePages: [] as ConfluencePage[],
+    overallObjective: '',
+  });
+
+  const handleEdit = () => {
+    // Save current state before editing
+    setSavedState({
+      uploads: JSON.parse(JSON.stringify(uploads)),
+      tickets: JSON.parse(JSON.stringify(tickets)),
+      confluencePages: JSON.parse(JSON.stringify(confluencePages)),
+      overallObjective,
+    });
+    setIsReadOnly(false);
+  };
+
+  const handleSave = async () => {
+    // Check if there are any changes
+    const hasChanges =
+      JSON.stringify(uploads) !== JSON.stringify(savedState.uploads) ||
+      JSON.stringify(tickets) !== JSON.stringify(savedState.tickets) ||
+      JSON.stringify(confluencePages) !==
+        JSON.stringify(savedState.confluencePages) ||
+      overallObjective !== savedState.overallObjective;
+
+    if (!hasChanges) {
+      // No changes, just return to read-only mode
+      setIsReadOnly(true);
+      message.info('No changes to save');
+      return;
+    }
+
+    setIsSaving(true);
+
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    // Save the current state
+    setSavedState({
+      uploads: JSON.parse(JSON.stringify(uploads)),
+      tickets: JSON.parse(JSON.stringify(tickets)),
+      confluencePages: JSON.parse(JSON.stringify(confluencePages)),
+      overallObjective,
+    });
+
+    setIsReadOnly(true);
+    setIsSaving(false);
+    message.success('Changes saved successfully!');
+  };
 
   const handleAddUpload = () => {
     const hasEditingFile = uploads.some((upload) => upload.isEditing);
@@ -268,15 +328,18 @@ export const InfoTab: React.FC = () => {
     // TODO: Add API call or further processing here
   };
 
+  // Validation for Analyse button
   const isAnalyseDisabled =
+    !isReadOnly ||
     !overallObjective.trim() ||
     uploads.filter((upload) => upload.file).length === 0 || // At least one file must be uploaded
     uploads.some((upload) => upload.isEditing) || // No upload should be in editing mode
     tickets.some((ticket) => ticket.isEditing) || // No ticket should be in editing mode
     confluencePages.some((page) => page.isEditing); // No page should be in editing mode
 
-  // Generate tooltip message for disabled Analyse button
+  // Generate tooltip message for Analyse button
   const getAnalyseTooltip = (): string => {
+    if (!isReadOnly) return 'Saving, please wait...';
     if (!isAnalyseDisabled) return '';
 
     const reasons: string[] = [];
@@ -308,6 +371,13 @@ export const InfoTab: React.FC = () => {
 
     return reasons[0] || '';
   };
+
+  // Validation for Save button - simpler
+  const isSaveDisabled =
+    uploads.some((upload) => upload.isEditing) ||
+    tickets.some((ticket) => ticket.isEditing) ||
+    confluencePages.some((page) => page.isEditing) ||
+    isSaving;
 
   return (
     <div className="info-tab">
@@ -341,33 +411,94 @@ export const InfoTab: React.FC = () => {
         <div className="analyse-icon-left">
           <ThunderboltOutlined />
         </div>
-        <Tooltip
-          title={
-            isAnalyseDisabled ? (
+        {getAnalyseTooltip() ? (
+          <Tooltip
+            title={
               <div style={{ whiteSpace: 'pre-line' }}>
                 {getAnalyseTooltip()}
               </div>
-            ) : (
-              ''
-            )
-          }
-          placement="bottom"
-        >
-          <span>
-            <Button
-              type="primary"
-              size="large"
-              onClick={handleAnalyse}
-              disabled={isAnalyseDisabled}
-              className="analyse-button"
-            >
-              {INFO_TAB_LABELS.ANALYSE}
-            </Button>
-          </span>
-        </Tooltip>
+            }
+            placement="bottom"
+          >
+            <span>
+              <Button
+                type="primary"
+                size="large"
+                onClick={handleAnalyse}
+                disabled={isAnalyseDisabled}
+                className="analyse-button"
+              >
+                {INFO_TAB_LABELS.ANALYSE}
+              </Button>
+            </span>
+          </Tooltip>
+        ) : (
+          <Button
+            type="primary"
+            size="large"
+            onClick={handleAnalyse}
+            disabled={isAnalyseDisabled}
+            className="analyse-button"
+          >
+            {INFO_TAB_LABELS.ANALYSE}
+          </Button>
+        )}
         <div className="analyse-icon-right">
           <RocketOutlined />
         </div>
+
+        {/* Edit/Save Button inside section */}
+        <Tooltip
+          title={
+            isReadOnly
+              ? showRocket || showFireworks
+                ? 'Analysing...'
+                : 'Edit Mode'
+              : isSaving
+                ? 'Saving...'
+                : 'Save Changes'
+          }
+          placement="left"
+        >
+          {isReadOnly ? (
+            <Button
+              type="primary"
+              shape="circle"
+              size="large"
+              icon={<EditOutlined />}
+              onClick={handleEdit}
+              disabled={showRocket || showFireworks}
+              className="section-edit-button"
+            />
+          ) : (
+            <Button
+              type="primary"
+              shape="circle"
+              size="large"
+              icon={<SaveOutlined />}
+              onClick={handleSave}
+              loading={isSaving}
+              disabled={isSaveDisabled}
+              className="section-save-button"
+            />
+          )}
+        </Tooltip>
+
+        {/* Progress Bar for Saving */}
+        {isSaving && (
+          <div className="saving-progress">
+            <Progress
+              percent={0}
+              size="small"
+              status="active"
+              strokeColor={{
+                '0%': '#722ed1',
+                '100%': '#531dab',
+              }}
+              showInfo={false}
+            />
+          </div>
+        )}
       </div>
 
       {/* Scrollable Content */}
@@ -386,6 +517,7 @@ export const InfoTab: React.FC = () => {
               value={overallObjective}
               onChange={(e) => setOverallObjective(e.target.value)}
               className="overall-objective-input"
+              disabled={isReadOnly || isSaving}
             />
           </div>
         </div>
@@ -400,7 +532,11 @@ export const InfoTab: React.FC = () => {
               type="primary"
               icon={<PlusOutlined />}
               onClick={handleAddUpload}
-              disabled={uploads.some((upload) => upload.isEditing)}
+              disabled={
+                isReadOnly ||
+                isSaving ||
+                uploads.some((upload) => upload.isEditing)
+              }
             >
               {INFO_TAB_BUTTONS.ADD_UPLOAD}
             </Button>
@@ -414,7 +550,10 @@ export const InfoTab: React.FC = () => {
               <div className="uploads-container">
                 {uploads.map((upload) => {
                   const hasEditingFile = uploads.some((u) => u.isEditing);
-                  const isDisabled = hasEditingFile && !upload.isEditing;
+                  const isDisabled =
+                    isReadOnly ||
+                    isSaving ||
+                    (hasEditingFile && !upload.isEditing);
                   return (
                     <FileUploadItem
                       key={upload.id}
@@ -449,7 +588,11 @@ export const InfoTab: React.FC = () => {
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => setTicketModalVisible(true)}
-              disabled={tickets.some((ticket) => ticket.isEditing)}
+              disabled={
+                isReadOnly ||
+                isSaving ||
+                tickets.some((ticket) => ticket.isEditing)
+              }
             >
               {INFO_TAB_BUTTONS.ADD_TICKETS}
             </Button>
@@ -465,7 +608,10 @@ export const InfoTab: React.FC = () => {
                 <div className="selected-items-list">
                   {tickets.map((ticket) => {
                     const hasEditingTicket = tickets.some((t) => t.isEditing);
-                    const isDisabled = hasEditingTicket && !ticket.isEditing;
+                    const isDisabled =
+                      isReadOnly ||
+                      isSaving ||
+                      (hasEditingTicket && !ticket.isEditing);
                     return (
                       <TicketItem
                         key={ticket.id}
@@ -495,7 +641,11 @@ export const InfoTab: React.FC = () => {
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => setPageModalVisible(true)}
-              disabled={confluencePages.some((page) => page.isEditing)}
+              disabled={
+                isReadOnly ||
+                isSaving ||
+                confluencePages.some((page) => page.isEditing)
+              }
             >
               {INFO_TAB_BUTTONS.ADD_PAGES}
             </Button>
@@ -510,9 +660,12 @@ export const InfoTab: React.FC = () => {
               <div className="selected-items-container">
                 <div className="selected-items-list">
                   {confluencePages.map((page) => {
-                    const isDisabled = confluencePages.some(
-                      (p) => p.url !== page.url && p.isEditing
-                    );
+                    const isDisabled =
+                      isReadOnly ||
+                      isSaving ||
+                      confluencePages.some(
+                        (p) => p.url !== page.url && p.isEditing
+                      );
                     return (
                       <ConfluencePageItem
                         key={page.id}

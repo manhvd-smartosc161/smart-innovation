@@ -40,7 +40,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
 
       <Layout className="main-body">
         {!isMobile && leftSidebar && (
-          <Sider width={280} theme="light" className="main-sider">
+          <Sider width={250} theme="light" className="main-sider">
             {leftSidebar}
           </Sider>
         )}
@@ -48,7 +48,6 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
         {isMobile && leftSidebar && (
           <Drawer
             placement="left"
-            width={280}
             onClose={() => setDrawerVisible(false)}
             open={drawerVisible}
             className="mobile-sidebar-drawer"
