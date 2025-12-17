@@ -105,8 +105,6 @@ export function EditableTable<T extends Record<string, any>>({
 
   const tableRef = useRef<HTMLDivElement>(null);
   const latestDataRef = useRef<T[]>(data);
-  const isDraggingRef = useRef(false);
-  const dragStartRowRef = useRef<number | null>(null);
 
   useEffect(() => {
     latestDataRef.current = data;
@@ -512,52 +510,9 @@ export function EditableTable<T extends Record<string, any>>({
             </svg>
           ),
           onCell: (_, rowIndex) => ({
-            onMouseDown: (e) => {
-              if (rowIndex === undefined) return;
-
-              // Don't interfere with checkbox clicks
-              if ((e.target as HTMLElement).closest('.ant-checkbox-wrapper')) {
-                return;
-              }
-
-              // Prevent default to stop focus
-              e.preventDefault();
-
-              // Remove focus from any focused element to prevent border
-              if (document.activeElement instanceof HTMLElement) {
-                document.activeElement.blur();
-              }
-
-              // Start drag selection (but don't select yet)
-              isDraggingRef.current = true;
-              dragStartRowRef.current = rowIndex;
-            },
-            onMouseEnter: () => {
-              if (
-                rowIndex === undefined ||
-                !isDraggingRef.current ||
-                dragStartRowRef.current === null
-              )
-                return;
-
-              // Only select when dragging to a different row
-              if (rowIndex === dragStartRowRef.current) return;
-
-              // Drag selection - select range
-              const start = Math.min(dragStartRowRef.current, rowIndex);
-              const end = Math.max(dragStartRowRef.current, rowIndex);
-              const range = Array.from(
-                { length: end - start + 1 },
-                (_, i) => start + i
-              );
-              setSelectedRowKeys(range);
-            },
             onClick: (e) => {
               if (rowIndex === undefined) return;
-              // Only focus if not dragging
-              if (!isDraggingRef.current) {
-                (e.currentTarget as HTMLElement).focus();
-              }
+              (e.currentTarget as HTMLElement).focus();
             },
             onDoubleClick: () =>
               rowIndex !== undefined &&
@@ -645,23 +600,11 @@ export function EditableTable<T extends Record<string, any>>({
       handleCellCancel,
       handleKeyDown,
       navigateCell,
-      setSelectedRowKeys,
     ]
   );
 
   return (
-    <div
-      className="editable-table-container"
-      ref={tableRef}
-      onMouseUp={() => {
-        isDraggingRef.current = false;
-        dragStartRowRef.current = null;
-      }}
-      onMouseLeave={() => {
-        isDraggingRef.current = false;
-        dragStartRowRef.current = null;
-      }}
-    >
+    <div className="editable-table-container" ref={tableRef}>
       <div className="editable-table-header">
         {title && <h3>{title}</h3>}
         <div className="editable-table-actions">
