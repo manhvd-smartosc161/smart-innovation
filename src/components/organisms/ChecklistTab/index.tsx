@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo, useRef } from 'react';
-import { message } from 'antd';
+import { message, Button, Divider } from 'antd';
+import { FileTextOutlined, ExperimentOutlined } from '@ant-design/icons';
 import {
   HandsonTable,
   type HandsonColumnConfig,
@@ -40,6 +41,10 @@ export const ChecklistTab: React.FC = () => {
   const [changedCells, setChangedCells] = useState<Set<string>>(new Set());
   const [savedCells, setSavedCells] = useState<Set<string>>(new Set());
 
+  // Animation states
+  const [showTestCase, setShowTestCase] = useState(false);
+  const [showFireworks, setShowFireworks] = useState(false);
+
   // Track pending changes to commit to history on save
   const pendingChangesRef = useRef<{
     added: string[];
@@ -56,6 +61,21 @@ export const ChecklistTab: React.FC = () => {
     edited: [],
     deleted: [],
   });
+
+  const handleGenerateTestCases = () => {
+    setShowTestCase(true);
+
+    setTimeout(() => {
+      setShowTestCase(false);
+      setShowFireworks(true);
+    }, 1500);
+
+    setTimeout(() => {
+      setShowFireworks(false);
+    }, 3500);
+
+    console.log('Generating test cases from checklist data:', data);
+  };
 
   const columns: HandsonColumnConfig<ChecklistItem>[] = useMemo(
     () => [
@@ -286,8 +306,58 @@ export const ChecklistTab: React.FC = () => {
     [changedCells, markTabAsSaved]
   );
 
+  const isGenerateDisabled =
+    data.filter((item) => item.type || item.item || item.description).length ===
+    0;
+
   return (
     <div className="checklist-tab">
+      {/* Test Case Flying Animation */}
+      {showTestCase && (
+        <div className="flying-testcase-container">
+          <div className="flying-testcase">📝</div>
+        </div>
+      )}
+
+      {/* Fireworks Animation */}
+      {showFireworks && (
+        <div className="fireworks-container">
+          <div className="firework firework-1"></div>
+          <div className="firework firework-2"></div>
+          <div className="firework firework-3"></div>
+          <div className="firework firework-4"></div>
+          <div className="firework firework-5"></div>
+          <div className="firework firework-6"></div>
+          <div className="firework firework-7"></div>
+          <div className="firework firework-8"></div>
+          <div className="firework firework-9"></div>
+          <div className="firework firework-10"></div>
+          <div className="firework firework-11"></div>
+          <div className="firework firework-12"></div>
+        </div>
+      )}
+
+      {/* Generate Test Cases Button - Sticky */}
+      <div className="generate-testcases-section">
+        <div className="generate-icon-left">
+          <FileTextOutlined />
+        </div>
+        <Button
+          type="primary"
+          size="large"
+          onClick={handleGenerateTestCases}
+          disabled={isGenerateDisabled}
+          className="generate-testcases-button"
+        >
+          Generate Test Cases
+        </Button>
+        <div className="generate-icon-right">
+          <ExperimentOutlined />
+        </div>
+      </div>
+
+      <Divider />
+
       <div className="checklist-content">
         <HandsonTable
           title="Checklist"
