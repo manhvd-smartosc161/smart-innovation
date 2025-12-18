@@ -375,11 +375,11 @@ export const TestCaseTable: React.FC = () => {
         changedCells.forEach((c) => newSaved.add(c));
 
         // Identify added rows and mark all their cells as saved/highlighted
-        const addedIds = new Set(validData.map((item) => item.testcase_id));
+        const addedIds = new Set(pending.added);
         if (addedIds.size > 0) {
           dataToSave.forEach((row, rowIndex) => {
             if (addedIds.has(row.testcase_id)) {
-              // Approximate all keys for simplicity or list them
+              // Mark all cells in added rows
               Object.keys(row).forEach((key) => {
                 newSaved.add(`${rowIndex}-${key}`);
               });
