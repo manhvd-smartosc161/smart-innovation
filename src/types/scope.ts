@@ -3,7 +3,7 @@ export interface ScopeItem {
   system: string;
   component: string;
   element: string;
-  description: string;
+  scope_description: string;
 }
 
 export interface ImpactItem {
@@ -11,12 +11,12 @@ export interface ImpactItem {
   system: string;
   component: string;
   element: string;
-  description: string;
+  impact_description: string;
 }
 
 export interface ChecklistItem {
   checklist_id: string;
   type: 'Scope' | 'Impact' | '';
   item: string;
-  description: string;
+  cl_description: string;
 }

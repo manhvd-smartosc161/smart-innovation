@@ -7,6 +7,7 @@ import {
   ScopeImpactTab,
   ChecklistTab,
   TestCaseDetailTab,
+  TestCaseTable,
 } from '@/components/organisms';
 import { TAB_KEYS, TAB_LABELS } from '@/constants';
 import { useAnalysis } from '@/contexts';
@@ -15,9 +16,8 @@ import './index.scss';
 const allItems = [
   { key: TAB_KEYS.INITIALIZATION, label: TAB_LABELS.INITIALIZATION },
   { key: TAB_KEYS.SCOPE_AND_IMPACT, label: TAB_LABELS.SCOPE_AND_IMPACT },
-  // Temporarily hidden
   { key: TAB_KEYS.CHECKLIST, label: TAB_LABELS.CHECKLIST },
-  // { key: TAB_KEYS.TEST_CASES, label: TAB_LABELS.TEST_CASES },
+  { key: TAB_KEYS.TEST_CASES, label: TAB_LABELS.TEST_CASES },
   // { key: TAB_KEYS.TEST_CASE_DETAILS, label: TAB_LABELS.TEST_CASE_DETAILS },
 ];
 
@@ -25,6 +25,7 @@ export const TestCasePanel: React.FC = () => {
   const {
     isAnalysed,
     isChecklistGenerated,
+    isTestCasesGenerated,
     activeTab,
     setActiveTab,
     hasUnsavedChanges,
@@ -41,7 +42,9 @@ export const TestCasePanel: React.FC = () => {
     if (item.key === TAB_KEYS.SCOPE_AND_IMPACT) return isAnalysed;
     if (item.key === TAB_KEYS.CHECKLIST)
       return isAnalysed && isChecklistGenerated;
-    return false; // For other tabs like TEST_CASES if they are enabled later
+    if (item.key === TAB_KEYS.TEST_CASES)
+      return isAnalysed && isChecklistGenerated && isTestCasesGenerated;
+    return false; // For other tabs like TEST_CASE_DETAILS if they are enabled later
   });
 
   const handleTabChange = (newTab: string) => {
@@ -111,11 +114,15 @@ export const TestCasePanel: React.FC = () => {
         </div>
         <div
           style={{
+            display: activeTab === TAB_KEYS.TEST_CASES ? 'block' : 'none',
+          }}
+        >
+          <TestCaseTable />
+        </div>
+        <div
+          style={{
             display:
-              activeTab === TAB_KEYS.TEST_CASES ||
-              activeTab === TAB_KEYS.TEST_CASE_DETAILS
-                ? 'block'
-                : 'none',
+              activeTab === TAB_KEYS.TEST_CASE_DETAILS ? 'block' : 'none',
           }}
         >
           <TestCaseDetailTab />

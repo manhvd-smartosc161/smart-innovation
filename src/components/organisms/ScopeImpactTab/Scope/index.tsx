@@ -31,7 +31,7 @@ const createEmptyScopeItem = (existingData: ScopeItem[]): ScopeItem => {
     system: '',
     component: '',
     element: '',
-    description: '',
+    scope_description: '',
   };
 };
 
@@ -137,9 +137,9 @@ export const Scope: React.FC = () => {
         },
       },
       {
-        key: 'description',
+        key: 'scope_description',
         title: 'Description',
-        dataIndex: 'description',
+        dataIndex: 'scope_description',
         width: 300,
         editable: true,
         type: 'text',
@@ -157,14 +157,14 @@ export const Scope: React.FC = () => {
 
         newData.forEach((newItem, index) => {
           const oldItem = scopeData[index];
-          (['system', 'component', 'element', 'description'] as const).forEach(
-            (key) => {
-              if (newItem[key] !== oldItem[key]) {
-                newChangedCells.add(`${index}-${key}`);
-                hasChanges = true;
-              }
+          (
+            ['system', 'component', 'element', 'scope_description'] as const
+          ).forEach((key) => {
+            if (newItem[key] !== oldItem[key]) {
+              newChangedCells.add(`${index}-${key}`);
+              hasChanges = true;
             }
-          );
+          });
         });
 
         if (hasChanges) {
@@ -293,7 +293,7 @@ export const Scope: React.FC = () => {
               newSaved.add(`${rowIndex}-system`);
               newSaved.add(`${rowIndex}-component`);
               newSaved.add(`${rowIndex}-element`);
-              newSaved.add(`${rowIndex}-description`);
+              newSaved.add(`${rowIndex}-scope_description`);
             }
           });
         }

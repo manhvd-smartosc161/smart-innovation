@@ -27,12 +27,13 @@ const createEmptyChecklistItem = (
     checklist_id: generateChecklistId(existingData.length),
     type: '',
     item: '',
-    description: '',
+    cl_description: '',
   };
 };
 
 export const ChecklistTab: React.FC = () => {
-  const { markTabAsSaved } = useAnalysis();
+  const { markTabAsSaved, setIsTestCasesGenerated, setActiveTab } =
+    useAnalysis();
   const [data, setData] = useState<ChecklistItem[]>(MOCK_CHECKLIST_DATA);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyVisible, setHistoryVisible] = useState(false);
@@ -72,6 +73,9 @@ export const ChecklistTab: React.FC = () => {
 
     setTimeout(() => {
       setShowFireworks(false);
+      // Mark test cases as generated and switch to Test Cases tab
+      setIsTestCasesGenerated(true);
+      setActiveTab(TAB_KEYS.TEST_CASES);
     }, 3500);
 
     console.log('Generating test cases from checklist data:', data);
@@ -134,9 +138,9 @@ export const ChecklistTab: React.FC = () => {
         },
       },
       {
-        key: 'description',
+        key: 'cl_description',
         title: 'Description',
-        dataIndex: 'description',
+        dataIndex: 'cl_description',
         width: 300,
         editable: true,
         type: 'text',
@@ -161,7 +165,7 @@ export const ChecklistTab: React.FC = () => {
 
         reindexedData.forEach((newItem, index) => {
           const oldItem = data[index];
-          (['type', 'item', 'description'] as const).forEach((key) => {
+          (['type', 'item', 'cl_description'] as const).forEach((key) => {
             if (newItem[key] !== oldItem[key]) {
               newChangedCells.add(`${index}-${key}`);
               hasChanges = true;
@@ -218,7 +222,7 @@ export const ChecklistTab: React.FC = () => {
   const handleSave = useCallback(
     (dataToSave: ChecklistItem[]) => {
       const validData = dataToSave.filter(
-        (item) => item.type || item.item || item.description
+        (item) => item.type || item.item || item.cl_description
       );
 
       if (validData.length === 0) {
@@ -291,7 +295,7 @@ export const ChecklistTab: React.FC = () => {
             if (addedIds.has(row.checklist_id)) {
               newSaved.add(`${rowIndex}-type`);
               newSaved.add(`${rowIndex}-item`);
-              newSaved.add(`${rowIndex}-description`);
+              newSaved.add(`${rowIndex}-cl_description`);
             }
           });
         }

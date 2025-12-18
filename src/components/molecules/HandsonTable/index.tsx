@@ -44,6 +44,9 @@ export function HandsonTable<T extends Record<string, any>>({
     Set<string>
   >(new Set());
   const [sortedInfo, setSortedInfo] = useState<SortedInfo>({});
+  const [filteredInfo, setFilteredInfo] = useState<
+    Record<string, React.Key[] | null>
+  >({});
 
   const tableRef = useRef<HTMLDivElement>(null);
   const latestDataRef = useRef<T[]>(data);
@@ -64,6 +67,12 @@ export function HandsonTable<T extends Record<string, any>>({
       setHasChanges(true);
     }
   }, [data, dataSource, onDataChange]);
+
+  // Check if table is filtered or sorted
+  const isFiltered = Object.keys(filteredInfo).some(
+    (key) => filteredInfo[key] && filteredInfo[key].length > 0
+  );
+  const isSorted = !!sortedInfo.order;
 
   // Handlers
   const handleCellClick = useCallback(
@@ -289,6 +298,8 @@ export function HandsonTable<T extends Record<string, any>>({
         hasChanges={hasChanges}
         selectedRowCount={selectedRowKeys.length}
         showHistory={showHistory}
+        isFiltered={isFiltered}
+        isSorted={isSorted}
       />
 
       <Table<T>
@@ -304,12 +315,14 @@ export function HandsonTable<T extends Record<string, any>>({
         bordered
         size="small"
         sticky={{ offsetHeader: 0 }}
-        onChange={(_, __, s) => {
-          const sorter = Array.isArray(s) ? s[0] : s;
+        scroll={{ x: 'max-content' }}
+        onChange={(_, filters, sorter) => {
+          const s = Array.isArray(sorter) ? sorter[0] : sorter;
           setSortedInfo({
-            columnKey: sorter.columnKey,
-            order: sorter.order || undefined,
+            columnKey: s.columnKey,
+            order: s.order || undefined,
           });
+          setFilteredInfo(filters as Record<string, React.Key[] | null>);
         }}
       />
     </div>

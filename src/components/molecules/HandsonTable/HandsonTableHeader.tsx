@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 import {
   PlusOutlined,
   DeleteOutlined,
@@ -21,6 +21,8 @@ interface HandsonTableHeaderProps {
   hasChanges: boolean;
   selectedRowCount: number;
   showHistory?: boolean;
+  isFiltered?: boolean;
+  isSorted?: boolean;
 }
 
 export function HandsonTableHeader({
@@ -36,14 +38,37 @@ export function HandsonTableHeader({
   hasChanges,
   selectedRowCount,
   showHistory = true,
+  isFiltered = false,
+  isSorted = false,
 }: HandsonTableHeaderProps) {
+  const isAddRowDisabled = isFiltered || isSorted;
+
+  const getAddRowTooltip = () => {
+    if (isFiltered && isSorted) {
+      return 'Please clear filters and sorting before adding rows';
+    }
+    if (isFiltered) {
+      return 'Please clear filters before adding rows';
+    }
+    if (isSorted) {
+      return 'Please clear sorting before adding rows';
+    }
+    return '';
+  };
+
   return (
     <div className="handson-table-header">
       {title && <h3>{title}</h3>}
       <div className="handson-table-actions">
-        <Button icon={<PlusOutlined />} onClick={onAddRow}>
-          Add Row
-        </Button>
+        <Tooltip title={isAddRowDisabled ? getAddRowTooltip() : ''}>
+          <Button
+            icon={<PlusOutlined />}
+            onClick={onAddRow}
+            disabled={isAddRowDisabled}
+          >
+            Add Row
+          </Button>
+        </Tooltip>
         <Button
           danger
           icon={<DeleteOutlined />}

@@ -10,6 +10,8 @@ export interface HandsonColumnConfig<T = Record<string, any>> {
   type?: 'text' | 'dropdown';
   options?: string[] | ((record: T) => string[]);
   readOnly?: boolean | ((record: T) => boolean);
+  sortable?: boolean; // Enable/disable sorting for this column
+  filterable?: boolean; // Enable/disable filtering for this column
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   render?: (value: any, record: T, index: number) => React.ReactNode;
   onCellChange?: (record: T, value: string) => Partial<T>;

@@ -36,7 +36,7 @@ interface UseTableColumnsProps<T extends Record<string, any>> {
   navigateCell: (
     rowIndex: number,
     columnKey: string,
-    direction: 'next' | 'prev' | 'down'
+    direction: 'next' | 'prev'
   ) => void;
 }
 
@@ -58,6 +58,8 @@ export function useTableColumns<T extends Record<string, any>>({
     () =>
       columns.map((col) => {
         const isSorted = sortedInfo.columnKey === col.key;
+        const sortable = col.sortable !== false; // Default to true
+        const filterable = col.filterable !== false; // Default to true
 
         return {
           key: col.key,
@@ -70,24 +72,26 @@ export function useTableColumns<T extends Record<string, any>>({
               }}
             >
               {col.title}
-              {isSorted && sortedInfo.order === 'ascend' && (
+              {sortable && isSorted && sortedInfo.order === 'ascend' && (
                 <ArrowUpOutlined style={{ opacity: 0.45 }} />
               )}
-              {isSorted && sortedInfo.order === 'descend' && (
+              {sortable && isSorted && sortedInfo.order === 'descend' && (
                 <ArrowDownOutlined style={{ opacity: 0.45 }} />
               )}
             </span>
           ),
           dataIndex: col.dataIndex,
           width: col.width,
-          sorter: (a, b) =>
-            String(a[col.dataIndex] || '').localeCompare(
-              String(b[col.dataIndex] || '')
-            ),
-          sortOrder: isSorted ? sortedInfo.order : null,
+          sorter: sortable
+            ? (a, b) =>
+                String(a[col.dataIndex] || '').localeCompare(
+                  String(b[col.dataIndex] || '')
+                )
+            : undefined,
+          sortOrder: sortable && isSorted ? sortedInfo.order : null,
           showSorterTooltip: false,
           filters:
-            col.type === 'dropdown'
+            filterable && col.type === 'dropdown'
               ? Array.from(
                   new Set(data.map((item) => String(item[col.dataIndex] || '')))
                 )
@@ -96,7 +100,7 @@ export function useTableColumns<T extends Record<string, any>>({
                   .map((v) => ({ text: v, value: v }))
               : undefined,
           filterDropdown:
-            col.type !== 'dropdown'
+            filterable && col.type !== 'dropdown'
               ? ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
                   <div style={{ padding: 8 }}>
                     <Input
@@ -129,48 +133,56 @@ export function useTableColumns<T extends Record<string, any>>({
                   </div>
                 )
               : undefined,
-          onFilter: (value, record) => {
-            const cellValue = String(record[col.dataIndex] || '').toLowerCase();
-            const filterValue = String(value).toLowerCase();
+          onFilter: filterable
+            ? (value, record) => {
+                const cellValue = String(
+                  record[col.dataIndex] || ''
+                ).toLowerCase();
+                const filterValue = String(value).toLowerCase();
 
-            if (col.type === 'dropdown') {
-              return cellValue === filterValue;
-            } else {
-              return cellValue.includes(filterValue);
-            }
-          },
-          filterIcon: (filtered) => (
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              style={{ color: filtered ? '#1890ff' : 'rgba(0, 0, 0, 0.45)' }}
-            >
-              <path
-                d="M4 6H20"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M7 12H17"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M10 18H14"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          ),
+                if (col.type === 'dropdown') {
+                  return cellValue === filterValue;
+                } else {
+                  return cellValue.includes(filterValue);
+                }
+              }
+            : undefined,
+          filterIcon: filterable
+            ? (filtered) => (
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{
+                    color: filtered ? '#1890ff' : 'rgba(0, 0, 0, 0.45)',
+                  }}
+                >
+                  <path
+                    d="M4 6H20"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M7 12H17"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M10 18H14"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )
+            : undefined,
           onCell: (_, rowIndex) => ({
             onClick: (e) => {
               if (rowIndex === undefined) return;
@@ -213,7 +225,6 @@ export function useTableColumns<T extends Record<string, any>>({
                   onNavigatePrevious={() =>
                     navigateCell(index, col.key, 'prev')
                   }
-                  onNavigateDown={() => navigateCell(index, col.key, 'down')}
                   type={col.type}
                   options={options}
                   readOnly={isReadOnly}

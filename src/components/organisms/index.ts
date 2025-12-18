@@ -3,6 +3,7 @@ export * from './InfoTab';
 export * from './ScopeImpactTab';
 
 export * from './TestCaseTab';
+export * from './TestCaseTable';
 export * from './ChecklistTab';
 export * from './PageSelectionModal';
 export * from './Sidebar';

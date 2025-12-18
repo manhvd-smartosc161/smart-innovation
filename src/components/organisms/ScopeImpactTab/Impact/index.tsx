@@ -25,7 +25,7 @@ const createEmptyImpactItem = (existingData: ImpactItem[]): ImpactItem => {
     system: '',
     component: '',
     element: '',
-    description: '',
+    impact_description: '',
   };
 };
 
@@ -132,9 +132,9 @@ export const Impact: React.FC = () => {
         },
       },
       {
-        key: 'description',
+        key: 'impact_description',
         title: 'Description',
-        dataIndex: 'description',
+        dataIndex: 'impact_description',
         width: 300,
         editable: true,
         type: 'text',
@@ -160,14 +160,14 @@ export const Impact: React.FC = () => {
 
         reindexedData.forEach((newItem, index) => {
           const oldItem = data[index];
-          (['system', 'component', 'element', 'description'] as const).forEach(
-            (key) => {
-              if (newItem[key] !== oldItem[key]) {
-                newChangedCells.add(`${index}-${key}`);
-                hasChanges = true;
-              }
+          (
+            ['system', 'component', 'element', 'impact_description'] as const
+          ).forEach((key) => {
+            if (newItem[key] !== oldItem[key]) {
+              newChangedCells.add(`${index}-${key}`);
+              hasChanges = true;
             }
-          );
+          });
         });
 
         if (hasChanges) {
@@ -220,7 +220,10 @@ export const Impact: React.FC = () => {
     (dataToSave: ImpactItem[]) => {
       const validData = dataToSave.filter(
         (item) =>
-          item.system || item.component || item.element || item.description
+          item.system ||
+          item.component ||
+          item.element ||
+          item.impact_description
       );
 
       if (validData.length === 0) {
@@ -294,7 +297,7 @@ export const Impact: React.FC = () => {
               newSaved.add(`${rowIndex}-system`);
               newSaved.add(`${rowIndex}-component`);
               newSaved.add(`${rowIndex}-element`);
-              newSaved.add(`${rowIndex}-description`);
+              newSaved.add(`${rowIndex}-impact_description`);
             }
           });
         }

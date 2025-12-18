@@ -67,29 +67,9 @@ export function useTableNavigation<T>(
   );
 
   const navigateCell = useCallback(
-    (
-      rowIndex: number,
-      columnKey: string,
-      direction: 'next' | 'prev' | 'down'
-    ) => {
+    (rowIndex: number, columnKey: string, direction: 'next' | 'prev') => {
       const currentColIndex = columns.findIndex((c) => c.key === columnKey);
       if (currentColIndex === -1) return;
-
-      if (direction === 'down') {
-        const nextRow = rowIndex + 1;
-        if (nextRow < latestDataRef.current.length) {
-          const nextRecord = latestDataRef.current[nextRow];
-          const targetCol = columns.find(
-            (c) =>
-              c.editable &&
-              !(typeof c.readOnly === 'function'
-                ? c.readOnly(nextRecord)
-                : c.readOnly)
-          );
-          if (targetCol) focusCell(nextRow, targetCol.key);
-        }
-        return;
-      }
 
       if (direction === 'next') {
         const lastEditableCol = [...columns].reverse().find((c) => c.editable);

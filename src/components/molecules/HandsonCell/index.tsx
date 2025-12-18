@@ -9,7 +9,6 @@ interface HandsonCellProps {
   onCancel: () => void;
   onNavigateNext?: () => void;
   onNavigatePrevious?: () => void;
-  onNavigateDown?: () => void;
   type?: 'text' | 'dropdown';
   options?: string[];
   readOnly?: boolean;
@@ -23,7 +22,6 @@ export const HandsonCell: React.FC<HandsonCellProps> = ({
   onCancel,
   onNavigateNext,
   onNavigatePrevious,
-  onNavigateDown,
   type = 'text',
   options = [],
   readOnly = false,
@@ -96,15 +94,15 @@ export const HandsonCell: React.FC<HandsonCellProps> = ({
         return;
       }
 
-      // For text input, prevent default, save and navigate down
+      // For text input, prevent default, save and navigate to next cell
       e.preventDefault();
       onChange(localValue);
       onSave();
 
-      // Navigate down to same column in next row
-      if (onNavigateDown) {
+      // Navigate to next cell (same as Tab behavior)
+      if (onNavigateNext) {
         setTimeout(() => {
-          onNavigateDown();
+          onNavigateNext();
         }, 100);
       }
     } else if (e.key === 'Escape') {

@@ -1,4 +1,5 @@
 export * from './testcase';
+export * from './testCaseTable';
 export * from './ticket';
 export * from './tree';
 export * from './workflow';
