@@ -85,7 +85,7 @@ export const InfoTab: React.FC = () => {
     setIsSaving(true);
 
     // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Save the current state
     setSavedState({

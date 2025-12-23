@@ -18,7 +18,7 @@ const allItems = [
   { key: TAB_KEYS.SCOPE_AND_IMPACT, label: TAB_LABELS.SCOPE_AND_IMPACT },
   { key: TAB_KEYS.CHECKLIST, label: TAB_LABELS.CHECKLIST },
   { key: TAB_KEYS.TEST_CASES, label: TAB_LABELS.TEST_CASES },
-  // { key: TAB_KEYS.TEST_CASE_DETAILS, label: TAB_LABELS.TEST_CASE_DETAILS },
+  { key: TAB_KEYS.TEST_CASE_DETAILS, label: TAB_LABELS.TEST_CASE_DETAILS },
 ];
 
 export const TestCasePanel: React.FC = () => {
@@ -29,6 +29,7 @@ export const TestCasePanel: React.FC = () => {
     activeTab,
     setActiveTab,
     hasUnsavedChanges,
+    selectedTestCaseId,
   } = useAnalysis();
 
   useEffect(() => {
@@ -44,7 +45,14 @@ export const TestCasePanel: React.FC = () => {
       return isAnalysed && isChecklistGenerated;
     if (item.key === TAB_KEYS.TEST_CASES)
       return isAnalysed && isChecklistGenerated && isTestCasesGenerated;
-    return false; // For other tabs like TEST_CASE_DETAILS if they are enabled later
+    if (item.key === TAB_KEYS.TEST_CASE_DETAILS)
+      return (
+        isAnalysed &&
+        isChecklistGenerated &&
+        isTestCasesGenerated &&
+        selectedTestCaseId !== null
+      );
+    return false;
   });
 
   const handleTabChange = (newTab: string) => {

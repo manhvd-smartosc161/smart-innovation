@@ -183,10 +183,14 @@ export function useTableColumns<T extends Record<string, any>>({
                 </svg>
               )
             : undefined,
-          onCell: (_, rowIndex) => ({
+          onCell: (record, rowIndex) => ({
             onClick: (e) => {
               if (rowIndex === undefined) return;
               (e.currentTarget as HTMLElement).focus();
+              // Call custom onCellClick if defined
+              if (col.onCellClick) {
+                col.onCellClick(record);
+              }
             },
             onDoubleClick: () =>
               rowIndex !== undefined &&
@@ -238,7 +242,7 @@ export function useTableColumns<T extends Record<string, any>>({
                 : col.readOnly;
             return (
               <div
-                className={`handson-table-cell ${isHighlighted ? 'cell-highlighted' : ''} ${col.type === 'dropdown' ? 'has-dropdown' : ''}`}
+                className={`handson-table-cell ${isHighlighted ? 'cell-highlighted' : ''} ${col.type === 'dropdown' ? 'has-dropdown' : ''} ${col.onCellClick ? 'clickable-cell' : ''}`}
                 data-row-index={index}
                 data-column-key={col.key}
                 tabIndex={col.editable && !isReadOnly ? 0 : -1}

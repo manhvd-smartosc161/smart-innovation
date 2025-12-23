@@ -7,7 +7,7 @@ export interface HandsonColumnConfig<T = Record<string, any>> {
   dataIndex: string;
   width?: number;
   editable?: boolean;
-  type?: 'text' | 'dropdown';
+  type?: 'text' | 'dropdown' | 'textarea';
   options?: string[] | ((record: T) => string[]);
   readOnly?: boolean | ((record: T) => boolean);
   sortable?: boolean; // Enable/disable sorting for this column
@@ -15,6 +15,7 @@ export interface HandsonColumnConfig<T = Record<string, any>> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   render?: (value: any, record: T, index: number) => React.ReactNode;
   onCellChange?: (record: T, value: string) => Partial<T>;
+  onCellClick?: (record: T) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

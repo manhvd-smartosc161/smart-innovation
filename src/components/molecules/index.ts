@@ -15,4 +15,5 @@ export * from './TagsContainer';
 export * from './TicketItem';
 export * from './TicketListItem';
 export * from './TicketSelectorItem';
+export * from './TiptapEditor';
 export * from './TreeItem';

@@ -12,9 +12,15 @@
     border-bottom: none;
   }
 
-  &:hover {
+  &:hover:not(.step-item-disabled) {
     border: 1px solid #40a9ff;
     border-bottom: 1px solid #40a9ff;
+  }
+
+  &.step-item-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
   }
 
   &.step-item-selected {
@@ -72,8 +78,7 @@
     margin-top 0.5s cubic-bezier(0.4, 0, 0.2, 1),
     padding 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
-  max-height: 2000px;
-  opacity: 1;
+  max-height: 400px; // Set max height for scrolling
 
   &.collapsed {
     max-height: 0;
@@ -84,12 +89,36 @@
   }
 
   &.expanded {
-    max-height: 2000px;
+    max-height: 400px; // Set max height for scrolling
     opacity: 1;
     margin-top: 25px;
     padding: 12px 12px 0px 12px;
     border: 2px solid #f0f0f0;
+    overflow-y: auto; // Enable scroll on container
+    overflow-x: visible;
   }
+
+  // Custom scrollbar styling
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #d9d9d9;
+    border-radius: 3px;
+
+    &:hover {
+      background: #bfbfbf;
+    }
+  }
+
+  // Firefox scrollbar
+  scrollbar-width: thin;
+  scrollbar-color: #d9d9d9 transparent;
 
   @media (max-width: 768px) {
     margin-top: 20px;

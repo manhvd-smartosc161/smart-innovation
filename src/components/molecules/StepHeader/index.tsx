@@ -20,6 +20,7 @@ interface StepHeaderProps {
   showAdd?: boolean;
   showAddExpectedResult?: boolean;
   isExpanded?: boolean;
+  onEditingChange?: (isEditing: boolean) => void;
 }
 
 export const StepHeader: React.FC<StepHeaderProps> = ({
@@ -37,6 +38,7 @@ export const StepHeader: React.FC<StepHeaderProps> = ({
   showAdd = false,
   showAddExpectedResult = false,
   isExpanded = true,
+  onEditingChange,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(description);
@@ -55,6 +57,7 @@ export const StepHeader: React.FC<StepHeaderProps> = ({
 
   const handleEdit = () => {
     setIsEditing(true);
+    onEditingChange?.(true);
     onEdit?.();
   };
 
@@ -63,11 +66,13 @@ export const StepHeader: React.FC<StepHeaderProps> = ({
       onDescriptionChange(editValue);
     }
     setIsEditing(false);
+    onEditingChange?.(false);
   };
 
   const handleCancel = () => {
     setEditValue(description);
     setIsEditing(false);
+    onEditingChange?.(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

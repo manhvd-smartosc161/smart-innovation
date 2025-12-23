@@ -6,7 +6,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
   padding-bottom: 16px;
   flex-wrap: wrap;
   gap: 12px;
@@ -34,6 +33,10 @@
 }
 
 .details-form {
+  textarea {
+    height: 100px;
+  }
+
   .ant-form-item {
     margin-bottom: 16px;
   }
@@ -52,7 +55,6 @@
   .ant-input,
   .ant-select-selector {
     border-radius: 6px;
-    height: 32px;
   }
 
   .ant-select {

@@ -46,6 +46,7 @@ export const StepsSection: React.FC = () => {
     stepId: number;
     resultId: number;
   } | null>(null);
+  const [editingStepId, setEditingStepId] = useState<number | null>(null);
 
   const handleAddStepAfter = (afterStepId: number) => {
     const afterIndex = steps.findIndex((step) => step.id === afterStepId);
@@ -77,18 +78,26 @@ export const StepsSection: React.FC = () => {
   };
 
   const handleAddExpectedResult = (stepId: number, afterResultId?: number) => {
-    setSteps(
-      steps.map((step) => {
+    setSteps((prevSteps) =>
+      prevSteps.map((step) => {
         if (step.id === stepId) {
+          // Generate unique ID by finding max existing ID
+          const maxId =
+            step.expectedResults.length > 0
+              ? Math.max(...step.expectedResults.map((r) => r.id))
+              : 0;
+
           const newResult = {
-            id: step.expectedResults.length + 1,
+            id: maxId + 1,
             description: 'New expected result',
           };
 
-          if (afterResultId) {
+          // If afterResultId is provided, insert after that result
+          if (afterResultId !== undefined) {
             const afterIndex = step.expectedResults.findIndex(
               (res) => res.id === afterResultId
             );
+
             if (afterIndex !== -1) {
               const updatedResults = [...step.expectedResults];
               updatedResults.splice(afterIndex + 1, 0, newResult);
@@ -99,6 +108,7 @@ export const StepsSection: React.FC = () => {
             }
           }
 
+          // Otherwise, add to the end
           return {
             ...step,
             expectedResults: [...step.expectedResults, newResult],
@@ -212,6 +222,10 @@ export const StepsSection: React.FC = () => {
             onSelectExpectedResult={(stepId, resultId) =>
               setSelectedExpectedResultId({ stepId, resultId })
             }
+            isDisabled={editingStepId !== null && editingStepId !== step.id}
+            onEditingChange={(isEditing) => {
+              setEditingStepId(isEditing ? step.id : null);
+            }}
           />
         ))}
       </div>

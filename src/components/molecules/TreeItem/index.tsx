@@ -11,7 +11,9 @@ interface TreeItemProps {
   isLeaf?: boolean;
   children?: React.ReactNode;
   isSelected?: boolean;
+  checked?: boolean;
   onSelect?: () => void;
+  onCheck?: (checked: boolean) => void;
 }
 
 export const TreeItem: React.FC<TreeItemProps> = ({
@@ -21,10 +23,11 @@ export const TreeItem: React.FC<TreeItemProps> = ({
   isLeaf,
   children,
   isSelected,
+  checked = false,
   onSelect,
+  onCheck,
 }) => {
   const [expanded, setExpanded] = useState(true);
-  const [checked, setChecked] = useState(false);
 
   const handleExpand = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -37,7 +40,7 @@ export const TreeItem: React.FC<TreeItemProps> = ({
 
   const handleCheck = (e: CheckboxChangeEvent) => {
     e.stopPropagation();
-    setChecked(e.target.checked);
+    onCheck?.(e.target.checked);
   };
 
   const renderIcon = () => {

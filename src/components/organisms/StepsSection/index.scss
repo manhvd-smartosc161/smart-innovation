@@ -13,6 +13,11 @@
   border: 1px solid #d9d9d9;
   border-radius: 6px;
   background: #fff;
+  max-height: 500px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding-top: 45px; // Space for action bar
 }
 
 .step-execute-header {
@@ -23,8 +28,8 @@
   background: #fafafa;
   padding: 12px 16px;
   border-bottom: 1px solid #e8e8e8;
-  border-radius: 6px 6px 0 0;
   margin-bottom: 0;
+  margin-top: -45px; // Pull up to compensate for container padding
 }
 
 .add-step-btn {

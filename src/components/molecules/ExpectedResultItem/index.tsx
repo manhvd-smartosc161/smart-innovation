@@ -8,6 +8,7 @@ interface ExpectedResultItemProps {
   number: number;
   description: string;
   isSelected?: boolean;
+  isDisabled?: boolean;
   onSelect?: (e?: React.MouseEvent) => void;
   onDelete?: () => void;
   onCopy?: () => void;
@@ -16,12 +17,14 @@ interface ExpectedResultItemProps {
   onEdit?: () => void;
   onDescriptionChange?: (newDescription: string) => void;
   onAdd?: () => void;
+  onEditingChange?: (isEditing: boolean) => void;
 }
 
 export const ExpectedResultItem: React.FC<ExpectedResultItemProps> = ({
   number,
   description,
   isSelected,
+  isDisabled,
   onSelect,
   onDelete,
   onCopy,
@@ -30,6 +33,7 @@ export const ExpectedResultItem: React.FC<ExpectedResultItemProps> = ({
   onEdit,
   onDescriptionChange,
   onAdd,
+  onEditingChange,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(description);
@@ -48,6 +52,7 @@ export const ExpectedResultItem: React.FC<ExpectedResultItemProps> = ({
 
   const handleEdit = () => {
     setIsEditing(true);
+    onEditingChange?.(true);
     onEdit?.();
   };
 
@@ -56,11 +61,13 @@ export const ExpectedResultItem: React.FC<ExpectedResultItemProps> = ({
       onDescriptionChange(editValue);
     }
     setIsEditing(false);
+    onEditingChange?.(false);
   };
 
   const handleCancel = () => {
     setEditValue(description);
     setIsEditing(false);
+    onEditingChange?.(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -73,7 +80,7 @@ export const ExpectedResultItem: React.FC<ExpectedResultItemProps> = ({
 
   return (
     <div
-      className={`expected-result-item ${isSelected ? 'expected-result-item-selected' : ''}`}
+      className={`expected-result-item ${isSelected ? 'expected-result-item-selected' : ''} ${isDisabled ? 'expected-result-item-disabled' : ''}`}
       onClick={onSelect}
     >
       <div className="expected-result-content">

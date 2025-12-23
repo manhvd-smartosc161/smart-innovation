@@ -44,7 +44,7 @@ const createEmptyTestCaseItem = (
 
 export const TestCaseTable: React.FC = () => {
   // Use TEST_CASES tab key if available, otherwise fallback or add to constants if strict types
-  const { markTabAsSaved } = useAnalysis();
+  const { markTabAsSaved, setSelectedTestCaseId, setActiveTab } = useAnalysis();
   const [data, setData] = useState<TestCaseTableRow[]>(
     MOCK_TEST_CASE_TABLE_DATA
   );
@@ -72,6 +72,14 @@ export const TestCaseTable: React.FC = () => {
     deleted: [],
   });
 
+  const handleTestCaseIdClick = useCallback(
+    (testCaseId: string) => {
+      setSelectedTestCaseId(testCaseId);
+      setActiveTab(TAB_KEYS.TEST_CASE_DETAILS);
+    },
+    [setSelectedTestCaseId, setActiveTab]
+  );
+
   const columns: HandsonColumnConfig<TestCaseTableRow>[] = useMemo(
     () => [
       {
@@ -83,6 +91,7 @@ export const TestCaseTable: React.FC = () => {
         type: 'text',
         sortable: false,
         filterable: false,
+        onCellClick: (record) => handleTestCaseIdClick(record.testcase_id),
       },
       {
         key: 'group',
@@ -121,16 +130,6 @@ export const TestCaseTable: React.FC = () => {
         type: 'dropdown',
         options: ['Passed', 'Failed', 'Pending', 'Blocked'],
         sortable: false,
-      },
-      {
-        key: 'pre_condition',
-        title: 'Pre Condition',
-        dataIndex: 'pre_condition',
-        width: 150,
-        editable: true,
-        type: 'text',
-        sortable: false,
-        filterable: false,
       },
       {
         key: 'tc_description',
@@ -232,7 +231,7 @@ export const TestCaseTable: React.FC = () => {
         filterable: false,
       },
     ],
-    []
+    [handleTestCaseIdClick]
   );
 
   const handleDataChange = useCallback(

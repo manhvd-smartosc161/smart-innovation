@@ -1,10 +1,13 @@
 import React from 'react';
 import { Form, Input, Row, Col, Space, Button } from 'antd';
-import { FormSelect } from '@/components/molecules';
+import { SaveOutlined } from '@ant-design/icons';
+import { FormSelect, TiptapEditor } from '@/components/molecules';
+import { useAnalysis } from '@/contexts';
 import './index.scss';
 
 export const DetailsForm: React.FC = () => {
   const [form] = Form.useForm();
+  const { selectedTestCaseId } = useAnalysis();
 
   return (
     <div className="details-form-container">
@@ -14,7 +17,7 @@ export const DetailsForm: React.FC = () => {
           <Button className="ai-gen-btn" icon={<span>✨</span>}>
             AI Generation
           </Button>
-          <Button className="save-btn" icon={<span>💾</span>}>
+          <Button type="primary" className="save-btn" icon={<SaveOutlined />}>
             Save
           </Button>
         </Space>
@@ -33,7 +36,11 @@ export const DetailsForm: React.FC = () => {
           </Col>
           <Col span={12}>
             <Form.Item label="ID">
-              <Input defaultValue="TS-0000001" placeholder="ID" disabled />
+              <Input
+                value={selectedTestCaseId || 'TS-0000001'}
+                placeholder="ID"
+                disabled
+              />
             </Form.Item>
           </Col>
         </Row>
@@ -86,9 +93,9 @@ export const DetailsForm: React.FC = () => {
         <Row gutter={16}>
           <Col span={24}>
             <Form.Item label="Pre Condition">
-              <Input.TextArea
-                rows={3}
-                defaultValue="1. User is logged in.&#10;2. Product is in stock.&#10;3. Payment gateway is configured."
+              <TiptapEditor
+                value="<p>1. User is logged in.</p><p>2. Product is in stock.</p><p>3. Payment gateway is configured.</p>"
+                onChange={(html) => console.log('Pre condition changed:', html)}
                 placeholder="Enter pre-conditions"
               />
             </Form.Item>

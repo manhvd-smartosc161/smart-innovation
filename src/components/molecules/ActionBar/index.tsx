@@ -45,24 +45,45 @@ export const ActionBar: React.FC<ActionBarProps> = ({
 }) => {
   return (
     <Space size={4} className="action-bar">
-      {showAdd && <IconButton icon={<PlusCircleOutlined />} onClick={onAdd} />}
+      {showAdd && (
+        <IconButton
+          icon={<PlusCircleOutlined />}
+          onClick={onAdd}
+          tooltip="Add Step"
+        />
+      )}
       {showAddExpectedResult && (
         <IconButton
           icon={<AppstoreAddOutlined />}
           onClick={onAddExpectedResult}
+          tooltip="Add Expected Result"
         />
       )}
-      <IconButton icon={<CopyOutlined />} onClick={onCopy} />
-      <IconButton icon={<SettingOutlined />} onClick={onSetting} />
-      <IconButton icon={<CommentOutlined />} onClick={onComment} />
-      <IconButton icon={<EditOutlined />} onClick={onEdit} />
+      <IconButton icon={<CopyOutlined />} onClick={onCopy} tooltip="Copy" />
+      <IconButton
+        icon={<SettingOutlined />}
+        onClick={onSetting}
+        tooltip="Settings"
+      />
+      <IconButton
+        icon={<CommentOutlined />}
+        onClick={onComment}
+        tooltip="Comment"
+      />
+      <IconButton icon={<EditOutlined />} onClick={onEdit} tooltip="Edit" />
       {showDelete && (
-        <IconButton icon={<DeleteOutlined />} onClick={onDelete} danger />
+        <IconButton
+          icon={<DeleteOutlined />}
+          onClick={onDelete}
+          danger
+          tooltip="Delete"
+        />
       )}
       {onToggleExpand && (
         <IconButton
           icon={isExpanded ? <UpCircleOutlined /> : <DownCircleOutlined />}
           onClick={onToggleExpand}
+          tooltip={isExpanded ? 'Collapse' : 'Expand'}
         />
       )}
     </Space>

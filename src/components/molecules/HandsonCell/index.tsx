@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Input, Select } from 'antd';
 import type { InputRef, SelectProps } from 'antd';
-
 interface HandsonCellProps {
   value: string;
   onChange: (value: string) => void;
@@ -9,7 +8,7 @@ interface HandsonCellProps {
   onCancel: () => void;
   onNavigateNext?: () => void;
   onNavigatePrevious?: () => void;
-  type?: 'text' | 'dropdown';
+  type?: 'text' | 'dropdown' | 'textarea';
   options?: string[];
   readOnly?: boolean;
   autoFocus?: boolean;

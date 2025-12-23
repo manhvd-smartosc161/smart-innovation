@@ -99,6 +99,19 @@
       background-color: #fff7e6;
       animation: highlight-pulse 0.5s ease-in-out;
     }
+
+    // Style for clickable cells (like Test Case ID)
+    &.clickable-cell {
+      .cell-content {
+        color: #1890ff;
+        text-decoration: underline;
+        cursor: pointer;
+
+        &:hover {
+          color: #40a9ff;
+        }
+      }
+    }
   }
 
   @keyframes highlight-pulse {
