@@ -43,7 +43,7 @@ export const ChecklistTab: React.FC = () => {
   const [savedCells, setSavedCells] = useState<Set<string>>(new Set());
 
   // Animation states
-  const [showTestCase, setShowTestCase] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
 
   // Track pending changes to commit to history on save
@@ -63,20 +63,21 @@ export const ChecklistTab: React.FC = () => {
     deleted: [],
   });
 
-  const handleGenerateTestCases = () => {
-    setShowTestCase(true);
+  const handleGenerateTestCases = async () => {
+    setIsGenerating(true);
 
-    setTimeout(() => {
-      setShowTestCase(false);
-      setShowFireworks(true);
-    }, 1500);
+    // Simulate API call (3 seconds)
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    // End generating, show fireworks
+    setIsGenerating(false);
+    setShowFireworks(true);
 
     setTimeout(() => {
       setShowFireworks(false);
-      // Mark test cases as generated and switch to Test Cases tab
       setIsTestCasesGenerated(true);
       setActiveTab(TAB_KEYS.TEST_CASES);
-    }, 3500);
+    }, 2000);
 
     console.log('Generating test cases from checklist data:', data);
   };
@@ -311,18 +312,11 @@ export const ChecklistTab: React.FC = () => {
   );
 
   const isGenerateDisabled =
-    data.filter((item) => item.type || item.item || item.description).length ===
-    0;
+    data.filter((item) => item.type || item.item || item.cl_description)
+      .length === 0;
 
   return (
     <div className="checklist-tab">
-      {/* Test Case Flying Animation */}
-      {showTestCase && (
-        <div className="flying-testcase-container">
-          <div className="flying-testcase">📝</div>
-        </div>
-      )}
-
       {/* Fireworks Animation */}
       {showFireworks && (
         <div className="fireworks-container">
@@ -350,10 +344,18 @@ export const ChecklistTab: React.FC = () => {
           type="primary"
           size="large"
           onClick={handleGenerateTestCases}
-          disabled={isGenerateDisabled}
+          disabled={isGenerateDisabled || isGenerating}
           className="generate-testcases-button"
         >
-          Generate Test Cases
+          {isGenerating ? (
+            <span className="generating-text">
+              {'Generating...'.split('').map((char, index) => (
+                <span key={index}>{char}</span>
+              ))}
+            </span>
+          ) : (
+            'Generate Test Cases'
+          )}
         </Button>
         <div className="generate-icon-right">
           <ExperimentOutlined />

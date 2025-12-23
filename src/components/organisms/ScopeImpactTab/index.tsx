@@ -10,35 +10,27 @@ import './index.scss';
 export const ScopeImpactTab: React.FC = () => {
   const { setIsChecklistGenerated, setActiveTab } = useAnalysis();
   const [isGenerating, setIsGenerating] = useState(false);
-  const [showFlyingChecklist, setShowFlyingChecklist] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     setIsGenerating(true);
-    setShowFlyingChecklist(true);
 
-    setTimeout(() => {
-      setShowFlyingChecklist(false);
-      setShowFireworks(true);
-    }, 1500);
+    // Simulate API call (3 seconds)
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    // End generating, show fireworks
+    setIsGenerating(false);
+    setShowFireworks(true);
 
     setTimeout(() => {
       setShowFireworks(false);
-      setIsGenerating(false);
       setIsChecklistGenerated(true);
       setActiveTab(TAB_KEYS.CHECKLIST);
-    }, 3500);
+    }, 2000);
   };
 
   return (
     <div className="scope-impact-tab">
-      {/* Flying Checklist Animation */}
-      {showFlyingChecklist && (
-        <div className="flying-checklist-container">
-          <div className="flying-checklist">📋</div>
-        </div>
-      )}
-
       {/* Fireworks Animation */}
       {showFireworks && (
         <div className="fireworks-container">
@@ -67,9 +59,18 @@ export const ScopeImpactTab: React.FC = () => {
               type="primary"
               size="large"
               onClick={handleGenerate}
+              disabled={isGenerating}
               className={`generate-button ${isGenerating ? 'is-generating' : ''}`}
             >
-              Generate Checklist
+              {isGenerating ? (
+                <span className="generating-text">
+                  {'Generating...'.split('').map((char, index) => (
+                    <span key={index}>{char}</span>
+                  ))}
+                </span>
+              ) : (
+                'Generate Checklist'
+              )}
             </Button>
           </div>
           <div className="generate-icon-right">

@@ -299,10 +299,10 @@ export const InfoTab: React.FC = () => {
     setConfluencePages(confluencePages.filter((page) => page.url !== pageUrl));
   };
 
-  const [showRocket, setShowRocket] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
+  const [isAnalysing, setIsAnalysing] = useState(false);
 
-  const handleAnalyse = () => {
+  const handleAnalyse = async () => {
     const analysisData: AnalysisData = {
       files: uploads,
       tickets,
@@ -310,22 +310,25 @@ export const InfoTab: React.FC = () => {
       overallObjective,
     };
 
-    setShowRocket(true);
+    console.log('Analysis Data:', analysisData);
 
-    setTimeout(() => {
-      setShowRocket(false);
-      setShowFireworks(true);
-    }, 1500);
+    // Start analysing state
+    setIsAnalysing(true);
+
+    // Simulate API call (3 seconds)
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    // End analysing, show fireworks directly
+    setIsAnalysing(false);
+    setShowFireworks(true);
 
     setTimeout(() => {
       setShowFireworks(false);
       setIsAnalysed(true);
       setActiveTab(TAB_KEYS.SCOPE_AND_IMPACT);
-    }, 3500);
+    }, 2000);
 
-    console.log('Analysis Data:', analysisData);
-
-    // TODO: Add API call or further processing here
+    // TODO: Add real API call here
   };
 
   // Validation for Analyse button
@@ -381,13 +384,6 @@ export const InfoTab: React.FC = () => {
 
   return (
     <div className="info-tab">
-      {/* Rocket Animation */}
-      {showRocket && (
-        <div className="rocket-container">
-          <div className="rocket">🚀</div>
-        </div>
-      )}
-
       {/* Fireworks Animation */}
       {showFireworks && (
         <div className="fireworks-container">
@@ -425,10 +421,18 @@ export const InfoTab: React.FC = () => {
                 type="primary"
                 size="large"
                 onClick={handleAnalyse}
-                disabled={isAnalyseDisabled}
+                disabled={isAnalyseDisabled || isAnalysing}
                 className="analyse-button"
               >
-                {INFO_TAB_LABELS.ANALYSE}
+                {isAnalysing ? (
+                  <span className="analysing-text">
+                    {'Analysing...'.split('').map((char, index) => (
+                      <span key={index}>{char}</span>
+                    ))}
+                  </span>
+                ) : (
+                  INFO_TAB_LABELS.ANALYSE
+                )}
               </Button>
             </span>
           </Tooltip>
@@ -437,10 +441,18 @@ export const InfoTab: React.FC = () => {
             type="primary"
             size="large"
             onClick={handleAnalyse}
-            disabled={isAnalyseDisabled}
+            disabled={isAnalyseDisabled || isAnalysing}
             className="analyse-button"
           >
-            {INFO_TAB_LABELS.ANALYSE}
+            {isAnalysing ? (
+              <span className="analysing-text">
+                {'Analysing...'.split('').map((char, index) => (
+                  <span key={index}>{char}</span>
+                ))}
+              </span>
+            ) : (
+              INFO_TAB_LABELS.ANALYSE
+            )}
           </Button>
         )}
         <div className="analyse-icon-right">
@@ -451,7 +463,7 @@ export const InfoTab: React.FC = () => {
         <Tooltip
           title={
             isReadOnly
-              ? showRocket || showFireworks
+              ? showFireworks
                 ? 'Analysing...'
                 : 'Edit Mode'
               : isSaving
@@ -467,7 +479,7 @@ export const InfoTab: React.FC = () => {
               size="large"
               icon={<EditOutlined />}
               onClick={handleEdit}
-              disabled={showRocket || showFireworks}
+              disabled={showFireworks}
               className="section-edit-button"
             />
           ) : (
