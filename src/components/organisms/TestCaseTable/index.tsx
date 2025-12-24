@@ -44,7 +44,12 @@ const createEmptyTestCaseItem = (
 
 export const TestCaseTable: React.FC = () => {
   // Use TEST_CASES tab key if available, otherwise fallback or add to constants if strict types
-  const { markTabAsSaved, setSelectedTestCaseId, setActiveTab } = useAnalysis();
+  const {
+    markTabAsSaved,
+    markTabAsChanged,
+    setSelectedTestCaseId,
+    setActiveTab,
+  } = useAnalysis();
   const [data, setData] = useState<TestCaseTableRow[]>(
     MOCK_TEST_CASE_TABLE_DATA
   );
@@ -300,8 +305,11 @@ export const TestCaseTable: React.FC = () => {
       // Track changed cell
       const cellKey = `${rowIndex}-${columnKey}`;
       setChangedCells((prev) => new Set(prev).add(cellKey));
+
+      // Mark tab as having unsaved changes
+      markTabAsChanged(TAB_KEYS.TEST_CASES);
     },
-    [columns]
+    [columns, markTabAsChanged]
   );
 
   const handleSave = useCallback(

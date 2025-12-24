@@ -32,8 +32,12 @@ const createEmptyChecklistItem = (
 };
 
 export const ChecklistTab: React.FC = () => {
-  const { markTabAsSaved, setIsTestCasesGenerated, setActiveTab } =
-    useAnalysis();
+  const {
+    markTabAsSaved,
+    markTabAsChanged,
+    setIsTestCasesGenerated,
+    setActiveTab,
+  } = useAnalysis();
   const [data, setData] = useState<ChecklistItem[]>(MOCK_CHECKLIST_DATA);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyVisible, setHistoryVisible] = useState(false);
@@ -216,8 +220,11 @@ export const ChecklistTab: React.FC = () => {
       // Track changed cell
       const cellKey = `${rowIndex}-${columnKey}`;
       setChangedCells((prev) => new Set(prev).add(cellKey));
+
+      // Mark tab as having unsaved changes
+      markTabAsChanged(TAB_KEYS.CHECKLIST);
     },
-    [columns]
+    [columns, markTabAsChanged]
   );
 
   const handleSave = useCallback(

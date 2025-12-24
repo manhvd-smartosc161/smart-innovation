@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { StepItem } from '@/components/molecules';
 import type { TestStep } from '@/types';
+import { useAnalysis } from '@/contexts';
+import { TAB_KEYS } from '@/constants';
 import './index.scss';
 
 const initialSteps: TestStep[] = [
@@ -40,6 +42,7 @@ const initialSteps: TestStep[] = [
 ];
 
 export const StepsSection: React.FC = () => {
+  const { markTabAsChanged } = useAnalysis();
   const [steps, setSteps] = useState<TestStep[]>(initialSteps);
   const [selectedStepId, setSelectedStepId] = useState<number | null>(2);
   const [selectedExpectedResultId, setSelectedExpectedResultId] = useState<{
@@ -67,6 +70,8 @@ export const StepsSection: React.FC = () => {
     });
 
     setSteps(updatedSteps);
+    // Mark tab as having unsaved changes
+    markTabAsChanged(TAB_KEYS.TEST_CASE_DETAILS);
   };
 
   const handleDeleteStep = (id: number) => {
@@ -75,6 +80,8 @@ export const StepsSection: React.FC = () => {
       step.stepNumber = index + 1;
     });
     setSteps(updatedSteps);
+    // Mark tab as having unsaved changes
+    markTabAsChanged(TAB_KEYS.TEST_CASE_DETAILS);
   };
 
   const handleAddExpectedResult = (stepId: number, afterResultId?: number) => {
@@ -117,6 +124,8 @@ export const StepsSection: React.FC = () => {
         return step;
       })
     );
+    // Mark tab as having unsaved changes
+    markTabAsChanged(TAB_KEYS.TEST_CASE_DETAILS);
   };
 
   const handleDeleteExpectedResult = (stepId: number, resultId: number) => {
@@ -134,6 +143,8 @@ export const StepsSection: React.FC = () => {
         return step;
       })
     );
+    // Mark tab as having unsaved changes
+    markTabAsChanged(TAB_KEYS.TEST_CASE_DETAILS);
   };
 
   const handleStepDescriptionChange = (
@@ -151,6 +162,8 @@ export const StepsSection: React.FC = () => {
         return step;
       })
     );
+    // Mark tab as having unsaved changes
+    markTabAsChanged(TAB_KEYS.TEST_CASE_DETAILS);
   };
 
   const handleExpectedResultDescriptionChange = (
@@ -177,6 +190,8 @@ export const StepsSection: React.FC = () => {
         return step;
       })
     );
+    // Mark tab as having unsaved changes
+    markTabAsChanged(TAB_KEYS.TEST_CASE_DETAILS);
   };
 
   return (
