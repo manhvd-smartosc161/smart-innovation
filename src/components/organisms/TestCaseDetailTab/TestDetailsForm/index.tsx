@@ -7,7 +7,17 @@ import { useAnalysis } from '@/contexts';
 import { TAB_KEYS } from '@/constants';
 import './index.scss';
 
-export const TestDetailsForm: React.FC = () => {
+interface TestDetailsFormProps {
+  onAIGeneration?: () => void;
+  isGenerating?: boolean;
+  showSparkles?: boolean;
+}
+
+export const TestDetailsForm: React.FC<TestDetailsFormProps> = ({
+  onAIGeneration,
+  isGenerating = false,
+  showSparkles = false,
+}) => {
   const [form] = Form.useForm();
   const [searchParams] = useSearchParams();
   const { selectedTestCaseId, markTabAsChanged, hasUnsavedChanges } =
@@ -45,9 +55,30 @@ export const TestDetailsForm: React.FC = () => {
       <div className="details-header">
         <h2 className="details-title">Details</h2>
         <Space>
-          <Button className="ai-gen-btn" icon={<span>✨</span>}>
-            AI Generation
-          </Button>
+          <div className="ai-gen-wrapper">
+            {showSparkles && (
+              <>
+                <span className="sparkle sparkle-1">✨</span>
+                <span className="sparkle sparkle-2">✨</span>
+                <span className="sparkle sparkle-3">✨</span>
+                <span className="sparkle sparkle-4">✨</span>
+                <span className="sparkle sparkle-5">✨</span>
+                <span className="sparkle sparkle-6">✨</span>
+              </>
+            )}
+            <Button
+              className={`ai-gen-btn ${isGenerating ? 'generating' : ''}`}
+              icon={<span>✨</span>}
+              onClick={onAIGeneration}
+              disabled={isGenerating}
+            >
+              {isGenerating ? (
+                <span className="generating-text">Generating...</span>
+              ) : (
+                'AI Generation'
+              )}
+            </Button>
+          </div>
           <Button
             type="primary"
             className="save-btn"

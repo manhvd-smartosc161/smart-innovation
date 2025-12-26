@@ -18,12 +18,127 @@
   color: #1f1f1f;
 }
 
+.ai-gen-wrapper {
+  position: relative;
+  display: inline-block;
+
+  .sparkle {
+    position: absolute;
+    font-size: 20px;
+    animation: sparkle-twinkle 2s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .sparkle-1 {
+    top: -22px;
+    left: 15px;
+    animation-delay: 0s;
+  }
+
+  .sparkle-2 {
+    top: 8px;
+    right: -18px;
+    animation-delay: 0.3s;
+  }
+
+  .sparkle-3 {
+    bottom: -18px;
+    left: 45px;
+    animation-delay: 0.6s;
+  }
+
+  .sparkle-4 {
+    top: -15px;
+    right: 30px;
+    animation-delay: 0.9s;
+  }
+
+  .sparkle-5 {
+    top: 12px;
+    left: -20px;
+    animation-delay: 1.2s;
+  }
+
+  .sparkle-6 {
+    bottom: 10px;
+    right: 55px;
+    animation-delay: 1.5s;
+  }
+
+  @keyframes sparkle-twinkle {
+    0%,
+    100% {
+      transform: scale(0.8) rotate(0deg);
+      opacity: 0.6;
+    }
+    50% {
+      transform: scale(1.4) rotate(180deg);
+      opacity: 1;
+    }
+  }
+}
+
 .ai-gen-btn {
   color: #1890ff;
   border-color: #1890ff;
   display: flex;
   align-items: center;
   gap: 8px;
+  position: relative;
+  overflow: hidden;
+
+  &.generating {
+    background: linear-gradient(
+      90deg,
+      rgba(24, 144, 255, 0.1) 0%,
+      rgba(24, 144, 255, 0.3) 50%,
+      rgba(24, 144, 255, 0.1) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    cursor: not-allowed;
+  }
+
+  .generating-icon {
+    margin-right: 8px;
+    font-size: 16px;
+    opacity: 1;
+  }
+
+  .generating-text {
+    background: linear-gradient(
+      90deg,
+      #1890ff 0%,
+      #40a9ff 25%,
+      #1890ff 50%,
+      #40a9ff 75%,
+      #1890ff 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-flow 2s linear infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes gradient-flow {
+    0% {
+      background-position: 0% center;
+    }
+    100% {
+      background-position: 200% center;
+    }
+  }
 }
 
 .save-btn {
