@@ -85,7 +85,7 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
       placement="right"
       onClose={onClose}
       open={visible}
-      width={400}
+      size="default"
       className="history-panel"
     >
       {history.length === 0 ? (

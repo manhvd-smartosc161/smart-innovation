@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
-import { Input, Button, Dropdown, type MenuProps } from 'antd';
-import {
-  PlusOutlined,
-  DeleteOutlined,
-  MoreOutlined,
-  EyeOutlined,
-  CloseCircleOutlined,
-  FileTextOutlined,
-  GoogleOutlined,
-  FileExcelOutlined,
-} from '@ant-design/icons';
+import { Input, Button } from 'antd';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { TicketListItem } from '@/components/molecules';
 import type { Ticket } from '@/types';
 import './index.scss';
@@ -38,124 +29,45 @@ export const TicketSidebar: React.FC = () => {
   const [selectedTicketId, setSelectedTicketId] =
     useState<string>('SAIT-000001');
 
-  const handleRequestReview = () => {
-    console.log('Request Review clicked');
+  const handleRequestReview = (ticketId: string) => {
+    console.log('Request Review clicked for ticket:', ticketId);
     // TODO: Implement request review logic
   };
 
-  const handleCancelReview = () => {
-    console.log('Cancel Review clicked');
+  const handleCancelReview = (ticketId: string) => {
+    console.log('Cancel Review clicked for ticket:', ticketId);
     // TODO: Implement cancel review logic
   };
 
-  const handleImportFromTickets = () => {
-    console.log('Import from other tickets clicked');
+  const handleImportFromTickets = (ticketId: string) => {
+    console.log('Import from other tickets clicked for ticket:', ticketId);
     // TODO: Implement import from tickets logic
   };
 
-  const handleImportFromGoogleSheets = () => {
-    console.log('Import from Google Sheets clicked');
+  const handleImportFromGoogleSheets = (ticketId: string) => {
+    console.log('Import from Google Sheets clicked for ticket:', ticketId);
     // TODO: Implement import from Google Sheets logic
   };
 
-  const handleImportFromExcel = () => {
-    console.log('Import from Excel file clicked');
+  const handleImportFromExcel = (ticketId: string) => {
+    console.log('Import from Excel file clicked for ticket:', ticketId);
     // TODO: Implement import from Excel logic
   };
 
-  const handleExportToJira = () => {
-    console.log('Export to Jira clicked');
+  const handleExportToJira = (ticketId: string) => {
+    console.log('Export to Jira clicked for ticket:', ticketId);
     // TODO: Implement export to Jira logic
   };
 
-  const handleExportToGoogleSheets = () => {
-    console.log('Export to Google Sheets clicked');
+  const handleExportToGoogleSheets = (ticketId: string) => {
+    console.log('Export to Google Sheets clicked for ticket:', ticketId);
     // TODO: Implement export to Google Sheets logic
   };
 
-  const handleExportToExcel = () => {
-    console.log('Export to Excel file clicked');
+  const handleExportToExcel = (ticketId: string) => {
+    console.log('Export to Excel file clicked for ticket:', ticketId);
     // TODO: Implement export to Excel logic
   };
-
-  const menuItems: MenuProps['items'] = [
-    {
-      key: 'request-review',
-      label: 'Request Review',
-      icon: <EyeOutlined />,
-      onClick: handleRequestReview,
-      className: 'menu-item-request-review',
-    },
-    {
-      key: 'cancel-review',
-      label: 'Cancel Review',
-      icon: <CloseCircleOutlined />,
-      onClick: handleCancelReview,
-      className: 'menu-item-cancel-review',
-    },
-    {
-      type: 'divider',
-    },
-    {
-      key: 'import',
-      label: 'Import',
-      disabled: true,
-      style: { cursor: 'default' },
-      className: 'menu-item-section-header',
-    },
-    {
-      key: 'import-tickets',
-      label: <span style={{ paddingLeft: '8px' }}>From other tickets</span>,
-      icon: <FileTextOutlined />,
-      onClick: handleImportFromTickets,
-      className: 'menu-item-import',
-    },
-    {
-      key: 'import-google-sheets',
-      label: <span style={{ paddingLeft: '8px' }}>From Google Sheets</span>,
-      icon: <GoogleOutlined />,
-      onClick: handleImportFromGoogleSheets,
-      className: 'menu-item-import',
-    },
-    {
-      key: 'import-excel',
-      label: <span style={{ paddingLeft: '8px' }}>From Excel file</span>,
-      icon: <FileExcelOutlined />,
-      onClick: handleImportFromExcel,
-      className: 'menu-item-import',
-    },
-    {
-      type: 'divider',
-    },
-    {
-      key: 'export',
-      label: 'Export',
-      disabled: true,
-      style: { cursor: 'default' },
-      className: 'menu-item-section-header',
-    },
-    {
-      key: 'export-jira',
-      label: <span style={{ paddingLeft: '8px' }}>To Jira</span>,
-      icon: <FileTextOutlined />,
-      onClick: handleExportToJira,
-      className: 'menu-item-export',
-    },
-    {
-      key: 'export-google-sheets',
-      label: <span style={{ paddingLeft: '8px' }}>To Google Sheets</span>,
-      icon: <GoogleOutlined />,
-      onClick: handleExportToGoogleSheets,
-      className: 'menu-item-export',
-    },
-    {
-      key: 'export-excel',
-      label: <span style={{ paddingLeft: '8px' }}>To Excel file</span>,
-      icon: <FileExcelOutlined />,
-      onClick: handleExportToExcel,
-      className: 'menu-item-export',
-    },
-  ];
 
   return (
     <div className="ticket-sidebar">
@@ -173,19 +85,6 @@ export const TicketSidebar: React.FC = () => {
             danger
             className="header-icon-btn"
           />
-          <Dropdown
-            menu={{ items: menuItems }}
-            trigger={['click']}
-            placement="bottomLeft"
-            overlayClassName="ticket-sidebar-dropdown"
-            rootClassName="ticket-sidebar-dropdown"
-          >
-            <Button
-              type="text"
-              icon={<MoreOutlined />}
-              className="header-icon-btn"
-            />
-          </Dropdown>
         </div>
       </div>
       <div className="ticket-list">
@@ -196,6 +95,14 @@ export const TicketSidebar: React.FC = () => {
             title={ticket.title}
             isSelected={selectedTicketId === ticket.id}
             onClick={() => setSelectedTicketId(ticket.id)}
+            onRequestReview={handleRequestReview}
+            onCancelReview={handleCancelReview}
+            onImportFromTickets={handleImportFromTickets}
+            onImportFromGoogleSheets={handleImportFromGoogleSheets}
+            onImportFromExcel={handleImportFromExcel}
+            onExportToJira={handleExportToJira}
+            onExportToGoogleSheets={handleExportToGoogleSheets}
+            onExportToExcel={handleExportToExcel}
           />
         ))}
       </div>

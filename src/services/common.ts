@@ -1,4 +1,5 @@
 import { ELEMENTS_BY_COMPONENT } from '@/mock';
+import { sortBy } from '@/utils';
 
 export const getElementOptionsByComponent = (
   componentValue: string
@@ -21,18 +22,27 @@ export const generateNextId = <T extends object>(
   prefix: string,
   length: number
 ): string => {
-  const maxIdNumber = existingData.reduce((max, item) => {
-    const fieldValue = item[idField];
-    if (
-      fieldValue &&
-      typeof fieldValue === 'string' &&
-      fieldValue.startsWith(prefix)
-    ) {
-      const idNumber = parseInt(fieldValue.replace(prefix, ''), 10);
-      return Math.max(max, idNumber);
-    }
-    return max;
-  }, 0);
+  // Filter items with valid IDs and extract numbers
+  const validItems = existingData
+    .filter((item) => {
+      const fieldValue = item[idField];
+      return (
+        fieldValue &&
+        typeof fieldValue === 'string' &&
+        fieldValue.startsWith(prefix)
+      );
+    })
+    .map((item) => {
+      const fieldValue = item[idField] as string;
+      return {
+        ...item,
+        idNumber: parseInt(fieldValue.replace(prefix, ''), 10),
+      };
+    });
+
+  // Use sortBy utility to find max ID
+  const sorted = sortBy(validItems, 'idNumber', 'desc');
+  const maxIdNumber = sorted[0]?.idNumber || 0;
 
   const nextIdNumber = maxIdNumber + 1;
   return `${prefix}${String(nextIdNumber).padStart(length, '0')}`;

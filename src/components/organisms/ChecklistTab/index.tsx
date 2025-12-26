@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { message, Button, Divider } from 'antd';
 import { FileTextOutlined, ExperimentOutlined } from '@ant-design/icons';
 import {
@@ -7,11 +7,9 @@ import {
 } from '@/components/molecules/HandsonTable';
 import { MOCK_CHECKLIST_DATA, MOCK_SCOPE_DATA, MOCK_IMPACT_DATA } from '@/mock';
 import type { ChecklistItem } from '@/types';
-import {
-  HistoryPanel,
-  type HistoryItem,
-} from '@/components/molecules/HistoryPanel';
+import { HistoryPanel } from '@/components/molecules/HistoryPanel';
 import { useAnalysis } from '@/contexts';
+import { useTableManagement } from '@/hooks';
 import { TAB_KEYS } from '@/constants';
 import './index.scss';
 
@@ -38,34 +36,32 @@ export const ChecklistTab: React.FC = () => {
     setIsTestCasesGenerated,
     setActiveTab,
   } = useAnalysis();
-  const [data, setData] = useState<ChecklistItem[]>(MOCK_CHECKLIST_DATA);
-  const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [historyVisible, setHistoryVisible] = useState(false);
 
-  // Track changed cells since last save (for highlighting)
-  const [changedCells, setChangedCells] = useState<Set<string>>(new Set());
-  const [savedCells, setSavedCells] = useState<Set<string>>(new Set());
+  // Use table management hook
+  const {
+    data,
+    history,
+    historyVisible,
+    savedCells,
+    setData,
+    setHistoryVisible,
+    setChangedCells,
+    handleRowAdd,
+    handleRowDelete,
+    handleCellEdit: baseCellEdit,
+    handleSave: baseSave,
+    trackDataChanges,
+  } = useTableManagement<ChecklistItem>({
+    initialData: MOCK_CHECKLIST_DATA,
+    tabKey: TAB_KEYS.CHECKLIST,
+    idField: 'checklist_id',
+    markTabAsChanged,
+    markTabAsSaved,
+  });
 
   // Animation states
   const [isGenerating, setIsGenerating] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
-
-  // Track pending changes to commit to history on save
-  const pendingChangesRef = useRef<{
-    added: string[];
-    edited: Array<{
-      itemId: string;
-      row: number;
-      column: string;
-      oldValue: string;
-      newValue: string;
-    }>;
-    deleted: string[];
-  }>({
-    added: [],
-    edited: [],
-    deleted: [],
-  });
 
   const handleGenerateTestCases = async () => {
     setIsGenerating(true);
@@ -156,46 +152,26 @@ export const ChecklistTab: React.FC = () => {
 
   const handleDataChange = useCallback(
     (newData: ChecklistItem[]) => {
-      // Re-index IDs
       const reindexedData = newData.map((item, index) => ({
         ...item,
         checklist_id: generateChecklistId(index),
       }));
 
-      // Detect all changes (including cascading resets) for highlighting
-      // We compare reindexedData with the current 'data' state
       if (data.length === reindexedData.length) {
-        const newChangedCells = new Set(changedCells);
-        let hasChanges = false;
-
-        reindexedData.forEach((newItem, index) => {
-          const oldItem = data[index];
-          (['type', 'item', 'cl_description'] as const).forEach((key) => {
-            if (newItem[key] !== oldItem[key]) {
-              newChangedCells.add(`${index}-${key}`);
-              hasChanges = true;
-            }
-          });
-        });
-
-        if (hasChanges) {
-          setChangedCells(newChangedCells);
+        const newChangedCells = trackDataChanges(reindexedData, data, [
+          'type',
+          'item',
+          'cl_description',
+        ]);
+        if (newChangedCells.size > 0) {
+          setChangedCells((prev) => new Set([...prev, ...newChangedCells]));
         }
       }
 
       setData(reindexedData);
     },
-    [data, changedCells]
+    [data, trackDataChanges, setData, setChangedCells]
   );
-
-  const handleRowAdd = useCallback((newRow: ChecklistItem) => {
-    pendingChangesRef.current.added.push(newRow.checklist_id);
-  }, []);
-
-  const handleRowDelete = useCallback((deletedRows: ChecklistItem[]) => {
-    const deletedIds = deletedRows.map((r) => r.checklist_id);
-    pendingChangesRef.current.deleted.push(...deletedIds);
-  }, []);
 
   const handleCellEdit = useCallback(
     (
@@ -205,117 +181,35 @@ export const ChecklistTab: React.FC = () => {
       newValue: string,
       record: ChecklistItem
     ) => {
-      const itemId = record.checklist_id;
       const columnTitle =
         columns.find((col) => col.key === columnKey)?.title || columnKey;
-
-      pendingChangesRef.current.edited.push({
-        itemId,
-        row: rowIndex,
-        column: columnTitle as string,
+      baseCellEdit(
+        rowIndex,
+        columnKey,
         oldValue,
         newValue,
-      });
-
-      // Track changed cell
-      const cellKey = `${rowIndex}-${columnKey}`;
-      setChangedCells((prev) => new Set(prev).add(cellKey));
-
-      // Mark tab as having unsaved changes
-      markTabAsChanged(TAB_KEYS.CHECKLIST);
+        record,
+        columnTitle as string
+      );
     },
-    [columns, markTabAsChanged]
+    [columns, baseCellEdit]
   );
 
   const handleSave = useCallback(
     (dataToSave: ChecklistItem[]) => {
-      const validData = dataToSave.filter(
-        (item) => item.type || item.item || item.cl_description
-      );
-
-      if (validData.length === 0) {
+      if (
+        dataToSave.filter(
+          (item) => item.type || item.item || item.cl_description
+        ).length === 0
+      ) {
         message.warning('Please add at least one row with data before saving.');
         return;
       }
-
-      const pending = pendingChangesRef.current;
-      const newHistoryItems: HistoryItem[] = [];
-
-      const createHistoryItem = (
-        action: 'add' | 'edit' | 'delete',
-        description: string,
-        cell?: HistoryItem['cell']
-      ): HistoryItem => ({
-        id: `history-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        user: { name: 'Mạnh Vũ Duy (KO)', avatar: undefined },
-        timestamp: new Date(),
-        action,
-        description,
-        cell,
-      });
-
-      pending.added.forEach((itemId) => {
-        newHistoryItems.push(createHistoryItem('add', `Added ${itemId}`));
-      });
-
-      const editMap = new Map<string, (typeof pending.edited)[0]>();
-      pending.edited.forEach((edit) => {
-        const key = `${edit.itemId}-${edit.column}`;
-        editMap.set(key, edit);
-      });
-
-      editMap.forEach(({ itemId, row, column, oldValue, newValue }) => {
-        newHistoryItems.push(
-          createHistoryItem('edit', `Updated ${column} in ${itemId}`, {
-            row,
-            itemId,
-            column,
-            oldValue,
-            newValue,
-          })
-        );
-      });
-
-      if (pending.deleted.length > 0) {
-        const description =
-          pending.deleted.length === 1
-            ? `Deleted ${pending.deleted[0]}`
-            : `Deleted ${pending.deleted.length} rows: ${pending.deleted.join(', ')}`;
-        newHistoryItems.push(createHistoryItem('delete', description));
-      }
-
-      setHistory((prev) => [...newHistoryItems, ...prev]);
-
-      pendingChangesRef.current = {
-        added: [],
-        edited: [],
-        deleted: [],
-      };
-
-      setSavedCells((prev) => {
-        const newSaved = new Set(prev);
-        changedCells.forEach((c) => newSaved.add(c));
-
-        // Identify added rows and mark all their cells as saved/highlighted
-        const addedIds = new Set(pending.added);
-        if (addedIds.size > 0) {
-          dataToSave.forEach((row, rowIndex) => {
-            if (addedIds.has(row.checklist_id)) {
-              newSaved.add(`${rowIndex}-type`);
-              newSaved.add(`${rowIndex}-item`);
-              newSaved.add(`${rowIndex}-cl_description`);
-            }
-          });
-        }
-        return newSaved;
-      });
-      setChangedCells(new Set());
-
-      markTabAsSaved(TAB_KEYS.CHECKLIST);
-
-      console.log('Checklist data to save:', validData);
+      baseSave(dataToSave, (item) =>
+        Boolean(item.type || item.item || item.cl_description)
+      );
     },
-    [changedCells, markTabAsSaved]
+    [baseSave]
   );
 
   const isGenerateDisabled =

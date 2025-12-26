@@ -10,7 +10,6 @@ interface FormSelectOption {
 interface FormSelectProps {
   label: string;
   name?: string;
-  defaultValue?: string;
   options: FormSelectOption[];
   span?: number;
 }
@@ -18,7 +17,6 @@ interface FormSelectProps {
 export const FormSelect: React.FC<FormSelectProps> = ({
   label,
   name,
-  defaultValue,
   options,
   span,
 }) => {
@@ -28,7 +26,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
       name={name}
       className={span ? `form-select-span-${span}` : ''}
     >
-      <Select defaultValue={defaultValue}>
+      <Select>
         {options.map((option) => (
           <Select.Option key={option.value} value={option.value}>
             {option.label}

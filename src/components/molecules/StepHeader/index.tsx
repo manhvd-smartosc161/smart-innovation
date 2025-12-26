@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PlayCircleOutlined } from '@ant-design/icons';
-import { Input } from 'antd';
 import type { InputRef } from 'antd';
+import { Input } from '@/components/atoms';
 import { ActionBar } from '../ActionBar';
 import './index.scss';
 
@@ -23,6 +23,17 @@ interface StepHeaderProps {
   onEditingChange?: (isEditing: boolean) => void;
 }
 
+/**
+ * StepHeader molecule component
+ *
+ * Displays step number, description, and action buttons.
+ * Refactored to use Typography and Input atoms.
+ *
+ * Features:
+ * - Inline editing of step description
+ * - Action bar with multiple actions
+ * - Keyboard shortcuts (Enter to save, Escape to cancel)
+ */
 export const StepHeader: React.FC<StepHeaderProps> = ({
   stepNumber,
   description,

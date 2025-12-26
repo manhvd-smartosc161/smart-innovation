@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StepItem } from '@/components/molecules';
 import type { TestStep } from '@/types';
 import { useAnalysis } from '@/contexts';
+import { useStepsManagement } from '@/hooks';
 import { TAB_KEYS } from '@/constants';
 import './index.scss';
 
@@ -41,109 +42,56 @@ const initialSteps: TestStep[] = [
   },
 ];
 
-export const StepsSection: React.FC = () => {
+/**
+ * TestStepsSection organism component
+ *
+ * Displays and manages test steps with expected results.
+ * Uses useStepsManagement hook for all business logic.
+ *
+ * Features:
+ * - Add/delete steps
+ * - Add/delete expected results
+ * - Edit step and expected result descriptions
+ * - Selection and editing state management
+ * - Automatic tab change tracking
+ */
+export const TestStepsSection: React.FC = () => {
   const { markTabAsChanged } = useAnalysis();
-  const [steps, setSteps] = useState<TestStep[]>(initialSteps);
-  const [selectedStepId, setSelectedStepId] = useState<number | null>(2);
-  const [selectedExpectedResultId, setSelectedExpectedResultId] = useState<{
-    stepId: number;
-    resultId: number;
-  } | null>(null);
-  const [editingStepId, setEditingStepId] = useState<number | null>(null);
 
+  const {
+    steps,
+    selectedStepId,
+    selectedExpectedResultId,
+    editingStepId,
+    setSelectedStepId,
+    setSelectedExpectedResultId,
+    setEditingStepId,
+    addStepAfter,
+    deleteStep,
+    addExpectedResult,
+    deleteExpectedResult,
+    updateStepDescription,
+    updateExpectedResultDescription,
+  } = useStepsManagement(initialSteps);
+
+  // Wrapper functions to mark tab as changed
   const handleAddStepAfter = (afterStepId: number) => {
-    const afterIndex = steps.findIndex((step) => step.id === afterStepId);
-    if (afterIndex === -1) return;
-
-    const newStep: TestStep = {
-      id: steps.length + 1,
-      stepNumber: afterIndex + 2,
-      description: 'New step description',
-      expectedResults: [],
-    };
-
-    const updatedSteps = [...steps];
-    updatedSteps.splice(afterIndex + 1, 0, newStep);
-
-    updatedSteps.forEach((step, index) => {
-      step.stepNumber = index + 1;
-    });
-
-    setSteps(updatedSteps);
-    // Mark tab as having unsaved changes
+    addStepAfter(afterStepId);
     markTabAsChanged(TAB_KEYS.TEST_CASE_DETAILS);
   };
 
   const handleDeleteStep = (id: number) => {
-    const updatedSteps = steps.filter((step) => step.id !== id);
-    updatedSteps.forEach((step, index) => {
-      step.stepNumber = index + 1;
-    });
-    setSteps(updatedSteps);
-    // Mark tab as having unsaved changes
+    deleteStep(id);
     markTabAsChanged(TAB_KEYS.TEST_CASE_DETAILS);
   };
 
   const handleAddExpectedResult = (stepId: number, afterResultId?: number) => {
-    setSteps((prevSteps) =>
-      prevSteps.map((step) => {
-        if (step.id === stepId) {
-          // Generate unique ID by finding max existing ID
-          const maxId =
-            step.expectedResults.length > 0
-              ? Math.max(...step.expectedResults.map((r) => r.id))
-              : 0;
-
-          const newResult = {
-            id: maxId + 1,
-            description: 'New expected result',
-          };
-
-          // If afterResultId is provided, insert after that result
-          if (afterResultId !== undefined) {
-            const afterIndex = step.expectedResults.findIndex(
-              (res) => res.id === afterResultId
-            );
-
-            if (afterIndex !== -1) {
-              const updatedResults = [...step.expectedResults];
-              updatedResults.splice(afterIndex + 1, 0, newResult);
-              return {
-                ...step,
-                expectedResults: updatedResults,
-              };
-            }
-          }
-
-          // Otherwise, add to the end
-          return {
-            ...step,
-            expectedResults: [...step.expectedResults, newResult],
-          };
-        }
-        return step;
-      })
-    );
-    // Mark tab as having unsaved changes
+    addExpectedResult(stepId, afterResultId);
     markTabAsChanged(TAB_KEYS.TEST_CASE_DETAILS);
   };
 
   const handleDeleteExpectedResult = (stepId: number, resultId: number) => {
-    setSteps(
-      steps.map((step) => {
-        if (step.id === stepId) {
-          const updatedResults = step.expectedResults.filter(
-            (res) => res.id !== resultId
-          );
-          return {
-            ...step,
-            expectedResults: updatedResults,
-          };
-        }
-        return step;
-      })
-    );
-    // Mark tab as having unsaved changes
+    deleteExpectedResult(stepId, resultId);
     markTabAsChanged(TAB_KEYS.TEST_CASE_DETAILS);
   };
 
@@ -151,18 +99,7 @@ export const StepsSection: React.FC = () => {
     stepId: number,
     newDescription: string
   ) => {
-    setSteps(
-      steps.map((step) => {
-        if (step.id === stepId) {
-          return {
-            ...step,
-            description: newDescription,
-          };
-        }
-        return step;
-      })
-    );
-    // Mark tab as having unsaved changes
+    updateStepDescription(stepId, newDescription);
     markTabAsChanged(TAB_KEYS.TEST_CASE_DETAILS);
   };
 
@@ -171,26 +108,7 @@ export const StepsSection: React.FC = () => {
     resultId: number,
     newDescription: string
   ) => {
-    setSteps(
-      steps.map((step) => {
-        if (step.id === stepId) {
-          return {
-            ...step,
-            expectedResults: step.expectedResults.map((result) => {
-              if (result.id === resultId) {
-                return {
-                  ...result,
-                  description: newDescription,
-                };
-              }
-              return result;
-            }),
-          };
-        }
-        return step;
-      })
-    );
-    // Mark tab as having unsaved changes
+    updateExpectedResultDescription(stepId, resultId, newDescription);
     markTabAsChanged(TAB_KEYS.TEST_CASE_DETAILS);
   };
 

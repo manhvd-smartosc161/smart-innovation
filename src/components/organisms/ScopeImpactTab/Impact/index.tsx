@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { message } from 'antd';
 import {
   HandsonTable,
@@ -7,11 +7,9 @@ import {
 import { SYSTEMS, COMPONENTS, MOCK_IMPACT_DATA } from '@/mock';
 import * as handontableService from '@/services';
 import type { ImpactItem } from '@/types';
-import {
-  HistoryPanel,
-  type HistoryItem,
-} from '@/components/molecules/HistoryPanel';
+import { HistoryPanel } from '@/components/molecules/HistoryPanel';
 import { useAnalysis } from '@/contexts';
+import { useTableManagement } from '@/hooks';
 import './index.scss';
 
 const generateImpactId = (rowIndex: number): string => {
@@ -30,30 +28,27 @@ const createEmptyImpactItem = (existingData: ImpactItem[]): ImpactItem => {
 };
 
 export const Impact: React.FC = () => {
-  const { markTabAsSaved } = useAnalysis();
-  const [data, setData] = useState<ImpactItem[]>(MOCK_IMPACT_DATA);
-  const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [historyVisible, setHistoryVisible] = useState(false);
+  const { markTabAsSaved, markTabAsChanged } = useAnalysis();
 
-  // Track changed cells since last save (for highlighting)
-  const [changedCells, setChangedCells] = useState<Set<string>>(new Set());
-  const [savedCells, setSavedCells] = useState<Set<string>>(new Set());
-
-  // Track pending changes to commit to history on save
-  const pendingChangesRef = useRef<{
-    added: string[];
-    edited: Array<{
-      itemId: string;
-      row: number;
-      column: string;
-      oldValue: string;
-      newValue: string;
-    }>;
-    deleted: string[];
-  }>({
-    added: [],
-    edited: [],
-    deleted: [],
+  const {
+    data,
+    history,
+    historyVisible,
+    savedCells,
+    setData,
+    setHistoryVisible,
+    setChangedCells,
+    handleRowAdd,
+    handleRowDelete,
+    handleCellEdit: baseCellEdit,
+    handleSave: baseSave,
+    trackDataChanges,
+  } = useTableManagement<ImpactItem>({
+    initialData: MOCK_IMPACT_DATA,
+    tabKey: 'Impact',
+    idField: 'impact_id',
+    markTabAsChanged,
+    markTabAsSaved,
   });
 
   const columns: HandsonColumnConfig<ImpactItem>[] = useMemo(
@@ -147,47 +142,27 @@ export const Impact: React.FC = () => {
 
   const handleDataChange = useCallback(
     (newData: ImpactItem[]) => {
-      // Re-index IDs if necessary
       const reindexedData = newData.map((item, index) => ({
         ...item,
         impact_id: generateImpactId(index),
       }));
 
-      // Detect all changes (including cascading resets) for highlighting
       if (data.length === reindexedData.length) {
-        const newChangedCells = new Set(changedCells);
-        let hasChanges = false;
-
-        reindexedData.forEach((newItem, index) => {
-          const oldItem = data[index];
-          (
-            ['system', 'component', 'element', 'impact_description'] as const
-          ).forEach((key) => {
-            if (newItem[key] !== oldItem[key]) {
-              newChangedCells.add(`${index}-${key}`);
-              hasChanges = true;
-            }
-          });
-        });
-
-        if (hasChanges) {
-          setChangedCells(newChangedCells);
+        const newChangedCells = trackDataChanges(reindexedData, data, [
+          'system',
+          'component',
+          'element',
+          'impact_description',
+        ]);
+        if (newChangedCells.size > 0) {
+          setChangedCells((prev) => new Set([...prev, ...newChangedCells]));
         }
       }
 
       setData(reindexedData);
     },
-    [data, changedCells]
+    [data, trackDataChanges, setData, setChangedCells]
   );
-
-  const handleRowAdd = useCallback((newRow: ImpactItem) => {
-    pendingChangesRef.current.added.push(newRow.impact_id);
-  }, []);
-
-  const handleRowDelete = useCallback((deletedRows: ImpactItem[]) => {
-    const deletedIds = deletedRows.map((r) => r.impact_id);
-    pendingChangesRef.current.deleted.push(...deletedIds);
-  }, []);
 
   const handleCellEdit = useCallback(
     (
@@ -197,23 +172,18 @@ export const Impact: React.FC = () => {
       newValue: string,
       record: ImpactItem
     ) => {
-      const itemId = record.impact_id;
       const columnTitle =
         columns.find((col) => col.key === columnKey)?.title || columnKey;
-
-      pendingChangesRef.current.edited.push({
-        itemId,
-        row: rowIndex,
-        column: columnTitle as string,
+      baseCellEdit(
+        rowIndex,
+        columnKey,
         oldValue,
         newValue,
-      });
-
-      // Track changed cell
-      const cellKey = `${rowIndex}-${columnKey}`;
-      setChangedCells((prev) => new Set(prev).add(cellKey));
+        record,
+        columnTitle as string
+      );
     },
-    [columns]
+    [columns, baseCellEdit]
   );
 
   const handleSave = useCallback(
@@ -231,85 +201,16 @@ export const Impact: React.FC = () => {
         return;
       }
 
-      const pending = pendingChangesRef.current;
-      const newHistoryItems: HistoryItem[] = [];
-
-      const createHistoryItem = (
-        action: 'add' | 'edit' | 'delete',
-        description: string,
-        cell?: HistoryItem['cell']
-      ): HistoryItem => ({
-        id: `history-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        user: { name: 'Mạnh Vũ Duy (KO)', avatar: undefined },
-        timestamp: new Date(),
-        action,
-        description,
-        cell,
-      });
-
-      pending.added.forEach((itemId) => {
-        newHistoryItems.push(createHistoryItem('add', `Added ${itemId}`));
-      });
-
-      const editMap = new Map<string, (typeof pending.edited)[0]>();
-      pending.edited.forEach((edit) => {
-        const key = `${edit.itemId}-${edit.column}`;
-        editMap.set(key, edit);
-      });
-
-      editMap.forEach(({ itemId, row, column, oldValue, newValue }) => {
-        newHistoryItems.push(
-          createHistoryItem('edit', `Updated ${column} in ${itemId}`, {
-            row,
-            itemId,
-            column,
-            oldValue,
-            newValue,
-          })
-        );
-      });
-
-      if (pending.deleted.length > 0) {
-        const description =
-          pending.deleted.length === 1
-            ? `Deleted ${pending.deleted[0]}`
-            : `Deleted ${pending.deleted.length} rows: ${pending.deleted.join(', ')}`;
-        newHistoryItems.push(createHistoryItem('delete', description));
-      }
-
-      setHistory((prev) => [...newHistoryItems, ...prev]);
-
-      pendingChangesRef.current = {
-        added: [],
-        edited: [],
-        deleted: [],
-      };
-
-      setSavedCells((prev) => {
-        const newSaved = new Set(prev);
-        changedCells.forEach((cell) => newSaved.add(cell));
-
-        // Identify added rows and mark all their cells as saved/highlighted
-        const addedIds = new Set(pending.added);
-        if (addedIds.size > 0) {
-          dataToSave.forEach((row, rowIndex) => {
-            if (addedIds.has(row.impact_id)) {
-              newSaved.add(`${rowIndex}-system`);
-              newSaved.add(`${rowIndex}-component`);
-              newSaved.add(`${rowIndex}-element`);
-              newSaved.add(`${rowIndex}-impact_description`);
-            }
-          });
-        }
-        return newSaved;
-      });
-      setChangedCells(new Set());
-
-      markTabAsSaved('Impact');
-
-      console.log('Impact data to save:', validData);
+      baseSave(dataToSave, (item) =>
+        Boolean(
+          item.system ||
+            item.component ||
+            item.element ||
+            item.impact_description
+        )
+      );
     },
-    [changedCells, markTabAsSaved]
+    [baseSave]
   );
 
   return (

@@ -7,11 +7,9 @@ const DEFAULT_USER = {
 
 export class HistoryService {
   private storageKey: string;
-  private idPrefix: string;
 
-  constructor(storageKey: string, idPrefix: string) {
+  constructor(storageKey: string) {
     this.storageKey = storageKey;
-    this.idPrefix = idPrefix;
   }
 
   /**
@@ -123,12 +121,6 @@ export class HistoryService {
 }
 
 // Create singleton instances for each tab
-export const scopeHistoryService = new HistoryService('scope_history', 'SCO.');
-export const impactHistoryService = new HistoryService(
-  'impact_history',
-  'IMP.'
-);
-export const checklistHistoryService = new HistoryService(
-  'checklist_history',
-  'CL.'
-);
+export const scopeHistoryService = new HistoryService('scope_history');
+export const impactHistoryService = new HistoryService('impact_history');
+export const checklistHistoryService = new HistoryService('checklist_history');

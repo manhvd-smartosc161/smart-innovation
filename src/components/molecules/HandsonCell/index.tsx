@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Input, Select } from 'antd';
-import type { InputRef, SelectProps } from 'antd';
+import { Select } from 'antd';
+import type { SelectProps } from 'antd';
+import { Input } from '@/components/atoms';
+import type { InputRef } from 'antd';
+
 interface HandsonCellProps {
   value: string;
   onChange: (value: string) => void;
@@ -14,6 +17,24 @@ interface HandsonCellProps {
   autoFocus?: boolean;
 }
 
+/**
+ * HandsonCell molecule component
+ *
+ * Editable cell for HandsonTable with keyboard navigation support.
+ * Refactored to use Input atom and simplified keyboard handling.
+ *
+ * @example
+ * ```tsx
+ * <HandsonCell
+ *   value={cellValue}
+ *   onChange={handleChange}
+ *   onSave={handleSave}
+ *   onCancel={handleCancel}
+ *   onNavigateNext={handleNext}
+ *   type="text"
+ * />
+ * ```
+ */
 export const HandsonCell: React.FC<HandsonCellProps> = ({
   value,
   onChange,

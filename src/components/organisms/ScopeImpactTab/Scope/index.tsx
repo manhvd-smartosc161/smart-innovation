@@ -1,17 +1,15 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { message } from 'antd';
 import { SYSTEMS, COMPONENTS, MOCK_SCOPE_DATA } from '@/mock';
 import type { ScopeItem } from '@/types';
 import * as tableService from '@/services';
-import {
-  HistoryPanel,
-  type HistoryItem,
-} from '@/components/molecules/HistoryPanel';
+import { HistoryPanel } from '@/components/molecules/HistoryPanel';
 import {
   HandsonTable,
   type HandsonColumnConfig,
 } from '@/components/molecules/HandsonTable';
 import { useAnalysis } from '@/contexts';
+import { useTableManagement } from '@/hooks';
 import './index.scss';
 
 const SCOPE_ID_PREFIX = 'SCO.';
@@ -37,27 +35,26 @@ const createEmptyScopeItem = (existingData: ScopeItem[]): ScopeItem => {
 
 export const Scope: React.FC = () => {
   const { markTabAsChanged, markTabAsSaved } = useAnalysis();
-  const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [historyVisible, setHistoryVisible] = useState(false);
-  const [scopeData, setScopeData] = useState<ScopeItem[]>(MOCK_SCOPE_DATA);
-  const [savedCells, setSavedCells] = useState<Set<string>>(new Set());
-  const [changedCells, setChangedCells] = useState<Set<string>>(new Set());
 
-  // Track pending changes to commit to history on save
-  const pendingChangesRef = React.useRef<{
-    added: string[];
-    edited: Array<{
-      itemId: string;
-      row: number;
-      column: string;
-      oldValue: string;
-      newValue: string;
-    }>;
-    deleted: string[];
-  }>({
-    added: [],
-    edited: [],
-    deleted: [],
+  const {
+    data: scopeData,
+    history,
+    historyVisible,
+    savedCells,
+    setData: setScopeData,
+    setHistoryVisible,
+    setChangedCells,
+    handleRowAdd,
+    handleRowDelete,
+    handleCellEdit: baseCellEdit,
+    handleSave: baseSave,
+    trackDataChanges,
+  } = useTableManagement<ScopeItem>({
+    initialData: MOCK_SCOPE_DATA,
+    tabKey: 'Scope',
+    idField: 'scope_id',
+    markTabAsChanged,
+    markTabAsSaved,
   });
 
   const columns: HandsonColumnConfig<ScopeItem>[] = useMemo(
@@ -150,32 +147,27 @@ export const Scope: React.FC = () => {
 
   const handleDataChange = useCallback(
     (newData: ScopeItem[]) => {
-      // Detect all changes (including cascading resets) for highlighting
       if (scopeData.length === newData.length) {
-        const newChangedCells = new Set(changedCells);
-        let hasChanges = false;
-
-        newData.forEach((newItem, index) => {
-          const oldItem = scopeData[index];
-          (
-            ['system', 'component', 'element', 'scope_description'] as const
-          ).forEach((key) => {
-            if (newItem[key] !== oldItem[key]) {
-              newChangedCells.add(`${index}-${key}`);
-              hasChanges = true;
-            }
-          });
-        });
-
-        if (hasChanges) {
-          setChangedCells(newChangedCells);
+        const newChangedCells = trackDataChanges(newData, scopeData, [
+          'system',
+          'component',
+          'element',
+          'scope_description',
+        ]);
+        if (newChangedCells.size > 0) {
+          setChangedCells((prev) => new Set([...prev, ...newChangedCells]));
         }
       }
-
       setScopeData(newData);
       markTabAsChanged('Scope');
     },
-    [scopeData, changedCells, markTabAsChanged]
+    [
+      scopeData,
+      trackDataChanges,
+      setScopeData,
+      setChangedCells,
+      markTabAsChanged,
+    ]
   );
 
   const handleCellEdit = useCallback(
@@ -186,30 +178,19 @@ export const Scope: React.FC = () => {
       newValue: string,
       record: ScopeItem
     ) => {
-      // Track edited cell for history
-      const itemId = record.scope_id;
       const columnTitle =
         columns.find((col) => col.key === columnKey)?.title || columnKey;
-
-      pendingChangesRef.current.edited.push({
-        itemId,
-        row: rowIndex,
-        column: columnTitle,
+      baseCellEdit(
+        rowIndex,
+        columnKey,
         oldValue,
         newValue,
-      });
+        record,
+        columnTitle
+      );
     },
-    [columns]
+    [columns, baseCellEdit]
   );
-
-  const handleRowAdd = useCallback((newRow: ScopeItem) => {
-    pendingChangesRef.current.added.push(newRow.scope_id);
-  }, []);
-
-  const handleRowDelete = useCallback((deletedRows: ScopeItem[]) => {
-    const deletedIds = deletedRows.map((row) => row.scope_id);
-    pendingChangesRef.current.deleted.push(...deletedIds);
-  }, []);
 
   const handleSave = useCallback(
     (data: ScopeItem[]) => {
@@ -217,98 +198,9 @@ export const Scope: React.FC = () => {
         message.warning('Please add at least one row before saving.');
         return;
       }
-
-      // Commit all pending changes to history
-      const pending = pendingChangesRef.current;
-      const newHistoryItems: HistoryItem[] = [];
-
-      // Helper to create history item
-      const createHistoryItem = (
-        action: 'add' | 'edit' | 'delete',
-        description: string,
-        cell?: HistoryItem['cell']
-      ): HistoryItem => ({
-        id: `history-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        user: { name: 'Mạnh Vũ Duy (KO)', avatar: undefined },
-        timestamp: new Date(),
-        action,
-        description,
-        cell,
-      });
-
-      // Log added items
-      pending.added.forEach((itemId) => {
-        newHistoryItems.push(createHistoryItem('add', `Added ${itemId}`));
-      });
-
-      // Deduplicate edited items - keep only the last edit for each itemId+column
-      const editMap = new Map<string, (typeof pending.edited)[0]>();
-      pending.edited.forEach((edit) => {
-        const key = `${edit.itemId}-${edit.column}`;
-        editMap.set(key, edit);
-      });
-
-      // Log deduplicated edited items
-      editMap.forEach(({ itemId, row, column, oldValue, newValue }) => {
-        newHistoryItems.push(
-          createHistoryItem('edit', `Updated ${column} in ${itemId}`, {
-            row,
-            itemId,
-            column,
-            oldValue,
-            newValue,
-          })
-        );
-      });
-
-      // Log deleted items
-      if (pending.deleted.length > 0) {
-        const description =
-          pending.deleted.length === 1
-            ? `Deleted ${pending.deleted[0]}`
-            : `Deleted ${pending.deleted.length} rows: ${pending.deleted.join(', ')}`;
-        newHistoryItems.push(createHistoryItem('delete', description));
-      }
-
-      // Update history (prepend new items)
-      setHistory((prev) => [...newHistoryItems, ...prev]);
-
-      // Clear pending changes
-      pendingChangesRef.current = {
-        added: [],
-        edited: [],
-        deleted: [],
-      };
-
-      // Move changed cells to saved cells for highlighting (cumulative)
-      setSavedCells((prev) => {
-        const newSaved = new Set(prev);
-        changedCells.forEach((cell) => newSaved.add(cell));
-
-        // Identify added rows and mark all their cells as saved/highlighted
-        const addedIds = new Set(pending.added);
-        if (addedIds.size > 0) {
-          data.forEach((row, rowIndex) => {
-            if (addedIds.has(row.scope_id)) {
-              newSaved.add(`${rowIndex}-system`);
-              newSaved.add(`${rowIndex}-component`);
-              newSaved.add(`${rowIndex}-element`);
-              newSaved.add(`${rowIndex}-scope_description`);
-            }
-          });
-        }
-
-        return newSaved;
-      });
-      // Clear changed cells
-      setChangedCells(new Set());
-
-      // Mark tab as saved
-      markTabAsSaved('Scope');
-
-      console.log('Scope data to save:', data);
+      baseSave(data);
     },
-    [changedCells, markTabAsSaved]
+    [baseSave]
   );
 
   return (

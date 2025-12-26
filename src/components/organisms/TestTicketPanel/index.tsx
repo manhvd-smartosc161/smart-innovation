@@ -7,7 +7,7 @@ import {
   ScopeImpactTab,
   ChecklistTab,
   TestCaseDetailTab,
-  TestCaseTable,
+  TestCaseTab,
 } from '@/components/organisms';
 import { TAB_KEYS, TAB_LABELS } from '@/constants';
 import { useAnalysis } from '@/contexts';
@@ -21,7 +21,7 @@ const allItems = [
   { key: TAB_KEYS.TEST_CASE_DETAILS, label: TAB_LABELS.TEST_CASE_DETAILS },
 ];
 
-export const TestCasePanel: React.FC = () => {
+export const TestTicketPanel: React.FC = () => {
   const {
     isAnalysed,
     isChecklistGenerated,
@@ -125,7 +125,7 @@ export const TestCasePanel: React.FC = () => {
             display: activeTab === TAB_KEYS.TEST_CASES ? 'block' : 'none',
           }}
         >
-          <TestCaseTable />
+          <TestCaseTab />
         </div>
         <div
           style={{

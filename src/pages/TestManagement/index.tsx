@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs } from 'antd';
 import { MainLayout } from '@/components/templates';
-import { TicketSidebar, TestCasePanel } from '@/components/organisms';
+import { TicketSidebar, TestTicketPanel } from '@/components/organisms';
 import { WORKFLOW_TAB_KEYS, WORKFLOW_TAB_LABELS } from '@/constants';
 import { AnalysisProvider } from '@/contexts';
 import './index.scss';
@@ -15,7 +15,7 @@ const tabs = [
   { key: WORKFLOW_TAB_KEYS.APPROVED, label: WORKFLOW_TAB_LABELS.APPROVED },
 ];
 
-export const TestCaseManagement: React.FC = () => {
+export const TestManagement: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState<string>(
     WORKFLOW_TAB_KEYS.DRAFTING
   );
@@ -36,7 +36,7 @@ export const TestCaseManagement: React.FC = () => {
   return (
     <AnalysisProvider>
       <MainLayout leftSidebar={<TicketSidebar />} tabs={tabsSection}>
-        <TestCasePanel />
+        <TestTicketPanel />
       </MainLayout>
     </AnalysisProvider>
   );
