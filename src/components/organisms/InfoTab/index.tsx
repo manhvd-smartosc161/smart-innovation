@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { message } from 'antd';
 import type { AnalysisData } from '@/types';
 import { TAB_KEYS } from '@/constants';
-import { useAnalysis } from '@/contexts';
+import { useAnalysis } from '@/stores';
 import {
   useFileUploadManagement,
   useTicketManagement,
@@ -17,7 +17,7 @@ import { TicketSelectionModal } from './TicketSelectionModal';
 import { PageSelectionModal } from './PageSelectionModal';
 import './index.scss';
 
-export const InfoTab: React.FC = () => {
+const InfoTab: React.FC = () => {
   const { setIsAnalysed, setActiveTab } = useAnalysis();
   const [overallObjective, setOverallObjective] = useState<string>('');
 
@@ -247,3 +247,5 @@ export const InfoTab: React.FC = () => {
     </div>
   );
 };
+
+export default InfoTab;

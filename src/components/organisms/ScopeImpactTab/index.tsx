@@ -3,11 +3,11 @@ import { Button, Divider } from 'antd';
 import { FileDoneOutlined } from '@ant-design/icons';
 import { Scope as Scope } from './Scope';
 import { Impact } from './Impact';
-import { useAnalysis } from '@/contexts';
+import { useAnalysis } from '@/stores';
 import { TAB_KEYS } from '@/constants';
 import './index.scss';
 
-export const ScopeImpactTab: React.FC = () => {
+const ScopeImpactTab: React.FC = () => {
   const { setIsChecklistGenerated, setActiveTab } = useAnalysis();
   const [isGenerating, setIsGenerating] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
@@ -97,3 +97,5 @@ export const ScopeImpactTab: React.FC = () => {
     </div>
   );
 };
+
+export default ScopeImpactTab;

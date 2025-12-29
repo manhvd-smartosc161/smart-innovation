@@ -1,16 +1,20 @@
-import React, { useEffect } from 'react';
-import { Tabs, Modal } from 'antd';
+import React, { lazy, Suspense, useEffect } from 'react';
+import { Tabs, Modal, Spin } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 
-import {
-  InfoTab,
-  ScopeImpactTab,
-  ChecklistTab,
-  TestCaseDetailTab,
-  TestCaseTab,
-} from '@/components/organisms';
+// Lazy load tab components for code splitting
+const InfoTab = lazy(() => import('@/components/organisms/InfoTab'));
+const ScopeImpactTab = lazy(
+  () => import('@/components/organisms/ScopeImpactTab')
+);
+const ChecklistTab = lazy(() => import('@/components/organisms/ChecklistTab'));
+const TestCaseTab = lazy(() => import('@/components/organisms/TestCaseTab'));
+const TestCaseDetailTab = lazy(
+  () => import('@/components/organisms/TestCaseDetailTab')
+);
+
 import { TAB_KEYS, TAB_LABELS } from '@/constants';
-import { useAnalysis } from '@/contexts';
+import { useAnalysis } from '@/stores';
 import './index.scss';
 
 const allItems = [
@@ -20,6 +24,20 @@ const allItems = [
   { key: TAB_KEYS.TEST_CASES, label: TAB_LABELS.TEST_CASES },
   { key: TAB_KEYS.TEST_CASE_DETAILS, label: TAB_LABELS.TEST_CASE_DETAILS },
 ];
+
+// Loading fallback component
+const TabLoadingFallback = () => (
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '400px',
+    }}
+  >
+    <Spin size="large" tip="Loading..." />
+  </div>
+);
 
 export const TestTicketPanel: React.FC = () => {
   const {
@@ -98,7 +116,7 @@ export const TestTicketPanel: React.FC = () => {
 
   const renderContent = () => {
     return (
-      <>
+      <Suspense fallback={<TabLoadingFallback />}>
         <div
           style={{
             display: activeTab === TAB_KEYS.INITIALIZATION ? 'block' : 'none',
@@ -135,7 +153,7 @@ export const TestTicketPanel: React.FC = () => {
         >
           <TestCaseDetailTab />
         </div>
-      </>
+      </Suspense>
     );
   };
 

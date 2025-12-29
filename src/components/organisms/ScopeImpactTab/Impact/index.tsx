@@ -8,7 +8,7 @@ import { SYSTEMS, COMPONENTS, MOCK_IMPACT_DATA } from '@/mock';
 import * as handontableService from '@/services';
 import type { ImpactItem } from '@/types';
 import { HistoryPanel } from '@/components/molecules/HistoryPanel';
-import { useAnalysis } from '@/contexts';
+import { useAnalysis } from '@/stores';
 import { useTableManagement } from '@/hooks';
 import './index.scss';
 
@@ -204,9 +204,9 @@ export const Impact: React.FC = () => {
       baseSave(dataToSave, (item) =>
         Boolean(
           item.system ||
-            item.component ||
-            item.element ||
-            item.impact_description
+          item.component ||
+          item.element ||
+          item.impact_description
         )
       );
     },

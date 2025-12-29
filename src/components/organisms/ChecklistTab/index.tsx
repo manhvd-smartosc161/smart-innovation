@@ -8,7 +8,7 @@ import {
 import { MOCK_CHECKLIST_DATA, MOCK_SCOPE_DATA, MOCK_IMPACT_DATA } from '@/mock';
 import type { ChecklistItem } from '@/types';
 import { HistoryPanel } from '@/components/molecules/HistoryPanel';
-import { useAnalysis } from '@/contexts';
+import { useAnalysis } from '@/stores';
 import { useTableManagement } from '@/hooks';
 import { TAB_KEYS } from '@/constants';
 import './index.scss';
@@ -29,7 +29,7 @@ const createEmptyChecklistItem = (
   };
 };
 
-export const ChecklistTab: React.FC = () => {
+const ChecklistTab: React.FC = () => {
   const {
     markTabAsSaved,
     markTabAsChanged,
@@ -290,3 +290,5 @@ export const ChecklistTab: React.FC = () => {
     </div>
   );
 };
+
+export default ChecklistTab;

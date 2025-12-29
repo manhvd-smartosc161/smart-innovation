@@ -8,7 +8,7 @@ import {
 import { MOCK_TEST_CASE_TABLE_DATA } from '@/mock';
 import type { TestCaseTableRow } from '@/types';
 import { HistoryPanel } from '@/components/molecules/HistoryPanel';
-import { useAnalysis } from '@/contexts';
+import { useAnalysis } from '@/stores';
 import { useTableManagement } from '@/hooks';
 import { TAB_KEYS } from '@/constants';
 import './index.scss';
@@ -41,7 +41,7 @@ const createEmptyTestCaseItem = (
   };
 };
 
-export const TestCaseTab: React.FC = () => {
+const TestCaseTab: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -345,3 +345,5 @@ export const TestCaseTab: React.FC = () => {
     </div>
   );
 };
+
+export default TestCaseTab;

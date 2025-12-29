@@ -8,7 +8,7 @@ import {
   HandsonTable,
   type HandsonColumnConfig,
 } from '@/components/molecules/HandsonTable';
-import { useAnalysis } from '@/contexts';
+import { useAnalysis } from '@/stores';
 import { useTableManagement } from '@/hooks';
 import './index.scss';
 

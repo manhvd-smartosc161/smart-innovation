@@ -3,7 +3,6 @@ import { Tabs } from 'antd';
 import { MainLayout } from '@/components/templates';
 import { TicketSidebar, TestTicketPanel } from '@/components/organisms';
 import { WORKFLOW_TAB_KEYS, WORKFLOW_TAB_LABELS } from '@/constants';
-import { AnalysisProvider } from '@/contexts';
 import './index.scss';
 
 const tabs = [
@@ -34,10 +33,8 @@ export const TestManagement: React.FC = () => {
   );
 
   return (
-    <AnalysisProvider>
-      <MainLayout leftSidebar={<TicketSidebar />} tabs={tabsSection}>
-        <TestTicketPanel />
-      </MainLayout>
-    </AnalysisProvider>
+    <MainLayout leftSidebar={<TicketSidebar />} tabs={tabsSection}>
+      <TestTicketPanel />
+    </MainLayout>
   );
 };

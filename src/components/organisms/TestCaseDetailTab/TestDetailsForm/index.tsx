@@ -3,7 +3,7 @@ import { Form, Input, Row, Col, Space, Button } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
 import { useSearchParams } from 'react-router-dom';
 import { FormSelect, TiptapEditor } from '@/components/molecules';
-import { useAnalysis } from '@/contexts';
+import { useAnalysis } from '@/stores';
 import { TAB_KEYS } from '@/constants';
 import './index.scss';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StepItem } from '@/components/molecules';
 import type { TestStep } from '@/types';
-import { useAnalysis } from '@/contexts';
+import { useAnalysis } from '@/stores';
 import { useStepsManagement } from '@/hooks';
 import { TAB_KEYS } from '@/constants';
 import './index.scss';

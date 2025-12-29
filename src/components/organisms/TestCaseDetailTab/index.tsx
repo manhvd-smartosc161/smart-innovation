@@ -4,7 +4,7 @@ import { TestDetailsForm } from './TestDetailsForm';
 import { TestStepsSection } from './TestStepsSection';
 import './index.scss';
 
-export const TestCaseDetailTab: React.FC = () => {
+const TestCaseDetailTab: React.FC = () => {
   const [showSteps, setShowSteps] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [showSparkles, setShowSparkles] = useState(false);
@@ -45,3 +45,5 @@ export const TestCaseDetailTab: React.FC = () => {
     </div>
   );
 };
+
+export default TestCaseDetailTab;
