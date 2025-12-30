@@ -1,0 +1,513 @@
+// SCSS Mixins Library
+// Reusable mixins for common patterns
+
+@use 'sass:map';
+@use './tokens.scss' as *;
+
+// ============================================
+// Breakpoint Mixins
+// ============================================
+
+$breakpoints: (
+  'xs': 480px,
+  'sm': 576px,
+  'md': 768px,
+  'lg': 992px,
+  'xl': 1200px,
+  '2xl': 1600px,
+);
+
+@mixin respond-to($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (min-width: map.get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @warn "Invalid breakpoint: #{$breakpoint}.";
+  }
+}
+
+@mixin respond-below($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    $bp-value: map.get($breakpoints, $breakpoint);
+    @media (max-width: calc(#{$bp-value} - 1px)) {
+      @content;
+    }
+  } @else {
+    @warn "Invalid breakpoint: #{$breakpoint}.";
+  }
+}
+
+// ============================================
+// Flexbox Utilities
+// ============================================
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-start {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+@mixin flex-column-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+// ============================================
+// Scrollbar Styling
+// ============================================
+
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-bg);
+    border-radius: var(--radius-xl);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-bg);
+    border-radius: var(--radius-xl);
+    transition: background var(--duration-fast) ease;
+
+    &:hover {
+      background: var(--scrollbar-thumb-hover-bg);
+    }
+  }
+}
+
+// ============================================
+// Glassmorphism Effect
+// ============================================
+
+@mixin glassmorphism($bg-opacity: 0.1, $blur: 20px) {
+  background: rgba(255, 255, 255, $bg-opacity);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  box-shadow: var(--shadow-glass);
+}
+
+// ============================================
+// Gradient Backgrounds
+// ============================================
+
+@mixin gradient-primary {
+  background: var(--gradient-primary);
+}
+
+@mixin gradient-animated {
+  background: var(--gradient-animated);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+// ============================================
+// Card/Container Styles
+// ============================================
+
+@mixin card-base {
+  background: var(--color-bg-container);
+  border-radius: var(--radius-2xl);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  transition: all var(--duration-normal) var(--ease-in-out);
+}
+
+@mixin card-hover {
+  &:hover {
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+@mixin card {
+  @include card-base;
+  @include card-hover;
+}
+
+// ============================================
+// Input Styles
+// ============================================
+
+@mixin input-base {
+  width: 100%;
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-lg);
+  border: var(--input-border);
+  padding: var(--spacing-sm) var(--spacing-md);
+  transition: all var(--duration-normal) ease;
+
+  &:hover {
+    border: var(--input-border-hover);
+  }
+
+  &:focus {
+    border: var(--input-border-focus);
+    box-shadow: var(--input-focus-shadow);
+    outline: none;
+  }
+}
+
+// ============================================
+// Button Styles
+// ============================================
+
+@mixin button-base {
+  border-radius: var(--radius-md);
+  height: var(--button-height-md);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  transition: all var(--duration-normal) ease;
+  cursor: pointer;
+  border: none;
+  outline: none;
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:disabled,
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 1;
+    pointer-events: none;
+  }
+}
+
+@mixin button-primary {
+  @include button-base;
+  background: var(--gradient-info);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-button);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-button-hover);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled,
+  &[disabled] {
+    background: #f5f5f5;
+    color: rgba(0, 0, 0, 0.25);
+    border: 1px solid #d9d9d9;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+@mixin button-glass {
+  @include button-base;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition: all var(--duration-slow) var(--ease-bounce);
+
+  &:hover {
+    transform: translateY(-1px) scale(1.05);
+  }
+
+  &:active {
+    transform: translateY(-2px) scale(1.02);
+  }
+}
+
+// ============================================
+// Focus States
+// ============================================
+
+@mixin focus-ring($color: var(--color-primary)) {
+  outline: 2px solid $color;
+  outline-offset: 2px;
+}
+
+@mixin focus-visible {
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+// ============================================
+// Truncate Text
+// ============================================
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin line-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// ============================================
+// Animations
+// ============================================
+
+// Gradient Shift Animation
+@keyframes gradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+// Float Animation
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-30px) scale(1.1);
+    opacity: 0.6;
+  }
+}
+
+// Pulse Animation
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+// Icon Pulse
+@keyframes iconPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow:
+      0 6px 25px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+}
+
+// Icon Spin
+@keyframes iconSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Icon Bounce
+@keyframes iconBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+// Wave Animation
+@keyframes wave {
+  0%,
+  40%,
+  100% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-7px);
+  }
+}
+
+// Slide Down
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Fade In
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Highlight Pulse
+@keyframes highlightPulse {
+  0% {
+    background-color: #ffd591;
+  }
+  100% {
+    background-color: #fff7e6;
+  }
+}
+
+// Rocket Fly
+@keyframes rocketFly {
+  0% {
+    transform: translate(0, 0) rotate(45deg) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(50vw, -50vh) rotate(40deg) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(100vw, -100vh) rotate(45deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+// Firework Explode
+@keyframes fireworkExplode {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+// ============================================
+// Animation Mixins
+// ============================================
+
+@mixin animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@mixin animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@mixin animate-icon-pulse {
+  animation: iconPulse 3s ease-in-out infinite;
+}
+
+@mixin animate-icon-bounce {
+  animation: iconBounce 2s ease-in-out infinite;
+}
+
+@mixin animate-gradient {
+  animation: gradientShift 15s ease infinite;
+}
+
+// ============================================
+// Utility Mixins
+// ============================================
+
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin absolute-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+@mixin circle($size) {
+  @include size($size);
+  border-radius: 50%;
+}
+
+// ============================================
+// Reset Mixins
+// ============================================
+
+@mixin reset-button {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  outline: none;
+
+  &:focus,
+  &:active,
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+@mixin reset-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

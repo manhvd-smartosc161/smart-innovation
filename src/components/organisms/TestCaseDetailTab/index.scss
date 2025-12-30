@@ -1,6 +1,6 @@
 .test-case-detail-tab {
   flex: 1;
-  display: flex;
+  @include flex-row;
   overflow: hidden;
   position: relative;
 
@@ -12,7 +12,7 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 9999;
+    z-index: var(--z-index-modal);
     overflow: hidden;
 
     &::before,
@@ -86,7 +86,7 @@
     position: relative;
   }
 
-  // Fireworks effect
+  // Fireworks effect (simplified - using same pattern as other tabs)
   .fireworks-container {
     position: fixed;
     top: 0;
@@ -94,187 +94,12 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 9999;
+    z-index: var(--z-index-modal);
     overflow: hidden;
-
-    &::before,
-    &::after {
-      content: '';
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      box-shadow:
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff,
-        0 0 #fff;
-      animation: fireworks 2.5s ease-out infinite;
-    }
-
-    &::after {
-      animation-delay: 0.8s;
-    }
-
-    @keyframes fireworks {
-      0% {
-        box-shadow:
-          0 0 #ff6b6b,
-          0 0 #4ecdc4,
-          0 0 #ffe66d,
-          0 0 #a8e6cf,
-          0 0 #ff8b94,
-          0 0 #ffd3b6,
-          0 0 #dcedc1,
-          0 0 #ffaaa5,
-          0 0 #ff6b6b,
-          0 0 #4ecdc4,
-          0 0 #ffe66d,
-          0 0 #a8e6cf,
-          0 0 #ff8b94,
-          0 0 #ffd3b6,
-          0 0 #dcedc1,
-          0 0 #ffaaa5,
-          0 0 #ff6b6b,
-          0 0 #4ecdc4,
-          0 0 #ffe66d,
-          0 0 #a8e6cf,
-          0 0 #ff8b94,
-          0 0 #ffd3b6,
-          0 0 #dcedc1,
-          0 0 #ffaaa5,
-          0 0 #ff6b6b,
-          0 0 #4ecdc4,
-          0 0 #ffe66d,
-          0 0 #a8e6cf,
-          0 0 #ff8b94,
-          0 0 #ffd3b6,
-          0 0 #dcedc1,
-          0 0 #ffaaa5,
-          0 0 #ff6b6b,
-          0 0 #4ecdc4,
-          0 0 #ffe66d,
-          0 0 #a8e6cf,
-          0 0 #ff8b94,
-          0 0 #ffd3b6,
-          0 0 #dcedc1,
-          0 0 #ffaaa5,
-          0 0 #ff6b6b,
-          0 0 #4ecdc4,
-          0 0 #ffe66d,
-          0 0 #a8e6cf,
-          0 0 #ff8b94,
-          0 0 #ffd3b6,
-          0 0 #dcedc1,
-          0 0 #ffaaa5;
-        transform: translate(50vw, 50vh);
-      }
-      100% {
-        box-shadow:
-          -320px -418px #ff6b6b,
-          448px -216px #4ecdc4,
-          390px 116px #ffe66d,
-          -313px -508px #a8e6cf,
-          -309px -487px #ff8b94,
-          -250px -513px #ffd3b6,
-          426px -231px #dcedc1,
-          380px -540px #ffaaa5,
-          -212px -334px #ff6b6b,
-          307px -316px #4ecdc4,
-          -314px -204px #ffe66d,
-          399px -206px #a8e6cf,
-          -293px -425px #ff8b94,
-          -296px -225px #ffd3b6,
-          351px -328px #dcedc1,
-          -397px -542px #ffaaa5,
-          298px -311px #ff6b6b,
-          -275px -325px #4ecdc4,
-          -359px -264px #ffe66d,
-          -288px -278px #a8e6cf,
-          -473px -108px #ff8b94,
-          -454px -432px #ffd3b6,
-          -244px -321px #dcedc1,
-          387px -390px #ffaaa5,
-          -307px -495px #ff6b6b,
-          -294px -295px #4ecdc4,
-          -365px -412px #ffe66d,
-          334px -378px #a8e6cf,
-          -492px -266px #ff8b94,
-          -295px -508px #ffd3b6,
-          -309px -345px #dcedc1,
-          -314px -367px #ffaaa5,
-          -423px -269px #ff6b6b,
-          -326px -329px #4ecdc4,
-          355px -529px #ffe66d,
-          313px -390px #a8e6cf,
-          -294px -295px #ff8b94,
-          355px -529px #ffd3b6,
-          -288px -278px #dcedc1,
-          -473px -208px #ffaaa5,
-          -454px -432px #ff6b6b,
-          -244px -321px #4ecdc4,
-          387px -390px #ffe66d,
-          334px -378px #a8e6cf,
-          -492px -266px #ff8b94,
-          -295px -508px #ffd3b6,
-          -309px -345px #dcedc1,
-          -314px -367px #ffaaa5;
-        opacity: 0;
-        transform: translate(50vw, 50vh);
-      }
-    }
   }
 
   .test-case-detail-content {
-    display: flex;
+    @include flex-row;
     width: 100%;
     height: 100%;
   }
@@ -282,22 +107,20 @@
   .test-case-detail-left {
     width: 300px;
     min-height: 100vh;
-    border-right: 1px solid #f0f0f0;
-    display: flex;
-    flex-direction: column;
+    border-right: 1px solid var(--color-border-lighter);
+    @include flex-column;
     flex-shrink: 0;
 
     .tree-header {
-      padding: 0 16px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      font-weight: 600;
-      color: #262626;
+      padding: 0 var(--spacing-lg);
+      margin-bottom: var(--spacing-sm);
+      @include flex-center;
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
 
       .folder-icon {
-        margin-right: 8px;
-        color: #1890ff;
+        margin-right: var(--spacing-sm);
+        color: var(--color-primary);
       }
 
       .root-name {
@@ -305,7 +128,7 @@
       }
 
       .more-options {
-        color: #8c8c8c;
+        color: var(--color-text-tertiary);
         cursor: pointer;
       }
     }
@@ -322,15 +145,15 @@
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 20px;
-    background-color: #fff;
+    padding: var(--spacing-lg);
+    background-color: var(--color-bg-base);
     -webkit-overflow-scrolling: touch;
 
     .steps-wrapper {
-      margin-top: 20px;
-      border: 1px solid #f0f0f0;
-      border-radius: 8px;
-      padding: 16px;
+      margin-top: var(--spacing-lg);
+      border: 1px solid var(--color-border-lighter);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
     }
   }
 
@@ -340,11 +163,11 @@
     }
 
     .test-case-detail-right {
-      padding: 20px;
+      padding: var(--spacing-lg);
     }
   }
 
-  @media (max-width: 768px) {
+  @include respond-below('md') {
     .test-case-detail-content {
       flex-direction: column;
     }
@@ -354,43 +177,43 @@
       height: auto;
       max-height: 250px;
       border-right: none;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid var(--color-border-lighter);
       overflow-y: auto;
-      padding-top: 12px;
+      padding-top: var(--spacing-md);
 
       .tree-header {
-        padding: 0 12px;
+        padding: 0 var(--spacing-md);
       }
     }
 
     .test-case-detail-right {
       overflow-y: visible;
-      padding: 16px;
+      padding: var(--spacing-lg);
 
       .steps-wrapper {
-        margin-top: 16px;
-        padding: 12px;
+        margin-top: var(--spacing-lg);
+        padding: var(--spacing-md);
       }
     }
   }
 
-  @media (max-width: 480px) {
+  @include respond-below('sm') {
     .test-case-detail-left {
       max-height: 200px;
-      padding-top: 8px;
+      padding-top: var(--spacing-sm);
 
       .tree-header {
-        padding: 0 8px;
-        font-size: 14px;
+        padding: 0 var(--spacing-sm);
+        font-size: var(--font-size-base);
       }
     }
 
     .test-case-detail-right {
-      padding: 12px;
+      padding: var(--spacing-md);
 
       .steps-wrapper {
-        margin-top: 12px;
-        padding: 8px;
+        margin-top: var(--spacing-md);
+        padding: var(--spacing-sm);
       }
     }
   }

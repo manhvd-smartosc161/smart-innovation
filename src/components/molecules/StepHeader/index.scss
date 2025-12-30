@@ -1,30 +1,27 @@
 .step-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
+  @include flex-between;
+  gap: var(--spacing-md);
   flex-wrap: wrap;
 }
 
 .step-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  @include flex-center;
+  gap: var(--spacing-sm);
   flex: 1;
   min-width: 0;
 }
 
 .step-icon {
-  font-size: 18px;
-  color: #1890ff;
+  font-size: var(--font-size-2xl);
+  color: var(--color-primary);
   line-height: 1;
   flex-shrink: 0;
 }
 
 .step-number {
-  font-weight: 600;
-  font-size: 14px;
-  color: #262626;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
   min-width: auto;
   flex-shrink: 0;
 }
@@ -32,40 +29,38 @@
 .step-actions {
   margin-top: -55px;
   background: #c3d9fc73;
-  border-radius: 6px;
-  border-width: 1px;
-  border-color: #2563ebff;
-  border-style: solid;
-  padding: 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid #2563eb;
+  padding: var(--spacing-sm);
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity var(--duration-fast);
   flex-shrink: 0;
-  z-index: 100; // Above sticky header (z-index: 10)
+  z-index: 100;
 
   .action-bar {
     .icon-button {
-      color: #1890ff;
-      font-weight: 600;
+      color: var(--color-primary);
+      font-weight: var(--font-weight-semibold);
 
       &:hover {
-        color: #1890ff !important;
+        color: var(--color-primary) !important;
         background: rgba(24, 144, 255, 0.1);
       }
 
       .anticon {
-        color: #1890ff;
+        color: var(--color-primary);
       }
 
       &:hover .anticon {
-        color: #1890ff !important;
+        color: var(--color-primary) !important;
       }
     }
   }
 }
 
 .step-description-text {
-  font-size: 14px;
-  color: #262626;
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
   flex: 1;
   min-width: 0;
   word-wrap: break-word;
@@ -78,40 +73,40 @@
   min-width: 0;
 
   .ant-input {
-    font-size: 14px;
+    font-size: var(--font-size-base);
     padding: 0;
     border: none;
-    border-bottom: 1px solid #1890ff;
+    border-bottom: 1px solid var(--color-primary);
     border-radius: 0;
     box-shadow: none;
 
     &:focus {
-      border-color: #1890ff;
+      border-color: var(--color-primary);
       box-shadow: none;
     }
   }
 }
 
-@media (max-width: 768px) {
+@include respond-below('md') {
   .step-header {
-    gap: 8px;
+    gap: var(--spacing-sm);
   }
 
   .step-title {
-    gap: 6px;
+    gap: var(--spacing-xs);
     width: 100%;
   }
 
   .step-icon {
-    font-size: 16px;
+    font-size: var(--font-size-lg);
   }
 
   .step-number {
-    font-size: 13px;
+    font-size: var(--font-size-sm);
   }
 
   .step-description-text {
-    font-size: 13px;
+    font-size: var(--font-size-sm);
   }
 
   .step-actions {
@@ -119,38 +114,37 @@
     width: 100%;
 
     .action-bar {
-      display: flex;
+      @include flex-center;
       flex-wrap: wrap;
-      justify-content: center;
-      gap: 4px;
+      gap: var(--spacing-xs);
     }
   }
 }
 
-@media (max-width: 480px) {
+@include respond-below('sm') {
   .step-title {
-    gap: 4px;
+    gap: var(--spacing-xs);
   }
 
   .step-icon {
-    font-size: 14px;
+    font-size: var(--font-size-base);
   }
 
   .step-number {
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
 
   .step-description-text {
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
 
   .step-actions {
-    padding: 6px;
+    padding: var(--spacing-xs);
 
     .action-bar {
       .icon-button {
-        font-size: 14px;
-        padding: 4px;
+        font-size: var(--font-size-base);
+        padding: var(--spacing-xs);
       }
     }
   }

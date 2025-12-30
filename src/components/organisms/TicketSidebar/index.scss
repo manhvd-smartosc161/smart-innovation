@@ -1,26 +1,24 @@
 .ticket-sidebar {
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  border-right: 1px solid #f0f0f0;
+  @include flex-column;
+  background-color: var(--color-bg-base);
+  border-right: 1px solid var(--color-border-lighter);
 
   .ticket-sidebar-header {
-    padding: 8px 12px;
-    border-bottom: 1px solid #f0f0f0;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--color-border-lighter);
     flex-shrink: 0;
 
     .search-box {
-      display: flex;
-      align-items: center;
-      border: 1px solid #d9d9d9;
-      border-radius: 6px;
-      padding: 3px;
+      @include flex-center;
+      border: 1px solid var(--color-border-base);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-xs);
 
       .ant-input {
         border: none;
         box-shadow: none;
-        padding: 4px 8px;
+        padding: var(--spacing-xs) var(--spacing-sm);
 
         &:focus {
           box-shadow: none;
@@ -28,7 +26,7 @@
       }
 
       .header-icon-btn {
-        padding: 4px 8px;
+        padding: var(--spacing-xs) var(--spacing-sm);
         height: auto;
         flex-shrink: 0;
         border: none;
@@ -46,23 +44,23 @@
           border: none;
           box-shadow: none !important;
           outline: none !important;
-          background-color: rgba(0, 0, 0, 0.04);
-          color: #1f1f1f;
+          background-color: var(--color-bg-elevated);
+          color: var(--color-text-primary);
         }
 
         &:hover {
-          background-color: rgba(0, 0, 0, 0.06);
-          color: #1f1f1f;
+          background-color: var(--color-bg-spotlight);
+          color: var(--color-text-primary);
         }
 
         &.ant-btn-dangerous {
-          color: #ff4d4f;
+          color: var(--color-error);
 
           &:hover,
           &:focus,
           &:active {
-            background-color: #fff1f0;
-            color: #ff4d4f;
+            background-color: var(--color-error-bg-light);
+            color: var(--color-error);
           }
         }
       }
@@ -75,26 +73,25 @@
     -webkit-overflow-scrolling: touch;
   }
 
-  @media (max-width: 768px) {
+  @include respond-below('md') {
     .ticket-sidebar-header {
-      padding: 8px 12px;
+      padding: var(--spacing-sm) var(--spacing-md);
 
       .search-box {
         .ant-input {
-          font-size: 14px;
+          font-size: var(--font-size-base);
         }
       }
     }
   }
 
-  @media (max-width: 480px) {
+  @include respond-below('sm') {
     .ticket-sidebar-header {
-      padding: 8px;
+      padding: var(--spacing-sm);
     }
   }
 }
 
-// Modern Dropdown Menu Styling
 // Premium Dropdown Menu Styling
 .ant-dropdown.ticket-sidebar-dropdown {
   // Dropdown Container
@@ -102,14 +99,12 @@
     background: rgba(255, 255, 255, 0.95) !important;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-radius: 12px !important;
-    padding: 4px !important;
-    box-shadow:
-      0 10px 40px -10px rgba(0, 0, 0, 0.15),
-      0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+    border-radius: var(--radius-lg) !important;
+    padding: var(--spacing-xs) !important;
+    box-shadow: var(--shadow-xl) !important;
     border: 1px solid rgba(255, 255, 255, 0.8) !important;
     overflow: hidden;
-    animation: dropdownSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    animation: dropdownSlideUp var(--duration-slow) var(--ease-smooth) !important;
 
     @keyframes dropdownSlideUp {
       0% {
@@ -128,30 +123,30 @@
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(0, 0, 0, 0.1),
+      var(--color-border-base),
       transparent
     ) !important;
-    margin: 4px 0 !important;
+    margin: var(--spacing-xs) 0 !important;
   }
 
   // General Item Styling
   .ant-dropdown-menu-item {
-    border-radius: 6px !important;
-    padding: 6px 10px !important;
+    border-radius: var(--radius-md) !important;
+    padding: var(--spacing-sm) var(--spacing-md) !important;
     margin-bottom: 0 !important;
-    color: #334155 !important;
-    font-weight: 500 !important;
-    transition: all 0.2s ease !important;
+    color: var(--color-text-primary) !important;
+    font-weight: var(--font-weight-medium) !important;
+    transition: all var(--duration-fast) ease !important;
 
     &:hover {
-      background: #f1f5f9 !important;
+      background: var(--color-bg-elevated) !important;
       transform: translateX(4px);
     }
 
     .anticon {
-      font-size: 16px !important;
-      margin-right: 12px !important;
-      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+      font-size: var(--font-size-lg) !important;
+      margin-right: var(--spacing-md) !important;
+      transition: transform var(--duration-fast) var(--ease-smooth) !important;
     }
   }
 
@@ -160,11 +155,11 @@
   // Green: Request Review
   .menu-item-request-review {
     .anticon {
-      color: #10b981 !important;
+      color: var(--color-success) !important;
     }
     &:hover {
-      background: #ecfdf5 !important; // green-50
-      color: #047857 !important; // green-700
+      background: var(--color-success-bg-light) !important;
+      color: var(--color-success-dark) !important;
       .anticon {
         transform: scale(1.2);
       }
@@ -174,11 +169,11 @@
   // Red: Cancel Review
   .menu-item-cancel-review {
     .anticon {
-      color: #ef4444 !important;
+      color: var(--color-error) !important;
     }
     &:hover {
-      background: #fef2f2 !important; // red-50
-      color: #b91c1c !important; // red-700
+      background: var(--color-error-bg-light) !important;
+      color: var(--color-error-dark) !important;
       .anticon {
         transform: rotate(90deg) scale(1.1);
       }
@@ -188,11 +183,11 @@
   // Blue/Indigo: Import
   .menu-item-import {
     .anticon {
-      color: #6366f1 !important;
+      color: var(--color-info) !important;
     }
     &:hover {
-      background: #eef2ff !important; // indigo-50
-      color: #4338ca !important; // indigo-700
+      background: var(--color-info-bg-light) !important;
+      color: var(--color-info-dark) !important;
       .anticon {
         transform: translateX(3px);
       }
@@ -202,11 +197,11 @@
   // Orange/Amber: Export
   .menu-item-export {
     .anticon {
-      color: #f59e0b !important;
+      color: var(--color-warning) !important;
     }
     &:hover {
-      background: #fffbeb !important; // amber-50
-      color: #b45309 !important; // amber-700
+      background: var(--color-warning-bg-light) !important;
+      color: var(--color-warning-dark) !important;
       .anticon {
         transform: translateY(-2px);
       }
@@ -217,7 +212,7 @@
   .menu-item-section-header {
     background: transparent !important;
     cursor: default !important;
-    padding: 8px 12px 2px !important;
+    padding: var(--spacing-sm) var(--spacing-md) var(--spacing-xs) !important;
 
     &:hover {
       background: transparent !important;
@@ -225,11 +220,11 @@
     }
 
     .ant-dropdown-menu-title-content {
-      font-size: 11px !important;
+      font-size: var(--font-size-xs) !important;
       text-transform: uppercase !important;
-      letter-spacing: 1px !important;
-      color: #94a3b8 !important;
-      font-weight: 700 !important;
+      letter-spacing: var(--letter-spacing-wider) !important;
+      color: var(--color-text-tertiary) !important;
+      font-weight: var(--font-weight-bold) !important;
     }
   }
 
@@ -240,16 +235,15 @@
       border-color: rgba(255, 255, 255, 0.1) !important;
 
       .ant-dropdown-menu-item {
-        color: #cbd5e1 !important;
+        color: var(--color-text-secondary) !important;
       }
 
       .menu-item-request-review {
         &:hover {
           background: rgba(5, 150, 105, 0.2) !important;
-          color: #6ee7b7 !important;
+          color: var(--color-success-light) !important;
         }
       }
-      // ... similar mapping for others if needed, but strict mode handles most
     }
   }
 }

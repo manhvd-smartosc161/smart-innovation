@@ -1,20 +1,20 @@
 .step-item {
   margin-bottom: 0;
   border: none;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--color-border-lighter);
   border-radius: 0;
-  padding: 16px;
-  background: #fff;
+  padding: var(--spacing-lg);
+  background: var(--color-bg-base);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--duration-fast);
 
   &:last-child {
     border-bottom: none;
   }
 
   &:hover:not(.step-item-disabled) {
-    border: 1px solid #40a9ff;
-    border-bottom: 1px solid #40a9ff;
+    border: 1px solid var(--color-primary-light);
+    border-bottom: 1px solid var(--color-primary-light);
   }
 
   &.step-item-disabled {
@@ -24,12 +24,12 @@
   }
 
   &.step-item-selected {
-    border: 1px solid #1890ff;
+    border: 1px solid var(--color-primary);
 
     .step-header {
       background: #c3d9fc73;
-      margin: -16px -16px -16px -16px;
-      padding: 16px;
+      margin: calc(var(--spacing-lg) * -1);
+      padding: var(--spacing-lg);
       border-radius: 0;
     }
 
@@ -42,24 +42,24 @@
     }
   }
 
-  @media (max-width: 768px) {
-    padding: 12px;
+  @include respond-below('md') {
+    padding: var(--spacing-md);
 
     &.step-item-selected {
       .step-header {
-        margin: -12px -12px -12px -12px;
-        padding: 12px;
+        margin: calc(var(--spacing-md) * -1);
+        padding: var(--spacing-md);
       }
     }
   }
 
-  @media (max-width: 480px) {
-    padding: 10px;
+  @include respond-below('sm') {
+    padding: var(--spacing-sm);
 
     &.step-item-selected {
       .step-header {
-        margin: -10px -10px -10px -10px;
-        padding: 10px;
+        margin: calc(var(--spacing-sm) * -1);
+        padding: var(--spacing-sm);
       }
     }
   }
@@ -67,100 +67,80 @@
 
 .expected-results-container {
   margin-top: 25px;
-  border: 2px solid #f0f0f0;
-  border-radius: 6px;
-  padding: 12px 12px 0px 12px;
-  background: #fff;
+  border: 2px solid var(--color-border-lighter);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md) var(--spacing-md) 0;
+  background: var(--color-bg-base);
   transition:
-    border-color 0.2s,
-    max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    margin-top 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    padding 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-color var(--duration-fast),
+    max-height 0.5s var(--ease-smooth),
+    opacity 0.4s var(--ease-smooth),
+    margin-top 0.5s var(--ease-smooth),
+    padding 0.5s var(--ease-smooth);
   overflow: hidden;
-  max-height: 400px; // Set max height for scrolling
+  max-height: 400px;
 
   &.collapsed {
     max-height: 0;
     opacity: 0;
     margin-top: 0;
-    padding: 0 12px;
+    padding: 0 var(--spacing-md);
     border: none;
   }
 
   &.expanded {
-    max-height: 400px; // Set max height for scrolling
+    max-height: 400px;
     opacity: 1;
     margin-top: 25px;
-    padding: 12px 12px 0px 12px;
-    border: 2px solid #f0f0f0;
-    overflow-y: auto; // Enable scroll on container
+    padding: var(--spacing-md) var(--spacing-md) 0;
+    border: 2px solid var(--color-border-lighter);
+    overflow-y: auto;
     overflow-x: visible;
   }
 
-  // Custom scrollbar styling
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
+  @include custom-scrollbar;
 
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #d9d9d9;
-    border-radius: 3px;
-
-    &:hover {
-      background: #bfbfbf;
-    }
-  }
-
-  // Firefox scrollbar
-  scrollbar-width: thin;
-  scrollbar-color: #d9d9d9 transparent;
-
-  @media (max-width: 768px) {
+  @include respond-below('md') {
     margin-top: 20px;
-    padding: 10px 10px 0px 10px;
+    padding: var(--spacing-sm) var(--spacing-sm) 0;
 
     &.expanded {
       margin-top: 20px;
-      padding: 10px 10px 0px 10px;
+      padding: var(--spacing-sm) var(--spacing-sm) 0;
     }
   }
 
-  @media (max-width: 480px) {
-    margin-top: 16px;
-    padding: 8px 8px 0px 8px;
+  @include respond-below('sm') {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-sm) var(--spacing-sm) 0;
 
     &.expanded {
-      margin-top: 16px;
-      padding: 8px 8px 0px 8px;
+      margin-top: var(--spacing-lg);
+      padding: var(--spacing-sm) var(--spacing-sm) 0;
     }
   }
 }
 
 .expected-results-header {
   font-size: 11px;
-  color: #8c8c8c;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  background: #fafafa;
-  padding: 12px 16px;
-  margin: -12px -12px 0px -12px;
-  border-bottom: 1px solid #e8e8e8;
-  border-radius: 6px 6px 0 0;
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wider);
+  background: var(--color-bg-elevated);
+  padding: var(--spacing-md) var(--spacing-lg);
+  margin: calc(var(--spacing-md) * -1) calc(var(--spacing-md) * -1) 0;
+  border-bottom: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
 
-  @media (max-width: 768px) {
-    padding: 10px 12px;
-    margin: -10px -10px 0px -10px;
+  @include respond-below('md') {
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin: calc(var(--spacing-sm) * -1) calc(var(--spacing-sm) * -1) 0;
     font-size: 10px;
   }
 
-  @media (max-width: 480px) {
-    padding: 8px 10px;
-    margin: -8px -8px 0px -8px;
+  @include respond-below('sm') {
+    padding: var(--spacing-sm) var(--spacing-sm);
+    margin: calc(var(--spacing-sm) * -1) calc(var(--spacing-sm) * -1) 0;
     font-size: 10px;
   }
 }

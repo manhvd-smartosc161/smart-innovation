@@ -1,36 +1,35 @@
 .tiptap-editor {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #d9d9d9;
-  border-radius: 6px;
+  @include flex-column;
+  border: 1px solid var(--color-border-base);
+  border-radius: var(--radius-md);
   overflow: hidden;
-  transition: all 0.3s;
+  transition: all var(--duration-normal);
 
   &:focus-within {
-    border-color: #40a9ff;
+    border-color: var(--color-primary-light);
     box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
   }
 
   .toolbar {
-    padding: 8px;
-    background: #fafafa;
-    border-bottom: 1px solid #d9d9d9;
+    padding: var(--spacing-sm);
+    background: var(--color-bg-elevated);
+    border-bottom: 1px solid var(--color-border-base);
 
     .ant-btn {
       border: none;
       background: transparent;
 
       &:hover:not(:disabled) {
-        background: #e6f7ff;
-        color: #1890ff;
+        background: var(--color-primary-bg-light);
+        color: var(--color-primary);
       }
 
       &.ant-btn-primary {
-        background: #1890ff;
-        color: #fff;
+        background: var(--color-primary);
+        color: var(--color-text-inverse);
 
         &:hover {
-          background: #40a9ff;
+          background: var(--color-primary-light);
         }
       }
 
@@ -47,14 +46,14 @@
     overflow-y: auto;
 
     .ProseMirror {
-      padding: 12px;
+      padding: var(--spacing-md);
       outline: none;
       min-height: 100px;
-      font-size: 14px;
-      line-height: 1.6;
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-relaxed);
 
       p {
-        margin: 0 0 8px 0;
+        margin: 0 0 var(--spacing-sm) 0;
 
         &:last-child {
           margin-bottom: 0;
@@ -63,16 +62,16 @@
 
       ul,
       ol {
-        padding-left: 24px;
-        margin: 8px 0;
+        padding-left: var(--spacing-xl);
+        margin: var(--spacing-sm) 0;
 
         li {
-          margin: 4px 0;
+          margin: var(--spacing-xs) 0;
         }
       }
 
       strong {
-        font-weight: 600;
+        font-weight: var(--font-weight-semibold);
       }
 
       em {
@@ -83,29 +82,13 @@
       p.is-editor-empty:first-child::before {
         content: attr(data-placeholder);
         float: left;
-        color: #bfbfbf;
+        color: var(--color-text-disabled);
         pointer-events: none;
         height: 0;
       }
     }
 
     // Custom scrollbar
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: #f5f5f5;
-      border-radius: 3px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: #bfbfbf;
-      border-radius: 3px;
-
-      &:hover {
-        background: #8c8c8c;
-      }
-    }
+    @include custom-scrollbar;
   }
 }

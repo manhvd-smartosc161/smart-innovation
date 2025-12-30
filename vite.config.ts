@@ -23,6 +23,13 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, './src'),
       },
     },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@use "@/styles/tokens.scss" as *; @use "@/styles/mixins.scss" as *;`,
+        },
+      },
+    },
     server: {
       port: parseInt(env.VITE_PORT || '5174'),
       cors: true,

@@ -1,14 +1,14 @@
 .history-panel {
   .ant-drawer-body {
-    padding: 16px;
-    background: #fafafa;
+    padding: var(--spacing-lg);
+    background: var(--color-bg-elevated);
   }
 
   .ant-timeline {
-    margin-top: 16px;
+    margin-top: var(--spacing-lg);
 
     .ant-timeline-item {
-      padding-bottom: 20px;
+      padding-bottom: var(--spacing-lg);
 
       &:last-child {
         padding-bottom: 0;
@@ -17,47 +17,41 @@
   }
 
   .history-item {
-    background: white;
-    border-radius: 8px;
-    padding: 14px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    transition: all 0.2s ease;
+    @include card;
+    transition: all var(--duration-fast) ease;
 
     &:hover {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow-lg);
       transform: translateY(-1px);
     }
 
     .history-item-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
+      @include flex-between;
+      margin-bottom: var(--spacing-sm);
 
       .user-info {
-        display: flex;
-        align-items: center;
-        gap: 8px;
+        @include flex-center;
+        gap: var(--spacing-sm);
 
         .user-name {
-          font-weight: 500;
-          color: #262626;
-          font-size: 14px;
+          font-weight: var(--font-weight-medium);
+          color: var(--color-text-primary);
+          font-size: var(--font-size-base);
         }
       }
     }
 
     .history-item-description {
-      color: #595959;
-      font-size: 14px;
-      line-height: 1.6;
-      margin-bottom: 10px;
-      font-weight: 400;
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-relaxed);
+      margin-bottom: var(--spacing-sm);
+      font-weight: var(--font-weight-normal);
     }
 
     .history-item-timestamp {
-      font-size: 12px;
-      color: #8c8c8c;
+      font-size: var(--font-size-xs);
+      color: var(--color-text-tertiary);
     }
   }
 

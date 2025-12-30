@@ -1,5 +1,5 @@
 .handson-cell-readonly {
-  padding: 8px 12px;
-  min-height: 32px;
-  color: rgba(0, 0, 0, 0.45);
+  padding: var(--spacing-sm) var(--spacing-md);
+  min-height: var(--button-height-md);
+  color: var(--color-text-tertiary);
 }

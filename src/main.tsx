@@ -4,6 +4,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryProvider } from './providers/QueryProvider';
 import 'antd/dist/reset.css';
 import './index.scss';
+import './styles/global.scss';
+import './styles/utilities.scss';
 import App from './App.tsx';
 
 createRoot(document.getElementById('root')!).render(

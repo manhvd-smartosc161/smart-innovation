@@ -1,27 +1,27 @@
 .atom-input {
-  transition: all 0.3s ease;
-  border-radius: 6px;
+  transition: all var(--duration-normal) ease;
+  border-radius: var(--radius-md);
 
   // Size variants
   &--small {
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
 
   &--medium {
-    font-size: 14px;
+    font-size: var(--font-size-base);
   }
 
   &--large {
-    font-size: 16px;
+    font-size: var(--font-size-xl);
   }
 
   // State variants
   &--error {
-    border-color: #ff4d4f;
+    border-color: var(--color-error);
 
     &:focus,
     &:hover {
-      border-color: #ff4d4f;
+      border-color: var(--color-error);
       box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.1);
     }
   }
@@ -32,12 +32,12 @@
   }
 
   &--readonly {
-    background-color: #f5f5f5;
+    background-color: var(--color-bg-spotlight);
     cursor: default;
   }
 
   // Focus state
   &:focus {
-    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+    box-shadow: var(--input-focus-shadow);
   }
 }

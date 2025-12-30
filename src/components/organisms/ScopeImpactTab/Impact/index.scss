@@ -1,36 +1,31 @@
 .impact-tab {
-  padding: 16px;
+  padding: var(--spacing-lg);
   width: 100%;
-  background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+  background: var(--gradient-warm);
   box-sizing: border-box;
 
   .impact-content {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
+    background: var(--color-bg-base);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-md);
+    @include flex-column;
   }
 
-  // EditableTable handles its own header styling via title prop, but if we want custom outer spacing:
-  // The new implementation uses EditableTable which includes the header and actions.
-  // We can just keep the container styles.
-
-  @media (max-width: 768px) {
-    padding: 16px;
+  @include respond-below('md') {
+    padding: var(--spacing-lg);
 
     .impact-content {
-      padding: 16px;
-      border-radius: 12px;
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-xl);
     }
   }
 
-  @media (max-width: 480px) {
-    padding: 12px;
+  @include respond-below('sm') {
+    padding: var(--spacing-md);
 
     .impact-content {
-      padding: 12px;
-      border-radius: 8px;
+      padding: var(--spacing-md);
+      border-radius: var(--radius-lg);
     }
   }
 }

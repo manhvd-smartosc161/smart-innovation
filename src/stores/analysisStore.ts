@@ -94,7 +94,6 @@ export const useAnalysisStore = create<AnalysisState>()(
         name: 'analysis-store',
         partialize: (state) => ({
           selectedTestCaseId: state.selectedTestCaseId,
-          unsavedChanges: Array.from(state.unsavedChanges.entries()),
         }),
       }
     ),

@@ -1,21 +1,18 @@
 .scope-impact-tab {
-  display: flex;
-  flex-direction: column;
+  @include flex-column;
   height: 100%;
   overflow: hidden;
 
   &__header {
     flex-shrink: 0;
-    padding: 10px 24px;
-    background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+    padding: var(--spacing-sm) var(--spacing-xl);
+    background: var(--gradient-warm);
 
     .generate-section {
       position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 32px;
+      @include flex-center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm) var(--spacing-2xl);
       overflow: hidden;
 
       // Animated gradient background (green/teal theme)
@@ -28,19 +25,14 @@
         #0891b2 100%
       );
       background-size: 400% 400%;
-      animation: gradientShift 15s ease infinite;
+      @include animate-gradient;
 
       // Glassmorphism effect
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-
-      box-shadow:
-        0 8px 32px rgba(31, 38, 135, 0.37),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-
-      border-radius: 24px;
-      border: 2px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: var(--glass-backdrop-blur);
+      -webkit-backdrop-filter: var(--glass-backdrop-blur);
+      box-shadow: var(--shadow-glass);
+      border-radius: var(--radius-4xl);
+      border: var(--glass-border);
 
       // Decorative elements - floating particles
       &::before,
@@ -49,20 +41,18 @@
         position: absolute;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.15);
-        animation: float 6s ease-in-out infinite;
+        @include animate-float;
       }
 
       &::before {
-        width: 100px;
-        height: 100px;
+        @include size(100px);
         top: -20px;
         left: 10%;
         animation-delay: 0s;
       }
 
       &::after {
-        width: 140px;
-        height: 140px;
+        @include size(140px);
         bottom: -40px;
         right: 15%;
         animation-delay: 3s;
@@ -71,27 +61,23 @@
       .generate-icon-left,
       .generate-icon-right {
         position: relative;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
+        @include circle(30px);
         background: linear-gradient(
           135deg,
           rgba(255, 255, 255, 0.95) 0%,
           rgba(255, 255, 255, 0.85) 100%
         );
         border: 2px solid rgba(255, 255, 255, 0.4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
+        @include flex-center;
+        font-size: var(--font-size-2xl);
         color: #10b981;
         box-shadow:
           0 4px 20px rgba(0, 0, 0, 0.15),
           inset 0 1px 0 rgba(255, 255, 255, 0.8);
-        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: all var(--duration-slow) var(--ease-bounce);
         flex-shrink: 0;
-        z-index: 1;
-        animation: iconPulse 3s ease-in-out infinite;
+        z-index: var(--z-index-base);
+        @include animate-icon-pulse;
 
         .anticon {
           filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
@@ -140,9 +126,9 @@
         position: relative;
         min-width: 180px;
         height: 33px;
-        font-size: 14px;
-        font-weight: 700;
-        border-radius: 14px;
+        font-size: var(--font-size-base);
+        font-weight: var(--font-weight-bold);
+        border-radius: var(--radius-3xl);
         background: linear-gradient(
           135deg,
           rgba(255, 255, 255, 0.95) 0%,
@@ -153,8 +139,8 @@
         box-shadow:
           0 8px 32px rgba(0, 0, 0, 0.25),
           inset 0 1px 0 rgba(255, 255, 255, 0.9);
-        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        letter-spacing: 0.5px;
+        transition: all var(--duration-slow) var(--ease-bounce);
+        letter-spacing: var(--letter-spacing-wider);
         text-transform: none;
         z-index: 10;
         overflow: hidden;
@@ -178,7 +164,7 @@
             rgba(255, 255, 255, 0.6),
             transparent
           );
-          transition: left 0.5s ease;
+          transition: left var(--duration-slower) ease;
         }
 
         // Glow effect
@@ -186,7 +172,7 @@
           content: '';
           position: absolute;
           inset: -2px;
-          border-radius: 16px;
+          border-radius: var(--radius-4xl);
           background: linear-gradient(
             135deg,
             #10b981,
@@ -197,8 +183,8 @@
           background-size: 400% 400%;
           z-index: -1;
           opacity: 0;
-          transition: opacity 0.4s ease;
-          animation: gradientShift 3s ease infinite;
+          transition: opacity var(--duration-slow) ease;
+          @include animate-gradient;
         }
 
         &:hover {
@@ -206,7 +192,7 @@
           box-shadow:
             0 12px 48px rgba(16, 185, 129, 0.5),
             inset 0 1px 0 rgba(255, 255, 255, 1);
-          color: #ffffff;
+          color: var(--color-text-inverse);
 
           &::before {
             left: 100%;
@@ -235,9 +221,9 @@
 
         .anticon {
           font-size: 20px;
-          margin-right: 8px;
+          margin-right: var(--spacing-sm);
           filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-          animation: iconBounce 2s ease-in-out infinite;
+          @include animate-icon-bounce;
         }
       }
     }
@@ -248,7 +234,7 @@
     position: fixed;
     bottom: -100px;
     left: -100px;
-    z-index: 9999;
+    z-index: var(--z-index-modal);
     pointer-events: none;
   }
 
@@ -281,14 +267,13 @@
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 9999;
+    z-index: var(--z-index-modal);
     pointer-events: none;
   }
 
   .firework {
     position: absolute;
-    width: 6px;
-    height: 6px;
+    @include size(6px);
     border-radius: 50%;
     box-shadow:
       0 0 10px 2px currentColor,
@@ -438,24 +423,22 @@
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+    padding: var(--spacing-md);
+    @include flex-column;
+    gap: var(--spacing-sm);
+    background: var(--gradient-warm);
   }
 
   &__section {
-    background: #fff;
-    border-radius: 16px;
-    padding: 12px 24px;
+    background: var(--color-bg-base);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-md) var(--spacing-xl);
     box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
     max-height: 500px;
-    display: flex;
+    @include flex-column;
     overflow: hidden;
-    flex-direction: column;
     flex-shrink: 0;
-    margin: 10px;
+    margin: var(--spacing-sm);
 
     // Remove extra padding and styling from nested tabs
     .scope-tab,
@@ -465,16 +448,14 @@
       background: transparent;
       flex: 1;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
+      @include flex-column;
       min-height: 0;
 
       .scope-content,
       .impact-content {
         flex: 1;
         overflow: hidden;
-        display: flex;
-        flex-direction: column;
+        @include flex-column;
         padding: 0;
         min-height: 0;
 
@@ -483,75 +464,6 @@
           flex-shrink: 0;
         }
       }
-    }
-  }
-
-  // Keyframe animations (same as InfoTab)
-  @keyframes gradientShift {
-    0%,
-    100% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-  }
-
-  @keyframes float {
-    0%,
-    100% {
-      transform: translateY(0) scale(1);
-      opacity: 0.3;
-    }
-    50% {
-      transform: translateY(-30px) scale(1.1);
-      opacity: 0.6;
-    }
-  }
-
-  @keyframes iconPulse {
-    0%,
-    100% {
-      transform: scale(1);
-      box-shadow:
-        0 4px 20px rgba(0, 0, 0, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
-    }
-    50% {
-      transform: scale(1.05);
-      box-shadow:
-        0 6px 25px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    }
-  }
-
-  @keyframes iconSpin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-  @keyframes iconBounce {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-3px);
-    }
-  }
-
-  @keyframes wave {
-    0%,
-    40%,
-    100% {
-      transform: translateY(0);
-    }
-    20% {
-      transform: translateY(-7px);
     }
   }
 

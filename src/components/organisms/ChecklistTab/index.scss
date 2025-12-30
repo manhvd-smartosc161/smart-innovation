@@ -1,19 +1,18 @@
 .checklist-tab {
-  padding: 10px 24px;
+  padding: var(--spacing-sm) var(--spacing-xl);
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+  background: var(--gradient-warm);
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+  @include flex-column;
 
   // Flying Test Case Animation
   .flying-testcase-container {
     position: fixed;
     bottom: -100px;
     left: -100px;
-    z-index: 9999;
+    z-index: var(--z-index-modal);
     pointer-events: none;
   }
 
@@ -39,104 +38,93 @@
     }
   }
 
-  // Fireworks Animation
+  // Fireworks Animation (reuse from ScopeImpactTab)
   .fireworks-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 9999;
+    z-index: var(--z-index-modal);
     pointer-events: none;
   }
 
   .firework {
     position: absolute;
-    width: 6px;
-    height: 6px;
+    @include size(6px);
     border-radius: 50%;
     box-shadow:
       0 0 10px 2px currentColor,
       0 0 20px 4px currentColor;
   }
 
+  // Firework positions
   .firework-1 {
     left: 30%;
     top: 30%;
     color: #ff6b6b;
     animation: fireworkExplode 2s ease-out forwards;
   }
-
   .firework-2 {
     left: 50%;
     top: 20%;
     color: #4ecdc4;
     animation: fireworkExplode 2s ease-out 0.2s forwards;
   }
-
   .firework-3 {
     left: 70%;
     top: 35%;
     color: #ffe66d;
     animation: fireworkExplode 2s ease-out 0.4s forwards;
   }
-
   .firework-4 {
     left: 40%;
     top: 45%;
     color: #a8e6cf;
     animation: fireworkExplode 2s ease-out 0.6s forwards;
   }
-
   .firework-5 {
     left: 60%;
     top: 50%;
     color: #ff8b94;
     animation: fireworkExplode 2s ease-out 0.8s forwards;
   }
-
   .firework-6 {
     left: 25%;
     top: 25%;
     color: #b19cd9;
     animation: fireworkExplode 2s ease-out 1s forwards;
   }
-
   .firework-7 {
     left: 75%;
     top: 28%;
     color: #ffd93d;
     animation: fireworkExplode 2s ease-out 1.2s forwards;
   }
-
   .firework-8 {
     left: 45%;
     top: 32%;
     color: #6bcf7f;
     animation: fireworkExplode 2s ease-out 1.4s forwards;
   }
-
   .firework-9 {
     left: 55%;
     top: 38%;
     color: #ff6b9d;
     animation: fireworkExplode 2s ease-out 0.3s forwards;
   }
-
   .firework-10 {
     left: 35%;
     top: 42%;
     color: #4facfe;
     animation: fireworkExplode 2s ease-out 0.5s forwards;
   }
-
   .firework-11 {
     left: 65%;
     top: 44%;
     color: #ffa07a;
     animation: fireworkExplode 2s ease-out 0.7s forwards;
   }
-
   .firework-12 {
     left: 50%;
     top: 48%;
@@ -205,11 +193,9 @@
     position: relative;
     top: 0px;
     z-index: 100;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 15px;
+    @include flex-center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-lg);
     overflow: hidden;
 
     // Animated gradient background (orange/yellow theme)
@@ -222,19 +208,17 @@
       #ffd666 100%
     );
     background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
+    @include animate-gradient;
 
     // Glassmorphism effect
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-
+    backdrop-filter: var(--glass-backdrop-blur);
+    -webkit-backdrop-filter: var(--glass-backdrop-blur);
     box-shadow:
       0 8px 32px rgba(250, 140, 22, 0.37),
       inset 0 1px 0 rgba(255, 255, 255, 0.3),
       inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-
-    border-radius: 24px;
-    border: 2px solid rgba(255, 255, 255, 0.18);
+    border-radius: var(--radius-4xl);
+    border: var(--glass-border);
 
     // Decorative elements - floating particles
     &::before,
@@ -243,20 +227,18 @@
       position: absolute;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.15);
-      animation: float 6s ease-in-out infinite;
+      @include animate-float;
     }
 
     &::before {
-      width: 100px;
-      height: 100px;
+      @include size(100px);
       top: -20px;
       left: 10%;
       animation-delay: 0s;
     }
 
     &::after {
-      width: 140px;
-      height: 140px;
+      @include size(140px);
       bottom: -40px;
       right: 15%;
       animation-delay: 3s;
@@ -265,27 +247,23 @@
     .generate-icon-left,
     .generate-icon-right {
       position: relative;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
+      @include circle(30px);
       background: linear-gradient(
         135deg,
         rgba(255, 255, 255, 0.95) 0%,
         rgba(255, 255, 255, 0.85) 100%
       );
       border: 2px solid rgba(255, 255, 255, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
+      @include flex-center;
+      font-size: var(--font-size-2xl);
       color: #fa8c16;
       box-shadow:
         0 4px 20px rgba(0, 0, 0, 0.15),
         inset 0 1px 0 rgba(255, 255, 255, 0.8);
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: all var(--duration-slow) var(--ease-bounce);
       flex-shrink: 0;
-      z-index: 1;
-      animation: iconPulse 3s ease-in-out infinite;
+      z-index: var(--z-index-base);
+      @include animate-icon-pulse;
 
       .anticon {
         filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
@@ -329,9 +307,9 @@
       position: relative;
       min-width: 180px;
       height: 33px;
-      font-size: 14px;
-      font-weight: 700;
-      border-radius: 14px;
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-bold);
+      border-radius: var(--radius-3xl);
       background: linear-gradient(
         135deg,
         rgba(255, 255, 255, 0.95) 0%,
@@ -342,10 +320,10 @@
       box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.25),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      letter-spacing: 0.5px;
+      transition: all var(--duration-slow) var(--ease-bounce);
+      letter-spacing: var(--letter-spacing-wider);
       text-transform: none;
-      z-index: 1;
+      z-index: var(--z-index-base);
       overflow: hidden;
 
       // Animated shine effect
@@ -362,7 +340,7 @@
           rgba(255, 255, 255, 0.6),
           transparent
         );
-        transition: left 0.5s ease;
+        transition: left var(--duration-slower) ease;
       }
 
       // Glow effect
@@ -370,13 +348,13 @@
         content: '';
         position: absolute;
         inset: -2px;
-        border-radius: 16px;
+        border-radius: var(--radius-4xl);
         background: linear-gradient(135deg, #fa8c16, #fa541c, #faad14, #ffc53d);
         background-size: 400% 400%;
         z-index: -1;
         opacity: 0;
-        transition: opacity 0.4s ease;
-        animation: gradientShift 3s ease infinite;
+        transition: opacity var(--duration-slow) ease;
+        @include animate-gradient;
       }
 
       &:hover {
@@ -384,7 +362,7 @@
         box-shadow:
           0 12px 48px rgba(250, 140, 22, 0.5),
           inset 0 1px 0 rgba(255, 255, 255, 1);
-        color: #ffffff;
+        color: var(--color-text-inverse);
 
         &::before {
           left: 100%;
@@ -413,79 +391,10 @@
 
       .anticon {
         font-size: 20px;
-        margin-right: 8px;
+        margin-right: var(--spacing-sm);
         filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-        animation: iconBounce 2s ease-in-out infinite;
+        @include animate-icon-bounce;
       }
-    }
-  }
-
-  // Keyframe animations
-  @keyframes gradientShift {
-    0%,
-    100% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-  }
-
-  @keyframes float {
-    0%,
-    100% {
-      transform: translateY(0) scale(1);
-      opacity: 0.3;
-    }
-    50% {
-      transform: translateY(-30px) scale(1.1);
-      opacity: 0.6;
-    }
-  }
-
-  @keyframes iconPulse {
-    0%,
-    100% {
-      transform: scale(1);
-      box-shadow:
-        0 4px 20px rgba(0, 0, 0, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
-    }
-    50% {
-      transform: scale(1.05);
-      box-shadow:
-        0 6px 25px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    }
-  }
-
-  @keyframes iconSpin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-  @keyframes iconBounce {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-3px);
-    }
-  }
-
-  @keyframes wave {
-    0%,
-    40%,
-    100% {
-      transform: translateY(0);
-    }
-    20% {
-      transform: translateY(-7px);
     }
   }
 
@@ -499,83 +408,51 @@
       animation: wave 1.5s ease-in-out infinite;
       font-family: inherit;
 
-      &:nth-child(1) {
-        animation-delay: 0s;
-      }
-      &:nth-child(2) {
-        animation-delay: 0.1s;
-      }
-      &:nth-child(3) {
-        animation-delay: 0.2s;
-      }
-      &:nth-child(4) {
-        animation-delay: 0.3s;
-      }
-      &:nth-child(5) {
-        animation-delay: 0.4s;
-      }
-      &:nth-child(6) {
-        animation-delay: 0.5s;
-      }
-      &:nth-child(7) {
-        animation-delay: 0.6s;
-      }
-      &:nth-child(8) {
-        animation-delay: 0.7s;
-      }
-      &:nth-child(9) {
-        animation-delay: 0.8s;
-      }
-      &:nth-child(10) {
-        animation-delay: 0.9s;
-      }
-      &:nth-child(11) {
-        animation-delay: 1s;
-      }
-      &:nth-child(12) {
-        animation-delay: 1.1s;
+      @for $i from 1 through 12 {
+        &:nth-child(#{$i}) {
+          animation-delay: #{($i - 1) * 0.1}s;
+        }
       }
     }
   }
 
   .checklist-content {
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 12px 24px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-    display: flex;
-    flex-direction: column;
+    background: var(--color-bg-base);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-md) var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+    @include flex-column;
     flex: 1;
     overflow: hidden;
   }
 
   // Styling for Ant Design Divider
   .ant-divider {
-    margin: 12px 0;
-    border-color: #e8e8e8;
+    margin: var(--spacing-md) 0;
+    border-color: var(--color-border-light);
     border-width: 1px;
 
     &::before,
     &::after {
-      border-color: #e8e8e8;
+      border-color: var(--color-border-light);
     }
   }
 
-  @media (max-width: 768px) {
-    padding: 16px;
+  @include respond-below('md') {
+    padding: var(--spacing-lg);
 
     .checklist-content {
-      padding: 16px;
-      border-radius: 12px;
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-xl);
     }
   }
 
-  @media (max-width: 480px) {
-    padding: 12px;
+  @include respond-below('sm') {
+    padding: var(--spacing-md);
 
     .checklist-content {
-      padding: 12px;
-      border-radius: 8px;
+      padding: var(--spacing-md);
+      border-radius: var(--radius-lg);
     }
   }
 }

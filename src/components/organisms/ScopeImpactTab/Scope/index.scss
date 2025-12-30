@@ -1,9 +1,8 @@
 .scope-tab {
-  display: flex;
-  flex-direction: column;
+  @include flex-column;
   height: 100%;
-  padding: 12px;
-  background: #fff;
+  padding: var(--spacing-md);
+  background: var(--color-bg-base);
 
   .scope-content {
     flex: 1;

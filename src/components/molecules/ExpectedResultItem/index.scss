@@ -1,9 +1,7 @@
 .expected-result-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 12px 0;
-  border-bottom: 1px solid #f0f0f0;
+  @include flex-between;
+  padding: var(--spacing-md) 0;
+  border-bottom: 1px solid var(--color-border-lighter);
   cursor: pointer;
   position: relative;
 
@@ -13,12 +11,12 @@
 
   &:hover:not(.expected-result-item-disabled) {
     background: #fef9f0;
-    border-radius: 4px;
-    margin: 0 -12px;
-    padding: 12px 12px;
+    border-radius: var(--radius-sm);
+    margin: 0 calc(var(--spacing-md) * -1);
+    padding: var(--spacing-md);
 
     .expected-result-actions {
-      opacity: 1; // Show action bar on hover
+      opacity: 1;
     }
   }
 
@@ -30,38 +28,38 @@
 }
 
 .expected-result-content {
-  display: flex;
-  gap: 12px;
+  @include flex-row;
+  gap: var(--spacing-md);
   flex: 1;
   padding-right: 120px;
 }
 
 .expected-result-number {
-  font-weight: 600;
-  color: #1890ff;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
   min-width: 20px;
 }
 
 .expected-result-text {
-  color: #1890ff;
-  font-weight: 500;
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
 }
 
 .expected-result-input {
   flex: 1;
 
   .ant-input {
-    font-size: 14px;
+    font-size: var(--font-size-base);
     padding: 0;
     border: none;
-    border-bottom: 1px solid #1890ff;
+    border-bottom: 1px solid var(--color-primary);
     border-radius: 0;
     box-shadow: none;
-    color: #1890ff;
-    font-weight: 500;
+    color: var(--color-primary);
+    font-weight: var(--font-weight-medium);
 
     &:focus {
-      border-color: #1890ff;
+      border-color: var(--color-primary);
       box-shadow: none;
     }
   }
@@ -71,21 +69,20 @@
   position: absolute;
   top: 0;
   right: 0;
-  z-index: 1;
+  z-index: var(--z-index-base);
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity var(--duration-fast);
   background: #fcecc273;
-  border-radius: 6px;
-  border-width: 1px;
-  border-color: #e98400ff;
-  border-style: solid;
-  padding: 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid #e98400;
+  padding: var(--spacing-sm);
   margin-top: -40px;
-  margin-right: 10px;
+  margin-right: var(--spacing-sm);
+
   .action-bar {
     .icon-button {
       color: #e98400;
-      font-weight: 600;
+      font-weight: var(--font-weight-semibold);
 
       &:hover {
         color: #e98400 !important;

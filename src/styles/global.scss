@@ -5,37 +5,34 @@
 }
 
 body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-    'Segoe UI Symbol', 'Noto Color Emoji';
-  background-color: #f0f2f5;
+  font-family: var(--font-family-base);
+  background-color: var(--color-bg-layout);
   overflow-x: hidden;
 }
 
 /* Ant Design Overrides */
 .ant-layout {
-  background: #fff;
+  background: var(--color-bg-base);
 }
 
 .ant-layout-sider {
-  background: #fff;
+  background: var(--color-bg-base);
 }
 
 .ant-layout-header {
-  background: #fff;
+  background: var(--color-bg-base);
   padding: 0;
   height: auto;
   line-height: normal;
 }
 
 .ant-layout-content {
-  background: #fff;
+  background: var(--color-bg-base);
 }
 
 /* Responsive Table Wrapper */
 .ant-table-wrapper {
-  @media (max-width: 768px) {
+  @include respond-below('md') {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
@@ -43,104 +40,68 @@ body {
 
 /* Responsive Modal */
 .ant-modal {
-  @media (max-width: 768px) {
-    max-width: calc(100vw - 32px) !important;
-    margin: 16px auto;
+  @include respond-below('md') {
+    max-width: calc(100vw - var(--spacing-2xl)) !important;
+    margin: var(--spacing-lg) auto;
   }
 }
 
 .ant-modal-body {
-  @media (max-width: 768px) {
-    padding: 16px;
+  @include respond-below('md') {
+    padding: var(--spacing-lg);
   }
 }
 
 /* Responsive Drawer */
 .ant-drawer-body {
-  @media (max-width: 768px) {
-    padding: 16px;
+  @include respond-below('md') {
+    padding: var(--spacing-lg);
   }
 }
 
 /* Responsive Tabs */
 .ant-tabs {
-  @media (max-width: 768px) {
+  @include respond-below('md') {
     .ant-tabs-nav {
       .ant-tabs-tab {
-        padding: 8px 12px;
-        font-size: 14px;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-base);
       }
     }
   }
 }
 
 /* Responsive Buttons */
-@media (max-width: 768px) {
+@include respond-below('md') {
   .ant-btn {
-    padding: 4px 12px;
-    font-size: 14px;
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: var(--font-size-base);
 
     &.ant-btn-lg {
       padding: 6px 15px;
-      font-size: 16px;
+      font-size: var(--font-size-xl);
     }
 
     &.ant-btn-sm {
-      padding: 2px 8px;
-      font-size: 12px;
+      padding: 2px var(--spacing-sm);
+      font-size: var(--font-size-xs);
     }
   }
 }
 
 /* Responsive Form */
 .ant-form {
-  @media (max-width: 768px) {
+  @include respond-below('md') {
     .ant-form-item {
-      margin-bottom: 12px;
+      margin-bottom: var(--spacing-md);
     }
 
     .ant-form-item-label {
       padding-bottom: 2px;
 
       > label {
-        font-size: 14px;
+        font-size: var(--font-size-base);
       }
     }
-  }
-}
-
-/* Utility Classes */
-.mobile-only {
-  display: none !important;
-
-  @media (max-width: 768px) {
-    display: block !important;
-  }
-}
-
-.desktop-only {
-  display: block !important;
-
-  @media (max-width: 768px) {
-    display: none !important;
-  }
-}
-
-.tablet-and-up {
-  display: none !important;
-
-  @media (min-width: 769px) {
-    display: block !important;
-  }
-}
-
-/* Responsive Spacing */
-@media (max-width: 768px) {
-  .responsive-padding {
-    padding: 16px !important;
-  }
-
-  .responsive-margin {
-    margin: 16px !important;
   }
 }

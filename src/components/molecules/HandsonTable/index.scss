@@ -1,6 +1,5 @@
 .handson-table-container {
-  display: flex;
-  flex-direction: column;
+  @include flex-column;
   overflow: hidden;
   height: auto;
   max-height: 100%;
@@ -11,23 +10,22 @@
 
   .handson-table-header {
     flex-shrink: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 8px 10px 8px;
-    border-bottom: 1px solid #f0f0f0;
-    margin-bottom: 10px;
-    z-index: 200;
+    @include flex-between;
+    padding: var(--spacing-xs) var(--spacing-sm) var(--spacing-sm)
+      var(--spacing-sm);
+    border-bottom: 1px solid var(--color-border-lighter);
+    margin-bottom: var(--spacing-sm);
+    z-index: var(--z-index-header);
 
     h3 {
       margin: 0;
-      font-size: 16px;
-      font-weight: 700;
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-bold);
     }
 
     .handson-table-actions {
-      display: flex;
-      gap: 8px;
+      @include flex-start;
+      gap: var(--spacing-sm);
     }
   }
 
@@ -36,90 +34,71 @@
     flex: 1;
     min-height: 0;
     overflow: auto;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #e8e8e8;
-    border-radius: 8px;
-    box-shadow:
-      0 1px 2px 0 rgba(0, 0, 0, 0.03),
-      0 1px 6px -1px rgba(0, 0, 0, 0.02),
-      0 2px 4px 0 rgba(0, 0, 0, 0.02);
+    @include flex-column;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xs), var(--shadow-sm), var(--shadow-sm);
   }
 
   .handson-table-cell {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px;
+    @include flex-between;
+    padding: var(--spacing-sm) var(--spacing-md);
     min-height: 28px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all var(--duration-fast);
     outline: none;
     position: relative;
 
     .cell-content {
       flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      @include truncate;
     }
 
     .dropdown-icon {
-      margin-left: 8px;
+      margin-left: var(--spacing-sm);
       font-size: 10px;
       color: rgba(0, 0, 0, 0.45);
       flex-shrink: 0;
-      padding: 8px;
-      margin-right: -8px;
-      margin-top: -8px;
-      margin-bottom: -8px;
+      padding: var(--spacing-sm);
+      margin-right: calc(var(--spacing-sm) * -1);
+      margin-top: calc(var(--spacing-sm) * -1);
+      margin-bottom: calc(var(--spacing-sm) * -1);
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      @include flex-center;
 
       &:hover {
-        color: #1890ff;
+        color: var(--color-primary);
         background-color: rgba(0, 0, 0, 0.04);
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
       }
     }
 
     &.has-dropdown {
-      padding-right: 8px;
+      padding-right: var(--spacing-sm);
     }
 
     &:focus {
-      background-color: #e6f7ff;
-      border: 1px solid #1890ff;
-      border-radius: 2px;
+      background-color: var(--color-primary-bg-light);
+      border: 1px solid var(--color-primary);
+      border-radius: var(--radius-xs);
     }
 
     &.cell-highlighted {
-      background-color: #fff7e6;
-      animation: highlight-pulse 0.5s ease-in-out;
+      background-color: var(--color-warning-bg);
+      animation: highlightPulse var(--duration-slower) ease-in-out;
     }
 
     // Style for clickable cells (like Test Case ID)
     &.clickable-cell {
       .cell-content {
-        color: #1890ff;
+        color: var(--color-primary);
         text-decoration: underline;
         cursor: pointer;
 
         &:hover {
-          color: #40a9ff;
+          color: var(--color-primary-light);
         }
       }
-    }
-  }
-
-  @keyframes highlight-pulse {
-    0% {
-      background-color: #ffd591;
-    }
-    100% {
-      background-color: #fff7e6;
     }
   }
 
@@ -132,36 +111,32 @@
     .ant-table-thead {
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: var(--z-index-sticky);
 
       > tr > th {
-        padding: 8px 12px !important;
-        background: linear-gradient(
-          180deg,
-          #fafafa 0%,
-          #f5f5f5 100%
-        ) !important;
-        font-weight: 600;
+        padding: var(--spacing-sm) var(--spacing-md) !important;
+        background: var(--table-header-bg) !important;
+        font-weight: var(--font-weight-semibold);
         color: rgba(0, 0, 0, 0.85);
-        border-bottom: 1px solid #d9d9d9 !important;
+        border-bottom: 1px solid var(--color-border-base) !important;
         position: relative;
 
         // Add extra padding only for columns with filter icon
         &:has(.ant-table-filter-trigger-container) {
-          padding-right: 32px !important;
+          padding-right: var(--spacing-2xl) !important;
         }
 
         // Ensure filter trigger doesn't affect column width
         .ant-table-filter-trigger-container {
           position: absolute;
-          right: 4px;
+          right: var(--spacing-xs);
           top: 50%;
           transform: translateY(-50%);
         }
 
         .ant-table-filter-trigger {
           color: rgba(0, 0, 0, 0.45);
-          font-size: 14px !important;
+          font-size: var(--font-size-base) !important;
           margin-left: 0 !important;
           vertical-align: middle !important;
           display: inline-flex !important;
@@ -176,27 +151,27 @@
         .ant-table-column-sorter-up.active,
         .ant-table-column-sorter-down.active {
           opacity: 1 !important;
-          color: #1890ff;
+          color: var(--color-primary);
         }
 
         .ant-table-filter-trigger:hover,
         .ant-table-column-sorter:hover {
-          color: #1890ff;
+          color: var(--color-primary);
         }
       }
     }
 
     .ant-table-tbody > tr {
       &:nth-child(even) > td {
-        background-color: #ffffff !important;
+        background-color: var(--table-row-even-bg) !important;
       }
 
       &:nth-child(odd) > td {
-        background-color: #f8fbff !important;
+        background-color: var(--table-row-odd-bg) !important;
       }
 
       &.ant-table-row-selected > td {
-        background-color: #d6ebff !important;
+        background-color: var(--table-row-selected-bg) !important;
       }
     }
   }
