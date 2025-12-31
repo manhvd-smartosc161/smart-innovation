@@ -1,0 +1,91 @@
+.atom-select {
+  // Base select styles
+  transition: all 0.2s ease-in-out;
+
+  // Size variants
+  &--small {
+    font-size: var(--font-size-sm);
+
+    :global(.ant-select-selector) {
+      border-radius: var(--radius-sm);
+    }
+  }
+
+  &--medium {
+    font-size: var(--font-size-base);
+
+    :global(.ant-select-selector) {
+      border-radius: var(--radius-md);
+    }
+  }
+
+  &--large {
+    font-size: var(--font-size-lg);
+
+    :global(.ant-select-selector) {
+      border-radius: var(--radius-lg);
+    }
+  }
+
+  // State styles
+  &--error {
+    :global(.ant-select-selector) {
+      border-color: var(--color-error) !important;
+    }
+
+    &:global(.ant-select-focused) {
+      :global(.ant-select-selector) {
+        border-color: var(--color-error) !important;
+        box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2) !important;
+      }
+    }
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+
+    :global(.ant-select-selector) {
+      background-color: var(--color-bg-spotlight);
+    }
+  }
+
+  &--loading {
+    cursor: wait;
+  }
+
+  // Focus styles
+  &:global(.ant-select-focused):not(.atom-select--error) {
+    :global(.ant-select-selector) {
+      border-color: var(--color-primary) !important;
+      box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2) !important;
+    }
+  }
+
+  // Hover styles
+  &:not(.atom-select--disabled):hover {
+    :global(.ant-select-selector) {
+      border-color: var(--color-primary);
+    }
+  }
+}
+
+// Dropdown styles
+:global(.ant-select-dropdown) {
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  :global(.ant-select-item) {
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: rgba(24, 144, 255, 0.1);
+    }
+
+    &:global(.ant-select-item-option-selected) {
+      background-color: rgba(24, 144, 255, 0.15);
+      font-weight: 500;
+    }
+  }
+}

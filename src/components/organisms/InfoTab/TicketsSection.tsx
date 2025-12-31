@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Divider } from 'antd';
+import { Divider } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { Button } from '@/components/atoms';
 import { TicketItem } from '@/components/molecules';
 import type { RelatedTicket } from '@/types';
 import { INFO_TAB_LABELS, INFO_TAB_BUTTONS } from '@/constants';
@@ -40,7 +41,7 @@ export const TicketsSection: React.FC<TicketsSectionProps> = ({
         <div className="section-header">
           <h3>{INFO_TAB_LABELS.SELECT_RELATED_TICKETS}</h3>
           <Button
-            type="primary"
+            variant="primary"
             icon={<PlusOutlined />}
             onClick={onOpenModal}
             disabled={disabled || hasEditingTicket}

@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import { Button, Input, Tag } from 'antd';
+import { Tag } from 'antd';
 import {
   EditOutlined,
   DeleteOutlined,
   CheckOutlined,
   CloseOutlined,
 } from '@ant-design/icons';
+import { Button, TextArea } from '@/components/atoms';
 import type { RelatedTicket } from '@/types';
 import './index.scss';
-
-const { TextArea } = Input;
 
 interface TicketItemProps {
   ticket: RelatedTicket;
@@ -70,7 +69,7 @@ export const TicketItem: React.FC<TicketItemProps> = ({
           </Tag>
           <div className="ticket-actions">
             <Button
-              type="primary"
+              variant="primary"
               icon={<CheckOutlined />}
               onClick={handleAccept}
               disabled={!localPrompt || !localPrompt.trim()}
@@ -97,13 +96,13 @@ export const TicketItem: React.FC<TicketItemProps> = ({
         </Tag>
         <div className="ticket-actions">
           <Button
-            type="text"
+            variant="text"
             icon={<EditOutlined />}
             onClick={handleEditClick}
             disabled={isDisabled}
           />
           <Button
-            type="text"
+            variant="text"
             danger
             icon={<DeleteOutlined />}
             onClick={handleDeleteClick}

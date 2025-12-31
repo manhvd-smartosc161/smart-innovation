@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { message, Button, Divider } from 'antd';
+import { message, Divider } from 'antd';
 import { FileTextOutlined, ExperimentOutlined } from '@ant-design/icons';
+import { Button, AnimatedText } from '@/components/atoms';
+import { FireworksAnimation } from '@/components/molecules';
 import {
   HandsonTable,
   type HandsonColumnConfig,
@@ -219,22 +221,7 @@ const ChecklistTab: React.FC = () => {
   return (
     <div className="checklist-tab">
       {/* Fireworks Animation */}
-      {showFireworks && (
-        <div className="fireworks-container">
-          <div className="firework firework-1"></div>
-          <div className="firework firework-2"></div>
-          <div className="firework firework-3"></div>
-          <div className="firework firework-4"></div>
-          <div className="firework firework-5"></div>
-          <div className="firework firework-6"></div>
-          <div className="firework firework-7"></div>
-          <div className="firework firework-8"></div>
-          <div className="firework firework-9"></div>
-          <div className="firework firework-10"></div>
-          <div className="firework firework-11"></div>
-          <div className="firework firework-12"></div>
-        </div>
-      )}
+      <FireworksAnimation show={showFireworks} />
 
       {/* Generate Test Cases Button - Sticky */}
       <div className="generate-testcases-section">
@@ -242,18 +229,14 @@ const ChecklistTab: React.FC = () => {
           <FileTextOutlined />
         </div>
         <Button
-          type="primary"
+          variant="primary"
           size="large"
           onClick={handleGenerateTestCases}
           disabled={isGenerateDisabled || isGenerating}
           className="generate-testcases-button"
         >
           {isGenerating ? (
-            <span className="generating-text">
-              {'Generating...'.split('').map((char, index) => (
-                <span key={index}>{char}</span>
-              ))}
-            </span>
+            <AnimatedText text="Generating..." className="generating-text" />
           ) : (
             'Generate Test Cases'
           )}

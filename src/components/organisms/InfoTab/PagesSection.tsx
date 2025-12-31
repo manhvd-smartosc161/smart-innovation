@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Divider } from 'antd';
+import { Divider } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { Button } from '@/components/atoms';
 import { ConfluencePageItem } from '@/components/molecules';
 import type { ConfluencePage } from '@/types';
 import { INFO_TAB_LABELS, INFO_TAB_BUTTONS } from '@/constants';
@@ -40,7 +41,7 @@ export const PagesSection: React.FC<PagesSectionProps> = ({
         <div className="section-header">
           <h3>{INFO_TAB_LABELS.SELECT_RELATED_CONFLUENCE_PAGES}</h3>
           <Button
-            type="primary"
+            variant="primary"
             icon={<PlusOutlined />}
             onClick={onOpenModal}
             disabled={disabled || hasEditingPage}

@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
-import { Modal, Input, Button, message } from 'antd';
+import { Modal, Input, message } from 'antd';
 import { ReloadOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button } from '@/components/atoms';
 import { MOCK_CONFLUENCE_PAGES_TREE } from '@/mock';
 import { ConfluenceTreeItem } from '@/components/molecules/ConfluenceTreeItem';
 import './index.scss';
@@ -92,7 +93,7 @@ export const PageSelectionModal: React.FC<PageSelectionModalProps> = ({
             className="search-input"
           />
           <Button
-            type="primary"
+            variant="primary"
             icon={<ReloadOutlined />}
             onClick={handleRefresh}
             className="refresh-button"

@@ -1,7 +1,8 @@
 import React from 'react';
-import { Button, Divider } from 'antd';
+import { Divider } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd';
+import { Button } from '@/components/atoms';
 import { FileUploadItem } from '@/components/molecules';
 import type { FileType, UploadedFile } from '@/types';
 import { INFO_TAB_LABELS, INFO_TAB_BUTTONS } from '@/constants';
@@ -45,7 +46,7 @@ export const FileUploadSection: React.FC<FileUploadSectionProps> = ({
         <div className="section-header">
           <h3>{INFO_TAB_LABELS.UPLOAD_FILES}</h3>
           <Button
-            type="primary"
+            variant="primary"
             icon={<PlusOutlined />}
             onClick={onAdd}
             disabled={disabled || hasEditingFile}

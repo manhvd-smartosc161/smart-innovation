@@ -1,0 +1,80 @@
+@use 'sass:map';
+@use '@/styles/tokens.scss' as tokens;
+
+.atom-button {
+  // Base button styles
+  transition: all 0.2s ease-in-out;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+
+  // Size variants
+  &--small {
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  &--medium {
+    font-size: var(--font-size-base);
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  &--large {
+    font-size: var(--font-size-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  // Variant styles
+  &--primary {
+    &:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+  }
+
+  &--default {
+    &:hover:not(:disabled) {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+  }
+
+  &--text {
+    &:hover:not(:disabled) {
+      background-color: rgba(24, 144, 255, 0.1);
+    }
+  }
+
+  &--link {
+    &:hover:not(:disabled) {
+      opacity: 0.8;
+    }
+  }
+
+  &--dashed {
+    &:hover:not(:disabled) {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+  }
+
+  // State styles
+  &--danger {
+    &:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+  }
+
+  &--loading {
+    cursor: wait;
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  // Focus styles for accessibility
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}

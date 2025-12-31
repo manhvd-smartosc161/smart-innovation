@@ -1,0 +1,30 @@
+.animated-text,
+.analysing-text,
+.generating-text {
+  display: inline-block;
+  letter-spacing: 2px;
+  font-family: inherit;
+
+  span {
+    display: inline-block;
+    animation: wave 1.5s ease-in-out infinite;
+    font-family: inherit;
+
+    // Generate animation delays for up to 15 characters
+    @for $i from 1 through 15 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{($i - 1) * 0.1}s;
+      }
+    }
+  }
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}

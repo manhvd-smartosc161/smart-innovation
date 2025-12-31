@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Select, Upload, Input, Button, Tag, Tooltip, message } from 'antd';
+import { Upload, Tag, Tooltip, message } from 'antd';
 import {
   UploadOutlined,
   DeleteOutlined,
@@ -9,13 +9,12 @@ import {
   InfoCircleOutlined,
 } from '@ant-design/icons';
 import type { UploadFile } from 'antd';
+import { Button, TextArea, Select } from '@/components/atoms';
 import type { FileType } from '@/types';
 import { FILE_TYPES } from '@/types';
 import { ALLOWED_FILES_DISPLAY, FILE_UPLOAD_ACCEPT } from '@/constants';
 import { isValidFileType, truncateFileName } from '@/utils';
 import './index.scss';
-
-const { TextArea } = Input;
 
 interface FileUploadItemProps {
   id: string;
@@ -148,13 +147,14 @@ export const FileUploadItem: React.FC<FileUploadItemProps> = ({
         <div className="upload-header">
           <Select
             value={localFileType}
-            onChange={setLocalFileType}
+            onChange={(value) => setLocalFileType(value as FileType)}
             className="type-select"
-          >
-            <Select.Option value={FILE_TYPES.BRD}>BRD</Select.Option>
-            <Select.Option value={FILE_TYPES.TRD}>TRD</Select.Option>
-            <Select.Option value={FILE_TYPES.OTHERS}>OTHERS</Select.Option>
-          </Select>
+            options={[
+              { value: FILE_TYPES.BRD, label: 'BRD' },
+              { value: FILE_TYPES.TRD, label: 'TRD' },
+              { value: FILE_TYPES.OTHERS, label: 'OTHERS' },
+            ]}
+          />
           <div className="file-upload-wrapper">
             <Upload
               maxCount={1}
@@ -186,7 +186,7 @@ export const FileUploadItem: React.FC<FileUploadItemProps> = ({
           </div>
           <div className="upload-actions">
             <Button
-              type="primary"
+              variant="primary"
               icon={<CheckOutlined />}
               onClick={handleAccept}
               disabled={
@@ -242,13 +242,13 @@ export const FileUploadItem: React.FC<FileUploadItemProps> = ({
         )}
         <div className="upload-actions">
           <Button
-            type="text"
+            variant="text"
             icon={<EditOutlined />}
             onClick={handleEditClick}
             disabled={isDisabled}
           />
           <Button
-            type="text"
+            variant="text"
             danger
             icon={<DeleteOutlined />}
             onClick={handleDeleteClick}

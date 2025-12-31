@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Row, Col, Space, Button } from 'antd';
+import { Form, Input, Row, Col, Space } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
 import { useSearchParams } from 'react-router-dom';
+import { Button } from '@/components/atoms';
 import { FormSelect, TiptapEditor } from '@/components/molecules';
 import { useAnalysis } from '@/stores';
 import { TAB_KEYS } from '@/constants';
@@ -80,7 +81,7 @@ export const TestDetailsForm: React.FC<TestDetailsFormProps> = ({
             </Button>
           </div>
           <Button
-            type="primary"
+            variant="primary"
             className="save-btn"
             icon={<SaveOutlined />}
             disabled={!hasChanges}

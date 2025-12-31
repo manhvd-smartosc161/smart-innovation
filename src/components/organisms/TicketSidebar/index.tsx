@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Input, Button } from 'antd';
+import { Input } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button } from '@/components/atoms';
 import { TicketListItem } from '@/components/molecules';
 import type { Ticket } from '@/types';
 import './index.scss';
@@ -75,12 +76,12 @@ export const TicketSidebar: React.FC = () => {
         <div className="search-box">
           <Input placeholder="" />
           <Button
-            type="text"
+            variant="text"
             icon={<PlusOutlined />}
             className="header-icon-btn"
           />
           <Button
-            type="text"
+            variant="text"
             icon={<DeleteOutlined />}
             danger
             className="header-icon-btn"

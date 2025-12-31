@@ -1,11 +1,13 @@
 import React from 'react';
-import { Button, Tooltip, Progress } from 'antd';
+import { Tooltip, Progress } from 'antd';
 import {
   ThunderboltOutlined,
   RocketOutlined,
   EditOutlined,
   SaveOutlined,
 } from '@ant-design/icons';
+import { Button, AnimatedText } from '@/components/atoms';
+import { FireworksAnimation } from '@/components/molecules';
 import { INFO_TAB_LABELS } from '@/constants';
 
 interface AnalyseSectionProps {
@@ -45,22 +47,7 @@ export const AnalyseSection: React.FC<AnalyseSectionProps> = ({
   return (
     <>
       {/* Fireworks Animation */}
-      {showFireworks && (
-        <div className="fireworks-container">
-          <div className="firework firework-1"></div>
-          <div className="firework firework-2"></div>
-          <div className="firework firework-3"></div>
-          <div className="firework firework-4"></div>
-          <div className="firework firework-5"></div>
-          <div className="firework firework-6"></div>
-          <div className="firework firework-7"></div>
-          <div className="firework firework-8"></div>
-          <div className="firework firework-9"></div>
-          <div className="firework firework-10"></div>
-          <div className="firework firework-11"></div>
-          <div className="firework firework-12"></div>
-        </div>
-      )}
+      <FireworksAnimation show={showFireworks} />
 
       {/* Analyse Button - Sticky */}
       <div className="analyse-section">
@@ -76,18 +63,17 @@ export const AnalyseSection: React.FC<AnalyseSectionProps> = ({
           >
             <span>
               <Button
-                type="primary"
+                variant="primary"
                 size="large"
                 onClick={onAnalyse}
                 disabled={isAnalyseDisabled || isAnalysing}
                 className="analyse-button"
               >
                 {isAnalysing ? (
-                  <span className="analysing-text">
-                    {'Analysing...'.split('').map((char, index) => (
-                      <span key={index}>{char}</span>
-                    ))}
-                  </span>
+                  <AnimatedText
+                    text="Analysing..."
+                    className="analysing-text"
+                  />
                 ) : (
                   INFO_TAB_LABELS.ANALYSE
                 )}
@@ -96,18 +82,14 @@ export const AnalyseSection: React.FC<AnalyseSectionProps> = ({
           </Tooltip>
         ) : (
           <Button
-            type="primary"
+            variant="primary"
             size="large"
             onClick={onAnalyse}
             disabled={isAnalyseDisabled || isAnalysing}
             className="analyse-button"
           >
             {isAnalysing ? (
-              <span className="analysing-text">
-                {'Analysing...'.split('').map((char, index) => (
-                  <span key={index}>{char}</span>
-                ))}
-              </span>
+              <AnimatedText text="Analysing..." className="analysing-text" />
             ) : (
               INFO_TAB_LABELS.ANALYSE
             )}
@@ -132,7 +114,7 @@ export const AnalyseSection: React.FC<AnalyseSectionProps> = ({
         >
           {isReadOnly ? (
             <Button
-              type="primary"
+              variant="primary"
               shape="circle"
               size="large"
               icon={<EditOutlined />}
@@ -142,7 +124,7 @@ export const AnalyseSection: React.FC<AnalyseSectionProps> = ({
             />
           ) : (
             <Button
-              type="primary"
+              variant="primary"
               shape="circle"
               size="large"
               icon={<SaveOutlined />}

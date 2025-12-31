@@ -13,3 +13,4 @@ export * from './TicketListItem';
 export * from './TiptapEditor';
 export * from './TreeItem';
 export * from './HistoryPanel';
+export * from './FireworksAnimation';

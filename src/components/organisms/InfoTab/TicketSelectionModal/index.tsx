@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Modal, Checkbox, Input, Button, message } from 'antd';
+import { Modal, Checkbox, Input, message } from 'antd';
 import {
   DownCircleOutlined,
   UpCircleOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
+import { Button } from '@/components/atoms';
 import { MOCK_TICKETS } from '@/mock';
 import './index.scss';
 
@@ -115,7 +116,7 @@ export const TicketSelectionModal: React.FC<TicketSelectionModalProps> = ({
                   </div>
                   <div className="ticket-header-actions">
                     <Button
-                      type="primary"
+                      variant="primary"
                       size="small"
                       className="ticket-sync-btn"
                       icon={<SyncOutlined />}
@@ -127,7 +128,7 @@ export const TicketSelectionModal: React.FC<TicketSelectionModalProps> = ({
                       Sync
                     </Button>
                     <Button
-                      type="text"
+                      variant="text"
                       size="small"
                       className="ticket-expand-btn"
                       onClick={(e) => {

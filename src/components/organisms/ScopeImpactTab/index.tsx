@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Divider } from 'antd';
+import { Divider } from 'antd';
 import { FileDoneOutlined } from '@ant-design/icons';
+import { Button, AnimatedText } from '@/components/atoms';
+import { FireworksAnimation } from '@/components/molecules';
 import { Scope as Scope } from './Scope';
 import { Impact } from './Impact';
 import { useAnalysis } from '@/stores';
@@ -32,22 +34,7 @@ const ScopeImpactTab: React.FC = () => {
   return (
     <div className="scope-impact-tab">
       {/* Fireworks Animation */}
-      {showFireworks && (
-        <div className="fireworks-container">
-          <div className="firework firework-1"></div>
-          <div className="firework firework-2"></div>
-          <div className="firework firework-3"></div>
-          <div className="firework firework-4"></div>
-          <div className="firework firework-5"></div>
-          <div className="firework firework-6"></div>
-          <div className="firework firework-7"></div>
-          <div className="firework firework-8"></div>
-          <div className="firework firework-9"></div>
-          <div className="firework firework-10"></div>
-          <div className="firework firework-11"></div>
-          <div className="firework firework-12"></div>
-        </div>
-      )}
+      <FireworksAnimation show={showFireworks} />
 
       <div className="scope-impact-tab__header">
         <div className="generate-section">
@@ -56,18 +43,17 @@ const ScopeImpactTab: React.FC = () => {
           </div>
           <div className="button-wrapper">
             <Button
-              type="primary"
+              variant="primary"
               size="large"
               onClick={handleGenerate}
               disabled={isGenerating}
               className={`generate-button ${isGenerating ? 'is-generating' : ''}`}
             >
               {isGenerating ? (
-                <span className="generating-text">
-                  {'Generating...'.split('').map((char, index) => (
-                    <span key={index}>{char}</span>
-                  ))}
-                </span>
+                <AnimatedText
+                  text="Generating..."
+                  className="generating-text"
+                />
               ) : (
                 'Generate Checklist'
               )}

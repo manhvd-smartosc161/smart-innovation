@@ -1,8 +1,7 @@
 import React from 'react';
-import { Input, Divider } from 'antd';
+import { Divider } from 'antd';
+import { TextArea } from '@/components/atoms';
 import { INFO_TAB_LABELS } from '@/constants';
-
-const { TextArea } = Input;
 
 interface OverallObjectiveSectionProps {
   value: string;
