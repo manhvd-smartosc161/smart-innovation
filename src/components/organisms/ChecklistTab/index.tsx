@@ -37,6 +37,7 @@ const ChecklistTab: React.FC = () => {
     markTabAsChanged,
     setIsTestCasesGenerated,
     setActiveTab,
+    setSelectedTestCaseId,
   } = useAnalysis();
 
   // Use table management hook
@@ -124,6 +125,7 @@ const ChecklistTab: React.FC = () => {
     setTimeout(() => {
       setShowFireworks(false);
       setIsTestCasesGenerated(true);
+      setSelectedTestCaseId(null);
       setActiveTab(TAB_KEYS.TEST_CASES);
     }, 2000);
 
