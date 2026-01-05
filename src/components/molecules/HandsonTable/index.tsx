@@ -24,6 +24,9 @@ export function HandsonTable<T extends Record<string, any>>({
   showHistory = true,
   onHistoryClick,
   highlightedCells = new Set(),
+  disabled = false,
+  hideSaveButton = false,
+  headerActions,
 }: HandsonTableProps<T>) {
   const {
     state: data,
@@ -77,6 +80,7 @@ export function HandsonTable<T extends Record<string, any>>({
   // Handlers
   const handleCellClick = useCallback(
     (rowIndex: number, columnKey: string, column: (typeof columns)[0]) => {
+      if (disabled) return;
       const record = data[rowIndex];
       const isReadOnly =
         typeof column.readOnly === 'function'
@@ -85,7 +89,7 @@ export function HandsonTable<T extends Record<string, any>>({
       if (!column.editable || isReadOnly) return;
       setEditingCell({ rowIndex, columnKey });
     },
-    [data]
+    [data, disabled]
   );
 
   const handleCellSave = useCallback(
@@ -274,7 +278,10 @@ export function HandsonTable<T extends Record<string, any>>({
   });
 
   return (
-    <div className="handson-table-container" ref={tableRef}>
+    <div
+      className={`handson-table-container ${disabled ? 'disabled' : ''}`}
+      ref={tableRef}
+    >
       <HandsonTableHeader
         title={title}
         onAddRow={handleAddRow}
@@ -300,23 +307,41 @@ export function HandsonTable<T extends Record<string, any>>({
         showHistory={showHistory}
         isFiltered={isFiltered}
         isSorted={isSorted}
+        disabled={disabled}
+        hideSaveButton={hideSaveButton}
+        headerActions={headerActions}
       />
+
+      {disabled && (
+        <div className="read-only-banner">
+          <span className="read-only-icon">🔒</span>
+          <span className="read-only-text">
+            Read-only mode. Click the <strong>Edit</strong> button to make
+            changes.
+          </span>
+        </div>
+      )}
 
       <Table<T>
         columns={tableColumns}
         dataSource={data}
         rowKey={(record) => String(record[columns[0].dataIndex])}
-        rowSelection={{
-          selectedRowKeys,
-          onChange: setSelectedRowKeys,
-          preserveSelectedRowKeys: true,
-        }}
+        rowSelection={
+          disabled
+            ? undefined
+            : {
+                selectedRowKeys,
+                onChange: setSelectedRowKeys,
+                preserveSelectedRowKeys: true,
+              }
+        }
         pagination={false}
         bordered
         size="small"
         sticky={{ offsetHeader: 0 }}
         scroll={{ x: 'max-content' }}
         onChange={(_, filters, sorter) => {
+          if (disabled) return;
           const s = Array.isArray(sorter) ? sorter[0] : sorter;
           setSortedInfo({
             columnKey: s.columnKey,

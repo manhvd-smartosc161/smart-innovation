@@ -14,3 +14,4 @@ export * from './TiptapEditor';
 export * from './TreeItem';
 export * from './HistoryPanel';
 export * from './FireworksAnimation';
+export * from './SaveSection';

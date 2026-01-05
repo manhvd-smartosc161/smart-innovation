@@ -36,6 +36,9 @@ export interface HandsonTableProps<T extends Record<string, any>> {
   showHistory?: boolean;
   onHistoryClick?: () => void;
   highlightedCells?: Set<string>;
+  disabled?: boolean;
+  hideSaveButton?: boolean;
+  headerActions?: React.ReactNode;
 }
 
 export interface HandsonCellState {

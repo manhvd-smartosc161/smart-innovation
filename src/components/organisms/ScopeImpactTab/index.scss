@@ -122,6 +122,15 @@
         z-index: 10;
       }
 
+      // Save Section positioning
+      .scope-impact-save-section {
+        position: absolute;
+        right: var(--spacing-md);
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 20;
+      }
+
       .generate-button {
         position: relative;
         min-width: 180px;

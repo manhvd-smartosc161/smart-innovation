@@ -23,6 +23,9 @@ interface HandsonTableHeaderProps {
   showHistory?: boolean;
   isFiltered?: boolean;
   isSorted?: boolean;
+  disabled?: boolean;
+  hideSaveButton?: boolean;
+  headerActions?: React.ReactNode;
 }
 
 export function HandsonTableHeader({
@@ -40,8 +43,11 @@ export function HandsonTableHeader({
   showHistory = true,
   isFiltered = false,
   isSorted = false,
+  disabled = false,
+  hideSaveButton = false,
+  headerActions,
 }: HandsonTableHeaderProps) {
-  const isAddRowDisabled = isFiltered || isSorted;
+  const isAddRowDisabled = isFiltered || isSorted || disabled;
 
   const getAddRowTooltip = () => {
     if (isFiltered && isSorted) {
@@ -73,14 +79,14 @@ export function HandsonTableHeader({
           danger
           icon={<DeleteOutlined />}
           onClick={onRemoveRows}
-          disabled={selectedRowCount === 0}
+          disabled={selectedRowCount === 0 || disabled}
         >
           Remove Row
         </Button>
         <Button
           icon={<UndoOutlined />}
           onClick={onUndo}
-          disabled={!canUndo}
+          disabled={!canUndo || disabled}
           title="Undo"
         >
           Undo
@@ -88,7 +94,7 @@ export function HandsonTableHeader({
         <Button
           icon={<RedoOutlined />}
           onClick={onRedo}
-          disabled={!canRedo}
+          disabled={!canRedo || disabled}
           title="Redo"
         >
           Redo
@@ -98,14 +104,17 @@ export function HandsonTableHeader({
             History
           </Button>
         )}
-        <Button
-          type="primary"
-          icon={<SaveOutlined />}
-          onClick={onSave}
-          disabled={!hasChanges}
-        >
-          Save
-        </Button>
+        {!hideSaveButton && (
+          <Button
+            type="primary"
+            icon={<SaveOutlined />}
+            onClick={onSave}
+            disabled={!hasChanges || disabled}
+          >
+            Save
+          </Button>
+        )}
+        {headerActions}
       </div>
     </div>
   );

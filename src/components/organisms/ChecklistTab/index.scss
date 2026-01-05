@@ -154,6 +154,15 @@
       }
     }
 
+    // Save Section positioning
+    .checklist-save-section {
+      position: absolute;
+      right: var(--spacing-md);
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 20;
+    }
+
     .generate-testcases-button {
       position: relative;
       min-width: 180px;

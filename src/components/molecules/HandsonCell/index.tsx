@@ -110,7 +110,8 @@ export const HandsonCell: React.FC<HandsonCellProps> = ({
       // For dropdown, don't prevent default - let Select handle Enter to select item
       // The selection will trigger handleDropdownChange which will save and navigate
       if (type === 'dropdown') {
-        // Do nothing, let Select handle it
+        // Do nothing, let Select handle it, but prevent bubbling
+        e.stopPropagation();
         return;
       }
 

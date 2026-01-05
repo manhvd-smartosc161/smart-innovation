@@ -4,6 +4,15 @@
   padding: 0;
 }
 
+// Global button focus removal
+button:focus,
+.ant-btn:focus,
+.ant-btn:active,
+.ant-btn:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 body {
   font-family: var(--font-family-base);
   background-color: var(--color-bg-layout);

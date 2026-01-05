@@ -1,13 +1,15 @@
-import React, { useCallback, useMemo } from 'react';
-import { message } from 'antd';
+import React, { useState, useCallback, useMemo } from 'react';
+import { message, Tooltip } from 'antd';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Button } from 'antd';
+import { HistoryOutlined } from '@ant-design/icons';
 import {
   HandsonTable,
   type HandsonColumnConfig,
 } from '@/components/molecules/HandsonTable';
 import { MOCK_TEST_CASE_TABLE_DATA } from '@/mock';
 import type { TestCaseTableRow } from '@/types';
-import { HistoryPanel } from '@/components/molecules/HistoryPanel';
+import { HistoryPanel, SaveSection } from '@/components/molecules';
 import { useAnalysis } from '@/stores';
 import { useTableManagement } from '@/hooks';
 import { TAB_KEYS } from '@/constants';
@@ -73,6 +75,55 @@ const TestCaseTab: React.FC = () => {
     markTabAsChanged,
     markTabAsSaved,
   });
+
+  // Read-only mode state
+  const [isReadOnly, setIsReadOnly] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [selectedRowForHistory, setSelectedRowForHistory] = useState<
+    string | null
+  >(null);
+
+  // Saved state for cancel functionality
+  const [savedState, setSavedState] = useState({
+    data: [] as TestCaseTableRow[],
+  });
+
+  const handleEdit = () => {
+    // Save current state before editing
+    setSavedState({
+      data: JSON.parse(JSON.stringify(data)),
+    });
+    setIsReadOnly(false);
+  };
+
+  const handleSaveChanges = async () => {
+    // Check if there are any changes
+    const hasChanges = JSON.stringify(data) !== JSON.stringify(savedState.data);
+
+    if (!hasChanges) {
+      // No changes, just return to read-only mode
+      setIsReadOnly(true);
+      message.info('No changes to save');
+      return;
+    }
+
+    setIsSaving(true);
+
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    // Calculate history and persist changes
+    handleSave(data);
+
+    // Save the current state
+    setSavedState({
+      data: JSON.parse(JSON.stringify(data)),
+    });
+
+    setIsReadOnly(true);
+    setIsSaving(false);
+    message.success('Changes saved successfully!');
+  };
 
   const handleTestCaseIdClick = useCallback(
     (testCaseId: string) => {
@@ -140,6 +191,16 @@ const TestCaseTab: React.FC = () => {
         type: 'dropdown',
         options: ['Passed', 'Failed', 'Pending', 'Blocked'],
         sortable: false,
+      },
+      {
+        key: 'pre_condition',
+        title: 'Pre Condition',
+        dataIndex: 'pre_condition',
+        width: 200,
+        editable: true,
+        type: 'text',
+        sortable: false,
+        filterable: false,
       },
       {
         key: 'tc_description',
@@ -234,14 +295,40 @@ const TestCaseTab: React.FC = () => {
         key: 'history',
         title: 'History',
         dataIndex: 'history',
-        width: 150,
-        editable: true,
+        width: 100,
+        editable: false,
         type: 'text',
         sortable: false,
         filterable: false,
+        render: (_, record) => (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              width: '100%',
+            }}
+          >
+            <Tooltip title="View History">
+              <Button
+                type="text"
+                shape="circle"
+                icon={<HistoryOutlined />}
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedRowForHistory(record.testcase_id);
+                  setHistoryVisible(true);
+                }}
+                style={{
+                  color: 'var(--color-primary)',
+                }}
+              />
+            </Tooltip>
+          </div>
+        ),
       },
     ],
-    [handleTestCaseIdClick]
+    [handleTestCaseIdClick, setHistoryVisible]
   );
 
   const handleDataChange = useCallback(
@@ -318,8 +405,12 @@ const TestCaseTab: React.FC = () => {
     [baseSave]
   );
 
+  // Validation for Save button
+  const isSaveDisabled = isSaving;
+
   return (
     <div className="test-case-table-tab">
+      {/* Save Section Header */}
       <div className="test-case-table-content">
         <HandsonTable
           title="Test Cases"
@@ -331,16 +422,43 @@ const TestCaseTab: React.FC = () => {
           onRowAdd={handleRowAdd}
           onRowDelete={handleRowDelete}
           createEmptyRow={createEmptyTestCaseItem}
-          showHistory={true}
-          onHistoryClick={() => setHistoryVisible(true)}
+          showHistory={false}
+          onHistoryClick={() => {}}
           highlightedCells={savedCells}
+          disabled={isReadOnly || isSaving}
+          hideSaveButton={true}
+          headerActions={
+            <SaveSection
+              isReadOnly={isReadOnly}
+              isSaving={isSaving}
+              isSaveDisabled={isSaveDisabled}
+              onEdit={handleEdit}
+              onSave={handleSaveChanges}
+              className="test-case-save-section"
+            />
+          }
         />
       </div>
       <HistoryPanel
         visible={historyVisible}
-        onClose={() => setHistoryVisible(false)}
-        history={history}
-        title="Test Case Change History"
+        onClose={() => {
+          setHistoryVisible(false);
+          setSelectedRowForHistory(null);
+        }}
+        history={
+          selectedRowForHistory
+            ? history.filter(
+                (item) =>
+                  item.cell?.itemId === selectedRowForHistory ||
+                  item.description.includes(selectedRowForHistory)
+              )
+            : history
+        }
+        title={
+          selectedRowForHistory
+            ? `History for ${selectedRowForHistory}`
+            : 'Test Case Change History'
+        }
       />
     </div>
   );

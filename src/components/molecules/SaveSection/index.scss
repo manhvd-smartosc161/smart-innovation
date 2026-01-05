@@ -1,0 +1,86 @@
+@use '@/styles/mixins' as *;
+@use '@/styles/tokens' as *;
+
+.save-section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: spacing(2);
+
+  // Edit/Save Button - copied from InfoTab
+  .section-edit-button,
+  .section-save-button {
+    @include size(40px);
+    border: none;
+    z-index: 10;
+    transition: all var(--duration-normal) var(--ease-bounce);
+
+    .anticon {
+      font-size: var(--font-size-2xl);
+      color: var(--color-text-inverse);
+    }
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    &:active {
+      transform: scale(1.05);
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .section-edit-button {
+    background: var(--gradient-info);
+    box-shadow:
+      0 4px 16px rgba(24, 144, 255, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+    &:hover:not(:disabled) {
+      box-shadow:
+        0 6px 24px rgba(24, 144, 255, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%);
+    }
+  }
+
+  .section-save-button {
+    background: var(--gradient-success);
+    box-shadow:
+      0 4px 16px rgba(82, 196, 26, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+    &:hover:not(:disabled) {
+      box-shadow:
+        0 6px 24px rgba(82, 196, 26, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      background: linear-gradient(135deg, #73d13d 0%, #52c41a 100%);
+    }
+  }
+
+  // Saving Progress Bar - copied from InfoTab
+  .saving-progress {
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+    z-index: 11;
+    animation: slideDown var(--duration-normal) ease-out;
+
+    .ant-progress {
+      margin: 0;
+    }
+
+    .ant-progress-bg {
+      height: 4px !important;
+    }
+  }
+}

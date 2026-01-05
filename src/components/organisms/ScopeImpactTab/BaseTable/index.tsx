@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useImperativeHandle } from 'react';
 import { message } from 'antd';
 import {
   HandsonTable,
@@ -45,6 +45,18 @@ export interface BaseTableProps<T extends Record<string, any>> {
    * Custom ID generator function (optional)
    */
   generateId?: (data: T[]) => string;
+  /**
+   * Disabled state (read-only mode)
+   */
+  disabled?: boolean;
+  /**
+   * Callback when data changes
+   */
+  onDataChange?: (data: T[]) => void;
+  /**
+   * Ref to expose save function
+   */
+  onSaveRef?: React.Ref<{ save: () => void }>;
 }
 
 /**
@@ -61,6 +73,9 @@ export function BaseTable<T extends Record<string, any>>({
   descriptionField,
   initialData,
   generateId,
+  disabled = false,
+  onDataChange,
+  onSaveRef,
 }: BaseTableProps<T>) {
   const { markTabAsChanged, markTabAsSaved } = useAnalysis();
 
@@ -235,6 +250,11 @@ export function BaseTable<T extends Record<string, any>>({
       }
 
       setData(reindexedData);
+
+      // Call parent callback if provided
+      if (onDataChange) {
+        onDataChange(reindexedData);
+      }
     },
     [
       data,
@@ -244,6 +264,7 @@ export function BaseTable<T extends Record<string, any>>({
       idField,
       descriptionField,
       idGenerator,
+      onDataChange,
     ]
   );
 
@@ -296,6 +317,15 @@ export function BaseTable<T extends Record<string, any>>({
     [baseSave, descriptionField]
   );
 
+  // Expose save function to parent via ref
+  useImperativeHandle(
+    onSaveRef,
+    () => ({
+      save: () => handleSave(data),
+    }),
+    [handleSave, data]
+  );
+
   return (
     <div className={`system-component-table ${tabKey.toLowerCase()}-tab`}>
       <div className={`${tabKey.toLowerCase()}-content`}>
@@ -312,6 +342,8 @@ export function BaseTable<T extends Record<string, any>>({
           showHistory={true}
           onHistoryClick={() => setHistoryVisible(true)}
           highlightedCells={savedCells}
+          disabled={disabled}
+          hideSaveButton={true}
         />
       </div>
       <HistoryPanel

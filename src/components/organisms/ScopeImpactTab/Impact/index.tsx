@@ -4,7 +4,17 @@ import { MOCK_IMPACT_DATA } from '@/mock';
 import type { ImpactItem } from '@/types';
 import './index.scss';
 
-export const Impact: React.FC = () => {
+interface ImpactProps {
+  disabled?: boolean;
+  onDataChange?: (data: ImpactItem[]) => void;
+  onSaveRef?: React.Ref<{ save: () => void }>;
+}
+
+export const Impact: React.FC<ImpactProps> = ({
+  disabled,
+  onDataChange,
+  onSaveRef,
+}) => {
   return (
     <BaseTable<ImpactItem>
       title="Impact"
@@ -14,6 +24,9 @@ export const Impact: React.FC = () => {
       idField="impact_id"
       descriptionField="impact_description"
       initialData={MOCK_IMPACT_DATA}
+      disabled={disabled}
+      onDataChange={onDataChange}
+      onSaveRef={onSaveRef}
     />
   );
 };

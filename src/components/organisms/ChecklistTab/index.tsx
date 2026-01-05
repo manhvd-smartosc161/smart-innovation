@@ -2,7 +2,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { message, Divider } from 'antd';
 import { FileTextOutlined, ExperimentOutlined } from '@ant-design/icons';
 import { Button, AnimatedText } from '@/components/atoms';
-import { FireworksAnimation } from '@/components/molecules';
+import { FireworksAnimation, SaveSection } from '@/components/molecules';
 import {
   HandsonTable,
   type HandsonColumnConfig,
@@ -64,6 +64,52 @@ const ChecklistTab: React.FC = () => {
   // Animation states
   const [isGenerating, setIsGenerating] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
+
+  // Read-only mode state
+  const [isReadOnly, setIsReadOnly] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Saved state for cancel functionality
+  const [savedState, setSavedState] = useState({
+    data: [] as ChecklistItem[],
+  });
+
+  const handleEdit = () => {
+    // Save current state before editing
+    setSavedState({
+      data: JSON.parse(JSON.stringify(data)),
+    });
+    setIsReadOnly(false);
+  };
+
+  const handleSaveChanges = async () => {
+    // Check if there are any changes
+    const hasChanges = JSON.stringify(data) !== JSON.stringify(savedState.data);
+
+    if (!hasChanges) {
+      // No changes, just return to read-only mode
+      setIsReadOnly(true);
+      message.info('No changes to save');
+      return;
+    }
+
+    setIsSaving(true);
+
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    // Calculate history and persist changes
+    handleSave(data);
+
+    // Save the current state
+    setSavedState({
+      data: JSON.parse(JSON.stringify(data)),
+    });
+
+    setIsReadOnly(true);
+    setIsSaving(false);
+    message.success('Changes saved successfully!');
+  };
 
   const handleGenerateTestCases = async () => {
     setIsGenerating(true);
@@ -218,6 +264,9 @@ const ChecklistTab: React.FC = () => {
     data.filter((item) => item.type || item.item || item.cl_description)
       .length === 0;
 
+  // Validation for Save button
+  const isSaveDisabled = isSaving;
+
   return (
     <div className="checklist-tab">
       {/* Fireworks Animation */}
@@ -232,7 +281,7 @@ const ChecklistTab: React.FC = () => {
           variant="primary"
           size="large"
           onClick={handleGenerateTestCases}
-          disabled={isGenerateDisabled || isGenerating}
+          disabled={isGenerateDisabled || isGenerating || !isReadOnly}
           className="generate-testcases-button"
         >
           {isGenerating ? (
@@ -244,6 +293,16 @@ const ChecklistTab: React.FC = () => {
         <div className="generate-icon-right">
           <ExperimentOutlined />
         </div>
+
+        {/* Edit/Save Button */}
+        <SaveSection
+          isReadOnly={isReadOnly}
+          isSaving={isSaving}
+          isSaveDisabled={isSaveDisabled}
+          onEdit={handleEdit}
+          onSave={handleSaveChanges}
+          className="checklist-save-section"
+        />
       </div>
 
       <Divider />
@@ -262,6 +321,8 @@ const ChecklistTab: React.FC = () => {
           showHistory={true}
           onHistoryClick={() => setHistoryVisible(true)}
           highlightedCells={savedCells}
+          disabled={isReadOnly || isSaving}
+          hideSaveButton={true}
         />
       </div>
       <HistoryPanel

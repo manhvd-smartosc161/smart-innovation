@@ -7,6 +7,64 @@
   box-sizing: border-box;
   padding: 2px;
   user-select: none; // Prevent text selection when dragging rows
+  position: relative;
+
+  // Disabled state - subtle and informative
+  &.disabled {
+    .ant-table-wrapper {
+      border: 2px dashed var(--color-border-base);
+      background: var(--color-bg-container);
+      position: relative;
+    }
+
+    // Prevent all interactions but keep visual clarity
+    .handson-table-cell {
+      cursor: not-allowed;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+      }
+
+      .dropdown-icon {
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+    }
+
+    // Disable row selection visually
+    .ant-checkbox-wrapper {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+  }
+
+  // Read-only banner
+  .read-only-banner {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: linear-gradient(135deg, #e6f4ff 0%, #bae0ff 100%);
+    border: 1px solid #91caff;
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: #0958d9;
+
+    .read-only-icon {
+      font-size: var(--font-size-lg);
+      flex-shrink: 0;
+    }
+
+    .read-only-text {
+      flex: 1;
+
+      strong {
+        font-weight: var(--font-weight-semibold);
+        color: #003eb3;
+      }
+    }
+  }
 
   .handson-table-header {
     flex-shrink: 0;
