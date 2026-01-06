@@ -43,7 +43,11 @@ const createEmptyTestCaseItem = (
   };
 };
 
-const TestCaseTab: React.FC = () => {
+interface TestCaseTabProps {
+  isActionHidden?: boolean;
+}
+
+const TestCaseTab: React.FC<TestCaseTabProps> = ({ isActionHidden }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -260,6 +264,7 @@ const TestCaseTab: React.FC = () => {
         type: 'dropdown',
         options: ['Core', 'Custom'],
         sortable: false,
+        sorted: true,
       },
       {
         key: 'note',
@@ -427,15 +432,18 @@ const TestCaseTab: React.FC = () => {
           highlightedCells={savedCells}
           disabled={isReadOnly || isSaving}
           hideSaveButton={true}
+          isActionHidden={isActionHidden}
           headerActions={
-            <SaveSection
-              isReadOnly={isReadOnly}
-              isSaving={isSaving}
-              isSaveDisabled={isSaveDisabled}
-              onEdit={handleEdit}
-              onSave={handleSaveChanges}
-              className="test-case-save-section"
-            />
+            !isActionHidden ? (
+              <SaveSection
+                isReadOnly={isReadOnly}
+                isSaving={isSaving}
+                isSaveDisabled={isSaveDisabled}
+                onEdit={handleEdit}
+                onSave={handleSaveChanges}
+                className="test-case-save-section"
+              />
+            ) : undefined
           }
         />
       </div>

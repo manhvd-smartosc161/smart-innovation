@@ -1,111 +1,185 @@
-// Mock data for tickets
+// Mock data for tickets grouped by status
 
 import type { Ticket } from '@/types';
 
-export const MOCK_TICKETS: Ticket[] = [
+// Drafting tickets
+export const DRAFTING_TICKETS: Ticket[] = [
   {
-    id: 'JIRA-001',
-    key: 'JIRA-001',
+    id: 'SAIT-000001',
+    key: 'SAIT-000001',
     title: 'Implement user authentication flow',
     description:
-      'Implement a secure user authentication system with login, logout, and session management. Include support for OAuth providers (Google, Facebook) and two-factor authentication.Implement a secure user authentication system with login, logout, and session management. Include support for OAuth providers (Google, Facebook) and two-factor authentication.Implement a secure user authentication system with login, logout, and session management. Include support for OAuth providers (Google, Facebook) and two-factor authentication.Implement a secure user authentication system with login, logout, and session management. Include support for OAuth providers (Google, Facebook) and two-factor authentication.Implement a secure user authentication system with login, logout, and session management. Include support for OAuth providers (Google, Facebook) and two-factor authentication.Implement a secure user authentication system with login, logout, and session management. Include support for OAuth providers (Google, Facebook) and two-factor authentication.Implement a secure user authentication system with login, logout, and session management. Include support for OAuth providers (Google, Facebook) and two-factor authentication.Implement a secure user authentication system with login, logout, and session management. Include support for OAuth providers (Google, Facebook) and two-factor authentication.Implement a secure user authentication system with login, logout, and session management. Include support for OAuth providers (Google, Facebook) and two-factor authentication.Implement a secure user authentication system with login, logout, and session management. Include support for OAuth providers (Google, Facebook) and two-factor authentication.',
+      'Implement a secure user authentication system with login, logout, and session management.',
   },
   {
-    id: 'JIRA-002',
-    key: 'JIRA-002',
+    id: 'SAIT-000002',
+    key: 'SAIT-000002',
     title: 'Fix payment gateway integration bug',
     description:
-      'Resolve the issue where payment transactions fail intermittently. The bug appears to be related to timeout handling and webhook processing.',
+      'Resolve the issue where payment transactions fail intermittently.',
   },
   {
-    id: 'JIRA-003',
-    key: 'JIRA-003',
+    id: 'SAIT-000003',
+    key: 'SAIT-000003',
     title: 'Add responsive design for mobile devices',
     description:
-      'Ensure the application is fully responsive across all mobile devices. Focus on touch interactions, viewport optimization, and mobile-first design principles.',
+      'Ensure the application is fully responsive across all mobile devices.',
   },
   {
-    id: 'JIRA-004',
-    key: 'JIRA-004',
+    id: 'SAIT-000004',
+    key: 'SAIT-000004',
     title: 'Optimize database query performance',
-    description:
-      'Analyze and optimize slow database queries. Add appropriate indexes, refactor N+1 queries, and implement caching strategies where applicable.',
+    description: 'Analyze and optimize slow database queries.',
   },
   {
-    id: 'JIRA-005',
-    key: 'JIRA-005',
+    id: 'SAIT-000005',
+    key: 'SAIT-000005',
     title: 'Update user profile page UI',
     description:
-      'Redesign the user profile page with a modern, clean interface. Include avatar upload, bio editing, and social media links.',
+      'Redesign the user profile page with a modern, clean interface.',
   },
+];
+
+// Reviewing tickets
+export const REVIEWING_TICKETS: Ticket[] = [
   {
-    id: 'JIRA-006',
-    key: 'JIRA-006',
+    id: 'SAIT-000006',
+    key: 'SAIT-000006',
     title: 'Implement dark mode theme',
-    description:
-      'Add a dark mode theme option that users can toggle. Ensure all components support both light and dark themes with smooth transitions.',
+    description: 'Add a dark mode theme option that users can toggle.',
   },
   {
-    id: 'JIRA-007',
-    key: 'JIRA-007',
+    id: 'SAIT-000007',
+    key: 'SAIT-000007',
     title: 'Add email notification system',
-    description:
-      'Implement an email notification system for important events. Include customizable notification preferences and email templates.',
+    description: 'Implement an email notification system for important events.',
   },
   {
-    id: 'JIRA-008',
-    key: 'JIRA-008',
+    id: 'SAIT-000008',
+    key: 'SAIT-000008',
     title: 'Fix cross-browser compatibility issues',
     description:
-      'Resolve rendering and functionality issues in Safari and older versions of Edge. Ensure consistent behavior across all major browsers.',
+      'Resolve rendering and functionality issues in Safari and older versions of Edge.',
   },
   {
-    id: 'JIRA-009',
-    key: 'JIRA-009',
+    id: 'SAIT-000009',
+    key: 'SAIT-000009',
     title: 'Implement file upload functionality',
-    description:
-      'Add file upload capability with drag-and-drop support. Include file type validation, size limits, and progress indicators.',
+    description: 'Add file upload capability with drag-and-drop support.',
   },
+];
+
+// Cancelled tickets
+export const CANCELLED_TICKETS: Ticket[] = [
   {
-    id: 'JIRA-010',
-    key: 'JIRA-010',
+    id: 'SAIT-000010',
+    key: 'SAIT-000010',
     title: 'Add multi-language support',
     description:
-      'Implement internationalization (i18n) to support multiple languages. Start with English, Spanish, and French.',
+      'Implement internationalization (i18n) to support multiple languages.',
   },
   {
-    id: 'JIRA-011',
-    key: 'JIRA-011',
+    id: 'SAIT-000011',
+    key: 'SAIT-000011',
     title: 'Create admin dashboard',
-    description:
-      'Build a comprehensive admin dashboard with analytics, user management, and system configuration options.',
+    description: 'Build a comprehensive admin dashboard with analytics.',
   },
   {
-    id: 'JIRA-012',
-    key: 'JIRA-012',
-    title: 'Implement search functionality',
-    description:
-      'Add a powerful search feature with filters, autocomplete, and advanced search options. Implement full-text search for better results.',
+    id: 'SAIT-000012',
+    key: 'SAIT-000012',
+    title: 'Implement advanced search functionality',
+    description: 'Add a powerful search feature with filters and autocomplete.',
   },
+];
+
+// Rejected tickets
+export const REJECTED_TICKETS: Ticket[] = [
   {
-    id: 'JIRA-013',
-    key: 'JIRA-013',
+    id: 'SAIT-000013',
+    key: 'SAIT-000013',
     title: 'Add data export feature',
-    description:
-      'Allow users to export their data in various formats (CSV, Excel, PDF). Include options for selective data export.',
+    description: 'Allow users to export their data in various formats.',
   },
   {
-    id: 'JIRA-014',
-    key: 'JIRA-014',
+    id: 'SAIT-000014',
+    key: 'SAIT-000014',
     title: 'Fix security vulnerabilities',
     description:
-      'Address security vulnerabilities identified in the latest security audit. Focus on XSS prevention, CSRF protection, and input validation.',
+      'Address security vulnerabilities identified in the latest security audit.',
   },
   {
-    id: 'JIRA-015',
-    key: 'JIRA-015',
-    title: 'Implement real-time notifications',
-    description:
-      'Add real-time notification system using WebSockets. Include in-app notifications, sound alerts, and desktop notifications.',
+    id: 'SAIT-000015',
+    key: 'SAIT-000015',
+    title: 'Implement chat feature',
+    description: 'Add real-time chat functionality for user communication.',
   },
+];
+
+// Resolved tickets
+export const RESOLVED_TICKETS: Ticket[] = [
+  {
+    id: 'SAIT-000016',
+    key: 'SAIT-000016',
+    title: 'Implement real-time notifications',
+    description: 'Add real-time notification system using WebSockets.',
+  },
+  {
+    id: 'SAIT-000017',
+    key: 'SAIT-000017',
+    title: 'Add two-factor authentication',
+    description: 'Implement 2FA for enhanced security.',
+  },
+  {
+    id: 'SAIT-000018',
+    key: 'SAIT-000018',
+    title: 'Create API documentation',
+    description: 'Generate comprehensive API documentation with examples.',
+  },
+  {
+    id: 'SAIT-000019',
+    key: 'SAIT-000019',
+    title: 'Implement rate limiting',
+    description: 'Add rate limiting to prevent API abuse.',
+  },
+];
+
+// Approved tickets
+export const APPROVED_TICKETS: Ticket[] = [
+  {
+    id: 'SAIT-000020',
+    key: 'SAIT-000020',
+    title: 'Deploy to production environment',
+    description: 'Deploy the latest version to production with zero downtime.',
+  },
+  {
+    id: 'SAIT-000021',
+    key: 'SAIT-000021',
+    title: 'Set up monitoring and alerting',
+    description: 'Configure monitoring tools and alert systems.',
+  },
+  {
+    id: 'SAIT-000022',
+    key: 'SAIT-000022',
+    title: 'Implement backup strategy',
+    description: 'Set up automated backup and disaster recovery procedures.',
+  },
+];
+
+// Object mapping for easy access
+export const MOCK_TICKETS_BY_STATUS = {
+  Drafting: DRAFTING_TICKETS,
+  Reviewing: REVIEWING_TICKETS,
+  Cancelled: CANCELLED_TICKETS,
+  Rejected: REJECTED_TICKETS,
+  Resolved: RESOLVED_TICKETS,
+  Approved: APPROVED_TICKETS,
+};
+
+export const MOCK_TICKETS: Ticket[] = [
+  ...DRAFTING_TICKETS,
+  ...REVIEWING_TICKETS,
+  ...CANCELLED_TICKETS,
+  ...REJECTED_TICKETS,
+  ...RESOLVED_TICKETS,
+  ...APPROVED_TICKETS,
 ];

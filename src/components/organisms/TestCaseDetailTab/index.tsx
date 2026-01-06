@@ -4,7 +4,13 @@ import { TestDetailsForm } from './TestDetailsForm';
 import { TestStepsSection } from './TestStepsSection';
 import './index.scss';
 
-const TestCaseDetailTab: React.FC = () => {
+interface TestCaseDetailTabProps {
+  isActionHidden?: boolean;
+}
+
+const TestCaseDetailTab: React.FC<TestCaseDetailTabProps> = ({
+  isActionHidden,
+}) => {
   const [showSteps, setShowSteps] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [showSparkles, setShowSparkles] = useState(false);
@@ -34,6 +40,7 @@ const TestCaseDetailTab: React.FC = () => {
             onAIGeneration={handleAIGeneration}
             isGenerating={isGenerating}
             showSparkles={showSparkles}
+            isActionHidden={isActionHidden}
           />
           {showSteps && (
             <div className="steps-reveal-animation">

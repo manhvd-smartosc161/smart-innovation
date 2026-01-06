@@ -1,32 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Input } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Button } from '@/components/atoms';
 import { TicketListItem } from '@/components/molecules';
-import type { Ticket } from '@/types';
+import type { TicketStatus } from '@/types';
+import { MOCK_TICKETS_BY_STATUS } from '@/mock/ticket';
 import './index.scss';
 
-const initialTickets: Ticket[] = [
-  {
-    id: 'SAIT-000001',
-    key: 'SAIT-000001',
-    title: 'Create order with invalid data',
-  },
-  { id: 'SAIT-000002', key: 'SAIT-000002', title: 'Verify login page' },
-  { id: 'SAIT-000003', key: 'SAIT-000003', title: 'Check payment gateway' },
-  { id: 'SAIT-000004', key: 'SAIT-000004', title: 'Test user registration' },
-  {
-    id: 'SAIT-000005',
-    key: 'SAIT-000005',
-    title: 'Validate search functionality',
-  },
-  { id: 'SAIT-000006', key: 'SAIT-000006', title: 'Check product details' },
-  { id: 'SAIT-000007', key: 'SAIT-000007', title: 'Verify cart updates' },
-  { id: 'SAIT-000008', key: 'SAIT-000008', title: 'Test checkout process' },
-];
+export const TicketSidebar: React.FC<{ activeTab: string }> = ({
+  activeTab,
+}) => {
+  // Get tickets based on active tab
+  const tickets = useMemo(
+    () => MOCK_TICKETS_BY_STATUS[activeTab as TicketStatus] || [],
+    [activeTab]
+  );
 
-export const TicketSidebar: React.FC = () => {
-  const [tickets] = useState<Ticket[]>(initialTickets);
   const [selectedTicketId, setSelectedTicketId] =
     useState<string>('SAIT-000001');
 
@@ -35,9 +24,29 @@ export const TicketSidebar: React.FC = () => {
     // TODO: Implement request review logic
   };
 
-  const handleCancelReview = (ticketId: string) => {
-    console.log('Cancel Review clicked for ticket:', ticketId);
-    // TODO: Implement cancel review logic
+  const handleApprove = (ticketId: string) => {
+    console.log('Approve clicked for ticket:', ticketId);
+    // TODO: Implement approve logic
+  };
+
+  const handleReject = (ticketId: string) => {
+    console.log('Reject clicked for ticket:', ticketId);
+    // TODO: Implement reject logic
+  };
+
+  const handleResolve = (ticketId: string) => {
+    console.log('Resolve clicked for ticket:', ticketId);
+    // TODO: Implement resolve logic
+  };
+
+  const handleCancel = (ticketId: string) => {
+    console.log('Cancel clicked for ticket:', ticketId);
+    // TODO: Implement cancel logic
+  };
+
+  const handleCreateExecution = (ticketId: string) => {
+    console.log('Create Execution clicked for ticket:', ticketId);
+    // TODO: Implement create execution logic
   };
 
   const handleImportFromTickets = (ticketId: string) => {
@@ -45,14 +54,19 @@ export const TicketSidebar: React.FC = () => {
     // TODO: Implement import from tickets logic
   };
 
+  const handleImportFromJira = (ticketId: string) => {
+    console.log('Import from Jira clicked for ticket:', ticketId);
+    // TODO: Implement import from Jira logic
+  };
+
   const handleImportFromGoogleSheets = (ticketId: string) => {
     console.log('Import from Google Sheets clicked for ticket:', ticketId);
     // TODO: Implement import from Google Sheets logic
   };
 
-  const handleImportFromExcel = (ticketId: string) => {
-    console.log('Import from Excel file clicked for ticket:', ticketId);
-    // TODO: Implement import from Excel logic
+  const handleExportToTickets = (ticketId: string) => {
+    console.log('Export to other tickets clicked for ticket:', ticketId);
+    // TODO: Implement export to tickets logic
   };
 
   const handleExportToJira = (ticketId: string) => {
@@ -63,11 +77,6 @@ export const TicketSidebar: React.FC = () => {
   const handleExportToGoogleSheets = (ticketId: string) => {
     console.log('Export to Google Sheets clicked for ticket:', ticketId);
     // TODO: Implement export to Google Sheets logic
-  };
-
-  const handleExportToExcel = (ticketId: string) => {
-    console.log('Export to Excel file clicked for ticket:', ticketId);
-    // TODO: Implement export to Excel logic
   };
 
   return (
@@ -94,16 +103,21 @@ export const TicketSidebar: React.FC = () => {
             key={ticket.id}
             id={ticket.id}
             title={ticket.title}
+            status={activeTab as TicketStatus}
             isSelected={selectedTicketId === ticket.id}
             onClick={() => setSelectedTicketId(ticket.id)}
             onRequestReview={handleRequestReview}
-            onCancelReview={handleCancelReview}
             onImportFromTickets={handleImportFromTickets}
+            onImportFromJira={handleImportFromJira}
             onImportFromGoogleSheets={handleImportFromGoogleSheets}
-            onImportFromExcel={handleImportFromExcel}
+            onExportToTickets={handleExportToTickets}
             onExportToJira={handleExportToJira}
             onExportToGoogleSheets={handleExportToGoogleSheets}
-            onExportToExcel={handleExportToExcel}
+            onApprove={handleApprove}
+            onReject={handleReject}
+            onResolve={handleResolve}
+            onCancel={handleCancel}
+            onCreateExecution={handleCreateExecution}
           />
         ))}
       </div>

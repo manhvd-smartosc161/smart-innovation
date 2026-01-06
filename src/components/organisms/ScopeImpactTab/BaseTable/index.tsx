@@ -57,6 +57,10 @@ export interface BaseTableProps<T extends Record<string, any>> {
    * Ref to expose save function
    */
   onSaveRef?: React.Ref<{ save: () => void }>;
+  /**
+   * Whether to hide action buttons (e.g. in Approved status)
+   */
+  isActionHidden?: boolean;
 }
 
 /**
@@ -76,6 +80,7 @@ export function BaseTable<T extends Record<string, any>>({
   disabled = false,
   onDataChange,
   onSaveRef,
+  isActionHidden,
 }: BaseTableProps<T>) {
   const { markTabAsChanged, markTabAsSaved } = useAnalysis();
 
@@ -344,6 +349,7 @@ export function BaseTable<T extends Record<string, any>>({
           highlightedCells={savedCells}
           disabled={disabled}
           hideSaveButton={true}
+          isActionHidden={isActionHidden}
         />
       </div>
       <HistoryPanel

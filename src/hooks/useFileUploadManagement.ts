@@ -15,7 +15,7 @@ import { FILE_TYPES } from '@/types';
 export const useFileUploadManagement = () => {
   const [uploads, setUploads] = useState<UploadedFile[]>([]);
 
-  const handleAdd = () => {
+  const handleAdd = (defaultPrompt?: string) => {
     const hasEditingFile = uploads.some((upload) => upload.isEditing);
     if (hasEditingFile) {
       return;
@@ -25,7 +25,7 @@ export const useFileUploadManagement = () => {
       id: Date.now().toString(),
       fileType: FILE_TYPES.BRD,
       file: null,
-      prompt: '',
+      prompt: defaultPrompt || '',
       isEditing: true,
     };
     setUploads([...uploads, newUpload]);

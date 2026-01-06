@@ -1,3 +1,11 @@
+export type TicketStatus =
+  | 'Drafting'
+  | 'Reviewing'
+  | 'Cancelled'
+  | 'Rejected'
+  | 'Resolved'
+  | 'Approved';
+
 export interface Ticket {
   id: string;
   key: string;

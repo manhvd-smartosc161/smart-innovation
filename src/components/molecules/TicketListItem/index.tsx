@@ -5,117 +5,207 @@ import {
   EyeOutlined,
   CloseCircleOutlined,
   GoogleOutlined,
-  FileExcelOutlined,
+  CheckOutlined,
+  CloseOutlined,
+  CheckCircleOutlined,
+  RocketOutlined,
 } from '@ant-design/icons';
 import { Button, Dropdown, type MenuProps } from 'antd';
+import type { TicketStatus } from '@/types';
 import './index.scss';
 
 interface TicketListItemProps {
   id: string;
   title: string;
+  status: TicketStatus;
   isSelected?: boolean;
   onClick?: () => void;
   onRequestReview?: (ticketId: string) => void;
-  onCancelReview?: (ticketId: string) => void;
   onImportFromTickets?: (ticketId: string) => void;
+  onImportFromJira?: (ticketId: string) => void;
   onImportFromGoogleSheets?: (ticketId: string) => void;
-  onImportFromExcel?: (ticketId: string) => void;
+  onExportToTickets?: (ticketId: string) => void;
   onExportToJira?: (ticketId: string) => void;
   onExportToGoogleSheets?: (ticketId: string) => void;
-  onExportToExcel?: (ticketId: string) => void;
+  onApprove?: (ticketId: string) => void;
+  onReject?: (ticketId: string) => void;
+  onResolve?: (ticketId: string) => void;
+  onCancel?: (ticketId: string) => void;
+  onCreateExecution?: (ticketId: string) => void;
 }
 
 export const TicketListItem: React.FC<TicketListItemProps> = ({
   id,
+  status,
   isSelected,
   onClick,
   onRequestReview,
-  onCancelReview,
   onImportFromTickets,
+  onImportFromJira,
   onImportFromGoogleSheets,
-  onImportFromExcel,
+  onExportToTickets,
   onExportToJira,
   onExportToGoogleSheets,
-  onExportToExcel,
+  onApprove,
+  onReject,
+  onResolve,
+  onCancel,
+  onCreateExecution,
 }) => {
-  const items: MenuProps['items'] = [
-    {
-      key: 'request-review',
-      label: 'Request Review',
-      icon: <EyeOutlined />,
-      onClick: () => onRequestReview?.(id),
-      className: 'menu-item-request-review',
-    },
-    {
-      key: 'cancel-review',
-      label: 'Cancel Review',
-      icon: <CloseCircleOutlined />,
-      onClick: () => onCancelReview?.(id),
-      className: 'menu-item-cancel-review',
-    },
-    {
-      type: 'divider',
-    },
-    {
-      key: 'import',
-      label: 'IMPORT',
-      disabled: true,
-      style: { cursor: 'default' },
-      className: 'menu-item-section-header',
-    },
-    {
-      key: 'import-tickets',
-      label: <span style={{ paddingLeft: '8px' }}>From other tickets</span>,
-      icon: <FileTextOutlined />,
-      onClick: () => onImportFromTickets?.(id),
-      className: 'menu-item-import',
-    },
-    {
-      key: 'import-google-sheets',
-      label: <span style={{ paddingLeft: '8px' }}>From Google Sheets</span>,
-      icon: <GoogleOutlined />,
-      onClick: () => onImportFromGoogleSheets?.(id),
-      className: 'menu-item-import',
-    },
-    {
-      key: 'import-excel',
-      label: <span style={{ paddingLeft: '8px' }}>From Excel file</span>,
-      icon: <FileExcelOutlined />,
-      onClick: () => onImportFromExcel?.(id),
-      className: 'menu-item-import',
-    },
-    {
-      type: 'divider',
-    },
-    {
-      key: 'export',
-      label: 'EXPORT',
-      disabled: true,
-      style: { cursor: 'default' },
-      className: 'menu-item-section-header',
-    },
-    {
-      key: 'export-jira',
-      label: <span style={{ paddingLeft: '8px' }}>To Jira</span>,
-      icon: <FileTextOutlined />,
-      onClick: () => onExportToJira?.(id),
-      className: 'menu-item-export',
-    },
-    {
-      key: 'export-google-sheets',
-      label: <span style={{ paddingLeft: '8px' }}>To Google Sheets</span>,
-      icon: <GoogleOutlined />,
-      onClick: () => onExportToGoogleSheets?.(id),
-      className: 'menu-item-export',
-    },
-    {
-      key: 'export-excel',
-      label: <span style={{ paddingLeft: '8px' }}>To Excel file</span>,
-      icon: <FileExcelOutlined />,
-      onClick: () => onExportToExcel?.(id),
-      className: 'menu-item-export',
-    },
-  ];
+  const getMenuItems = (): MenuProps['items'] => {
+    switch (status) {
+      case 'Drafting':
+        return [
+          {
+            key: 'request-review',
+            label: 'Request Review',
+            icon: <EyeOutlined />,
+            onClick: () => onRequestReview?.(id),
+            className: 'menu-item-request-review',
+          },
+          {
+            type: 'divider',
+          },
+          {
+            key: 'import',
+            label: 'IMPORT',
+            disabled: true,
+            style: { cursor: 'default' },
+            className: 'menu-item-section-header',
+          },
+          {
+            key: 'import-tickets',
+            label: (
+              <span style={{ paddingLeft: '8px' }}>From other tickets</span>
+            ),
+            icon: <FileTextOutlined />,
+            onClick: () => onImportFromTickets?.(id),
+            className: 'menu-item-import',
+          },
+          {
+            key: 'import-jira',
+            label: <span style={{ paddingLeft: '8px' }}>From Jira</span>,
+            icon: <FileTextOutlined />,
+            onClick: () => onImportFromJira?.(id),
+            className: 'menu-item-import',
+          },
+          {
+            key: 'import-google-sheets',
+            label: (
+              <span style={{ paddingLeft: '8px' }}>From Google Sheets</span>
+            ),
+            icon: <GoogleOutlined />,
+            onClick: () => onImportFromGoogleSheets?.(id),
+            className: 'menu-item-import',
+          },
+          {
+            type: 'divider',
+          },
+          {
+            key: 'export',
+            label: 'EXPORT',
+            disabled: true,
+            style: { cursor: 'default' },
+            className: 'menu-item-section-header',
+          },
+          {
+            key: 'export-tickets',
+            label: <span style={{ paddingLeft: '8px' }}>To other tickets</span>,
+            icon: <FileTextOutlined />,
+            onClick: () => onExportToTickets?.(id),
+            className: 'menu-item-export',
+          },
+          {
+            key: 'export-jira',
+            label: <span style={{ paddingLeft: '8px' }}>To Jira</span>,
+            icon: <FileTextOutlined />,
+            onClick: () => onExportToJira?.(id),
+            className: 'menu-item-export',
+          },
+          {
+            key: 'export-google-sheets',
+            label: <span style={{ paddingLeft: '8px' }}>To Google Sheets</span>,
+            icon: <GoogleOutlined />,
+            onClick: () => onExportToGoogleSheets?.(id),
+            className: 'menu-item-export',
+          },
+        ];
+
+      case 'Reviewing':
+        return [
+          {
+            key: 'approve',
+            label: 'Approve',
+            icon: <CheckOutlined />,
+            onClick: () => onApprove?.(id),
+            className: 'menu-item-approve',
+          },
+          {
+            key: 'reject',
+            label: 'Reject',
+            icon: <CloseOutlined />,
+            onClick: () => onReject?.(id),
+            className: 'menu-item-reject',
+          },
+          {
+            key: 'cancel',
+            label: 'Cancel',
+            icon: <CloseCircleOutlined />,
+            onClick: () => onCancel?.(id),
+            className: 'menu-item-cancel',
+          },
+        ];
+
+      case 'Rejected':
+        return [
+          {
+            key: 'resolve',
+            label: 'Resolve',
+            icon: <CheckCircleOutlined />,
+            onClick: () => onResolve?.(id),
+            className: 'menu-item-resolve',
+          },
+        ];
+
+      case 'Resolved':
+        return [
+          {
+            key: 'request-review',
+            label: 'Request Review',
+            icon: <EyeOutlined />,
+            onClick: () => onRequestReview?.(id),
+            className: 'menu-item-request-review',
+          },
+        ];
+
+      case 'Approved':
+        return [
+          {
+            key: 'create-execution',
+            label: 'Create Execution',
+            icon: <RocketOutlined />,
+            onClick: () => onCreateExecution?.(id),
+            className: 'menu-item-create-execution',
+          },
+        ];
+
+      case 'Cancelled':
+        return [
+          {
+            key: 'request-review',
+            label: 'Request Review',
+            icon: <EyeOutlined />,
+            onClick: () => onRequestReview?.(id),
+            className: 'menu-item-request-review',
+          },
+        ];
+
+      default:
+        return [];
+    }
+  };
+
+  const items = getMenuItems();
 
   return (
     <div

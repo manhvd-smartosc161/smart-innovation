@@ -8,12 +8,14 @@ interface ScopeProps {
   disabled?: boolean;
   onDataChange?: (data: ScopeItem[]) => void;
   onSaveRef?: React.Ref<{ save: () => void }>;
+  isActionHidden?: boolean;
 }
 
 export const Scope: React.FC<ScopeProps> = ({
   disabled,
   onDataChange,
   onSaveRef,
+  isActionHidden,
 }) => {
   return (
     <BaseTable<ScopeItem>
@@ -27,6 +29,7 @@ export const Scope: React.FC<ScopeProps> = ({
       disabled={disabled}
       onDataChange={onDataChange}
       onSaveRef={onSaveRef}
+      isActionHidden={isActionHidden}
     />
   );
 };

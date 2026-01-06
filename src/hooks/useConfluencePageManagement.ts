@@ -14,7 +14,10 @@ export const useConfluencePageManagement = () => {
   const [pages, setPages] = useState<ConfluencePage[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleSelectionOk = (selectedUrls: string[]) => {
+  const handleSelectionOk = (
+    selectedUrls: string[],
+    defaultPrompt?: string
+  ) => {
     const hasEditingPage = pages.some((page) => page.isEditing);
     if (hasEditingPage) {
       return;
@@ -22,15 +25,18 @@ export const useConfluencePageManagement = () => {
 
     const newPages = selectedUrls.map((pageUrl) => {
       const existing = pages.find((p) => p.url === pageUrl);
-      return (
-        existing || {
-          id: Date.now().toString() + Math.random(),
-          url: pageUrl,
-          title: '',
-          prompt: '',
-          isEditing: false,
-        }
-      );
+      if (existing) {
+        return existing.prompt
+          ? existing
+          : { ...existing, prompt: defaultPrompt || '' };
+      }
+      return {
+        id: Date.now().toString() + Math.random(),
+        url: pageUrl,
+        title: '',
+        prompt: defaultPrompt || '',
+        isEditing: false,
+      };
     });
     setPages(newPages);
     setModalVisible(false);

@@ -13,7 +13,7 @@ const TestCaseDetailTab = lazy(
   () => import('@/components/organisms/TestCaseDetailTab')
 );
 
-import { TAB_KEYS, TAB_LABELS } from '@/constants';
+import { TAB_KEYS, TAB_LABELS, WORKFLOW_TAB_KEYS } from '@/constants';
 import { useAnalysis } from '@/stores';
 import './index.scss';
 
@@ -39,7 +39,9 @@ const TabLoadingFallback = () => (
   </div>
 );
 
-export const TestTicketPanel: React.FC = () => {
+export const TestTicketPanel: React.FC<{ workflowStatus: string }> = ({
+  workflowStatus,
+}) => {
   const {
     isAnalysed,
     isChecklistGenerated,
@@ -49,6 +51,17 @@ export const TestTicketPanel: React.FC = () => {
     hasUnsavedChanges,
     selectedTestCaseId,
   } = useAnalysis();
+
+  // Reset analysis steps when switching workflow tabs
+  /* 
+  // Commented out to prevent resetting state when switching tabs for now
+  // Can be enabled if we want strict separation between workflow states
+  useEffect(() => {
+    setActiveTab(TAB_KEYS.INITIALIZATION);
+  }, [workflowStatus, setActiveTab]); 
+  */
+
+  const isActionHidden = workflowStatus === WORKFLOW_TAB_KEYS.APPROVED;
 
   useEffect(() => {
     if (!activeTab) {
@@ -122,28 +135,28 @@ export const TestTicketPanel: React.FC = () => {
             display: activeTab === TAB_KEYS.INITIALIZATION ? 'block' : 'none',
           }}
         >
-          <InfoTab />
+          <InfoTab isActionHidden={isActionHidden} />
         </div>
         <div
           style={{
             display: activeTab === TAB_KEYS.SCOPE_AND_IMPACT ? 'block' : 'none',
           }}
         >
-          <ScopeImpactTab />
+          <ScopeImpactTab isActionHidden={isActionHidden} />
         </div>
         <div
           style={{
             display: activeTab === TAB_KEYS.CHECKLIST ? 'block' : 'none',
           }}
         >
-          <ChecklistTab />
+          <ChecklistTab isActionHidden={isActionHidden} />
         </div>
         <div
           style={{
             display: activeTab === TAB_KEYS.TEST_CASES ? 'block' : 'none',
           }}
         >
-          <TestCaseTab />
+          <TestCaseTab isActionHidden={isActionHidden} />
         </div>
         <div
           style={{
@@ -151,7 +164,7 @@ export const TestTicketPanel: React.FC = () => {
               activeTab === TAB_KEYS.TEST_CASE_DETAILS ? 'block' : 'none',
           }}
         >
-          <TestCaseDetailTab />
+          <TestCaseDetailTab isActionHidden={isActionHidden} />
         </div>
       </Suspense>
     );

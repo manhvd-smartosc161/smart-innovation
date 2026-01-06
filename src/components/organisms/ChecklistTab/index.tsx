@@ -31,7 +31,11 @@ const createEmptyChecklistItem = (
   };
 };
 
-const ChecklistTab: React.FC = () => {
+interface ChecklistTabProps {
+  isActionHidden?: boolean;
+}
+
+const ChecklistTab: React.FC<ChecklistTabProps> = ({ isActionHidden }) => {
   const {
     markTabAsSaved,
     markTabAsChanged,
@@ -275,39 +279,46 @@ const ChecklistTab: React.FC = () => {
       <FireworksAnimation show={showFireworks} />
 
       {/* Generate Test Cases Button - Sticky */}
-      <div className="generate-testcases-section">
-        <div className="generate-icon-left">
-          <FileTextOutlined />
-        </div>
-        <Button
-          variant="primary"
-          size="large"
-          onClick={handleGenerateTestCases}
-          disabled={isGenerateDisabled || isGenerating || !isReadOnly}
-          className="generate-testcases-button"
-        >
-          {isGenerating ? (
-            <AnimatedText text="Generating..." className="generating-text" />
-          ) : (
-            'Generate Test Cases'
-          )}
-        </Button>
-        <div className="generate-icon-right">
-          <ExperimentOutlined />
-        </div>
+      {!isActionHidden && (
+        <>
+          <div className="generate-testcases-section">
+            <div className="generate-icon-left">
+              <FileTextOutlined />
+            </div>
+            <Button
+              variant="primary"
+              size="large"
+              onClick={handleGenerateTestCases}
+              disabled={isGenerateDisabled || isGenerating || !isReadOnly}
+              className="generate-testcases-button"
+            >
+              {isGenerating ? (
+                <AnimatedText
+                  text="Generating..."
+                  className="generating-text"
+                />
+              ) : (
+                'Generate Test Cases'
+              )}
+            </Button>
+            <div className="generate-icon-right">
+              <ExperimentOutlined />
+            </div>
 
-        {/* Edit/Save Button */}
-        <SaveSection
-          isReadOnly={isReadOnly}
-          isSaving={isSaving}
-          isSaveDisabled={isSaveDisabled}
-          onEdit={handleEdit}
-          onSave={handleSaveChanges}
-          className="checklist-save-section"
-        />
-      </div>
+            {/* Edit/Save Button */}
+            <SaveSection
+              isReadOnly={isReadOnly}
+              isSaving={isSaving}
+              isSaveDisabled={isSaveDisabled}
+              onEdit={handleEdit}
+              onSave={handleSaveChanges}
+              className="checklist-save-section"
+            />
+          </div>
 
-      <Divider />
+          <Divider />
+        </>
+      )}
 
       <div className="checklist-content">
         <HandsonTable
@@ -325,6 +336,7 @@ const ChecklistTab: React.FC = () => {
           highlightedCells={savedCells}
           disabled={isReadOnly || isSaving}
           hideSaveButton={true}
+          isActionHidden={isActionHidden}
         />
       </div>
       <HistoryPanel

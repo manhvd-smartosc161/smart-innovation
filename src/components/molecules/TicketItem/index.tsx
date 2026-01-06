@@ -18,6 +18,7 @@ interface TicketItemProps {
   onDiscard: (ticketId: string) => void;
   onEdit: (ticketId: string) => void;
   onDelete: (ticketId: string) => void;
+  promptExamples?: Record<string, string>;
 }
 
 export const TicketItem: React.FC<TicketItemProps> = ({
@@ -28,12 +29,26 @@ export const TicketItem: React.FC<TicketItemProps> = ({
   onDiscard,
   onEdit,
   onDelete,
+  promptExamples,
 }) => {
   const [localPrompt, setLocalPrompt] = useState(ticket.prompt);
 
   React.useEffect(() => {
     setLocalPrompt(ticket.prompt);
   }, [ticket.prompt]);
+
+  // Auto-fill prompt when entering edit mode with empty prompt
+  React.useEffect(() => {
+    if (ticket.isEditing && promptExamples && promptExamples['Ticket']) {
+      const example = promptExamples['Ticket'];
+      // Auto-fill if empty or if the current prompt is one of the other examples
+      const isStandard = Object.values(promptExamples).includes(localPrompt);
+      if (!localPrompt || !localPrompt.trim() || isStandard) {
+        setLocalPrompt(example);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ticket.isEditing, promptExamples]);
 
   const handleAccept = () => {
     if (!localPrompt || !localPrompt.trim()) {

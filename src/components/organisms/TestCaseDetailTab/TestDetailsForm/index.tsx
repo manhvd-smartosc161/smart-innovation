@@ -12,12 +12,14 @@ interface TestDetailsFormProps {
   onAIGeneration?: () => void;
   isGenerating?: boolean;
   showSparkles?: boolean;
+  isActionHidden?: boolean;
 }
 
 export const TestDetailsForm: React.FC<TestDetailsFormProps> = ({
   onAIGeneration,
   isGenerating = false,
   showSparkles = false,
+  isActionHidden,
 }) => {
   const [form] = Form.useForm();
   const [searchParams] = useSearchParams();
@@ -56,38 +58,42 @@ export const TestDetailsForm: React.FC<TestDetailsFormProps> = ({
       <div className="details-header">
         <h2 className="details-title">Details</h2>
         <Space>
-          <div className="ai-gen-wrapper">
-            {showSparkles && (
-              <>
-                <span className="sparkle sparkle-1">✨</span>
-                <span className="sparkle sparkle-2">✨</span>
-                <span className="sparkle sparkle-3">✨</span>
-                <span className="sparkle sparkle-4">✨</span>
-                <span className="sparkle sparkle-5">✨</span>
-                <span className="sparkle sparkle-6">✨</span>
-              </>
-            )}
-            <Button
-              className={`ai-gen-btn ${isGenerating ? 'generating' : ''}`}
-              icon={<span>✨</span>}
-              onClick={onAIGeneration}
-              disabled={isGenerating}
-            >
-              {isGenerating ? (
-                <span className="generating-text">Generating...</span>
-              ) : (
-                'AI Generation'
-              )}
-            </Button>
-          </div>
-          <Button
-            variant="primary"
-            className="save-btn"
-            icon={<SaveOutlined />}
-            disabled={!hasChanges}
-          >
-            Save
-          </Button>
+          {!isActionHidden && (
+            <>
+              <div className="ai-gen-wrapper">
+                {showSparkles && (
+                  <>
+                    <span className="sparkle sparkle-1">✨</span>
+                    <span className="sparkle sparkle-2">✨</span>
+                    <span className="sparkle sparkle-3">✨</span>
+                    <span className="sparkle sparkle-4">✨</span>
+                    <span className="sparkle sparkle-5">✨</span>
+                    <span className="sparkle sparkle-6">✨</span>
+                  </>
+                )}
+                <Button
+                  className={`ai-gen-btn ${isGenerating ? 'generating' : ''}`}
+                  icon={<span>✨</span>}
+                  onClick={onAIGeneration}
+                  disabled={isGenerating}
+                >
+                  {isGenerating ? (
+                    <span className="generating-text">Generating...</span>
+                  ) : (
+                    'AI Generation'
+                  )}
+                </Button>
+              </div>
+              <Button
+                variant="primary"
+                className="save-btn"
+                icon={<SaveOutlined />}
+                disabled={!hasChanges}
+              >
+                Save
+              </Button>
+            </>
+          )}
         </Space>
       </div>
 

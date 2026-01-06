@@ -208,6 +208,76 @@
     }
   }
 
+  // Green: Approve
+  .menu-item-approve {
+    .anticon {
+      color: var(--color-success) !important;
+    }
+    &:hover {
+      background: var(--color-success-bg-light) !important;
+      color: var(--color-success-dark) !important;
+      .anticon {
+        transform: scale(1.2);
+      }
+    }
+  }
+
+  // Red: Reject
+  .menu-item-reject {
+    .anticon {
+      color: var(--color-error) !important;
+    }
+    &:hover {
+      background: var(--color-error-bg-light) !important;
+      color: var(--color-error-dark) !important;
+      .anticon {
+        transform: rotate(45deg) scale(1.1);
+      }
+    }
+  }
+
+  // Orange: Cancel
+  .menu-item-cancel {
+    .anticon {
+      color: var(--color-warning) !important;
+    }
+    &:hover {
+      background: var(--color-warning-bg-light) !important;
+      color: var(--color-warning-dark) !important;
+      .anticon {
+        transform: rotate(90deg) scale(1.1);
+      }
+    }
+  }
+
+  // Blue: Resolve
+  .menu-item-resolve {
+    .anticon {
+      color: var(--color-info) !important;
+    }
+    &:hover {
+      background: var(--color-info-bg-light) !important;
+      color: var(--color-info-dark) !important;
+      .anticon {
+        transform: scale(1.2);
+      }
+    }
+  }
+
+  // Purple: Create Execution
+  .menu-item-create-execution {
+    .anticon {
+      color: #8b5cf6 !important; // Purple color
+    }
+    &:hover {
+      background: rgba(139, 92, 246, 0.1) !important;
+      color: #6d28d9 !important;
+      .anticon {
+        transform: translateY(-3px) scale(1.1);
+      }
+    }
+  }
+
   // --- HEADERS ---
   .menu-item-section-header {
     background: transparent !important;

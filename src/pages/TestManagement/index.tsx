@@ -33,8 +33,11 @@ export const TestManagement: React.FC = () => {
   );
 
   return (
-    <MainLayout leftSidebar={<TicketSidebar />} tabs={tabsSection}>
-      <TestTicketPanel />
+    <MainLayout
+      leftSidebar={<TicketSidebar activeTab={activeTab} />}
+      tabs={tabsSection}
+    >
+      <TestTicketPanel workflowStatus={activeTab} />
     </MainLayout>
   );
 };

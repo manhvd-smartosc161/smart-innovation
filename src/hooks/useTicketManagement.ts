@@ -14,7 +14,7 @@ export const useTicketManagement = () => {
   const [tickets, setTickets] = useState<RelatedTicket[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleSelectionOk = (selectedIds: string[]) => {
+  const handleSelectionOk = (selectedIds: string[], defaultPrompt?: string) => {
     const hasEditingTicket = tickets.some((ticket) => ticket.isEditing);
     if (hasEditingTicket) {
       return;
@@ -22,14 +22,17 @@ export const useTicketManagement = () => {
 
     const newTickets = selectedIds.map((ticketId) => {
       const existing = tickets.find((t) => t.ticketId === ticketId);
-      return (
-        existing || {
-          id: Date.now().toString() + Math.random(),
-          ticketId,
-          prompt: '',
-          isEditing: false,
-        }
-      );
+      if (existing) {
+        return existing.prompt
+          ? existing
+          : { ...existing, prompt: defaultPrompt || '' };
+      }
+      return {
+        id: Date.now().toString() + Math.random(),
+        ticketId,
+        prompt: defaultPrompt || '',
+        isEditing: false,
+      };
     });
     setTickets(newTickets);
     setModalVisible(false);

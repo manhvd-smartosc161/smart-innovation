@@ -39,6 +39,7 @@ export interface HandsonTableProps<T extends Record<string, any>> {
   disabled?: boolean;
   hideSaveButton?: boolean;
   headerActions?: React.ReactNode;
+  isActionHidden?: boolean;
 }
 
 export interface HandsonCellState {

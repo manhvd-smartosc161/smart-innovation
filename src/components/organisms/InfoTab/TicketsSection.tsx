@@ -16,6 +16,7 @@ interface TicketsSectionProps {
   onDiscard: (ticketId: string) => void;
   onEdit: (ticketId: string) => void;
   onDelete: (ticketId: string) => void;
+  promptExamples?: Record<string, string>;
 }
 
 /**
@@ -33,6 +34,7 @@ export const TicketsSection: React.FC<TicketsSectionProps> = ({
   onDiscard,
   onEdit,
   onDelete,
+  promptExamples,
 }) => {
   return (
     <>
@@ -71,6 +73,7 @@ export const TicketsSection: React.FC<TicketsSectionProps> = ({
                       onDiscard={onDiscard}
                       onEdit={onEdit}
                       onDelete={onDelete}
+                      promptExamples={promptExamples}
                     />
                   );
                 })}

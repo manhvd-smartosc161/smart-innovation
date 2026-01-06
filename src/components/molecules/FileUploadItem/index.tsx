@@ -30,6 +30,7 @@ interface FileUploadItemProps {
   onDiscard: (id: string) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
+  promptExamples?: Record<string, string>;
 }
 
 export const FileUploadItem: React.FC<FileUploadItemProps> = ({
@@ -46,10 +47,24 @@ export const FileUploadItem: React.FC<FileUploadItemProps> = ({
   onDiscard,
   onEdit,
   onDelete,
+  promptExamples,
 }) => {
   const [localFileType, setLocalFileType] = useState(fileType);
   const [localPrompt, setLocalPrompt] = useState(prompt);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  // Auto-fill prompt when file type changes or when entering edit mode with empty prompt
+  React.useEffect(() => {
+    if (isEditing && promptExamples && promptExamples[localFileType]) {
+      const example = promptExamples[localFileType];
+      // Auto-fill if empty or if the current prompt is one of the other examples (meaning it's not custom)
+      const isStandard = Object.values(promptExamples).includes(localPrompt);
+      if (!localPrompt || !localPrompt.trim() || isStandard) {
+        setLocalPrompt(example);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localFileType, isEditing, promptExamples]);
 
   const handleFileChange = (info: { fileList: UploadFile[] }) => {
     const validFiles = info.fileList.filter((file) => {
@@ -132,8 +147,14 @@ export const FileUploadItem: React.FC<FileUploadItemProps> = ({
   }, [fileName, id]);
 
   React.useEffect(() => {
-    setLocalPrompt(prompt);
-  }, [prompt]);
+    // Only update local prompt from props if we are NOT editing,
+    // or if we want to sync external changes.
+    // But since we have auto-fill logic, we should be careful.
+    // If not editing, we definitely sync.
+    if (!isEditing) {
+      setLocalPrompt(prompt);
+    }
+  }, [prompt, isEditing]);
 
   React.useEffect(() => {
     setLocalFileType(fileType);
@@ -256,9 +277,13 @@ export const FileUploadItem: React.FC<FileUploadItemProps> = ({
           />
         </div>
       </div>
-      {localPrompt && (
-        <div className="upload-prompt-display">{localPrompt}</div>
-      )}
+      <div className="upload-prompt-display">
+        {localPrompt || (
+          <span style={{ color: '#bfbfbf', fontStyle: 'italic' }}>
+            No prompt entered yet
+          </span>
+        )}
+      </div>
     </div>
   );
 };

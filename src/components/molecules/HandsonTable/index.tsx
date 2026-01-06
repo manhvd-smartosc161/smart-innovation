@@ -27,6 +27,7 @@ export function HandsonTable<T extends Record<string, any>>({
   disabled = false,
   hideSaveButton = false,
   headerActions,
+  isActionHidden,
 }: HandsonTableProps<T>) {
   const {
     state: data,
@@ -310,9 +311,10 @@ export function HandsonTable<T extends Record<string, any>>({
         disabled={disabled}
         hideSaveButton={hideSaveButton}
         headerActions={headerActions}
+        isActionHidden={isActionHidden}
       />
 
-      {disabled && (
+      {disabled && !isActionHidden && (
         <div className="read-only-banner">
           <span className="read-only-icon">🔒</span>
           <span className="read-only-text">

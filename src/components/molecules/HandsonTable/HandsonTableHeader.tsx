@@ -26,6 +26,7 @@ interface HandsonTableHeaderProps {
   disabled?: boolean;
   hideSaveButton?: boolean;
   headerActions?: React.ReactNode;
+  isActionHidden?: boolean;
 }
 
 export function HandsonTableHeader({
@@ -46,6 +47,7 @@ export function HandsonTableHeader({
   disabled = false,
   hideSaveButton = false,
   headerActions,
+  isActionHidden,
 }: HandsonTableHeaderProps) {
   const isAddRowDisabled = isFiltered || isSorted || disabled;
 
@@ -66,53 +68,57 @@ export function HandsonTableHeader({
     <div className="handson-table-header">
       {title && <h3>{title}</h3>}
       <div className="handson-table-actions">
-        <Tooltip title={isAddRowDisabled ? getAddRowTooltip() : ''}>
-          <Button
-            icon={<PlusOutlined />}
-            onClick={onAddRow}
-            disabled={isAddRowDisabled}
-          >
-            Add Row
-          </Button>
-        </Tooltip>
-        <Button
-          danger
-          icon={<DeleteOutlined />}
-          onClick={onRemoveRows}
-          disabled={selectedRowCount === 0 || disabled}
-        >
-          Remove Row
-        </Button>
-        <Button
-          icon={<UndoOutlined />}
-          onClick={onUndo}
-          disabled={!canUndo || disabled}
-          title="Undo"
-        >
-          Undo
-        </Button>
-        <Button
-          icon={<RedoOutlined />}
-          onClick={onRedo}
-          disabled={!canRedo || disabled}
-          title="Redo"
-        >
-          Redo
-        </Button>
-        {showHistory && (
-          <Button icon={<HistoryOutlined />} onClick={onHistoryClick}>
-            History
-          </Button>
-        )}
-        {!hideSaveButton && (
-          <Button
-            type="primary"
-            icon={<SaveOutlined />}
-            onClick={onSave}
-            disabled={!hasChanges || disabled}
-          >
-            Save
-          </Button>
+        {!isActionHidden && (
+          <>
+            <Tooltip title={isAddRowDisabled ? getAddRowTooltip() : ''}>
+              <Button
+                icon={<PlusOutlined />}
+                onClick={onAddRow}
+                disabled={isAddRowDisabled}
+              >
+                Add Row
+              </Button>
+            </Tooltip>
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={onRemoveRows}
+              disabled={selectedRowCount === 0 || disabled}
+            >
+              Remove Row
+            </Button>
+            <Button
+              icon={<UndoOutlined />}
+              onClick={onUndo}
+              disabled={!canUndo || disabled}
+              title="Undo"
+            >
+              Undo
+            </Button>
+            <Button
+              icon={<RedoOutlined />}
+              onClick={onRedo}
+              disabled={!canRedo || disabled}
+              title="Redo"
+            >
+              Redo
+            </Button>
+            {showHistory && (
+              <Button icon={<HistoryOutlined />} onClick={onHistoryClick}>
+                History
+              </Button>
+            )}
+            {!hideSaveButton && (
+              <Button
+                type="primary"
+                icon={<SaveOutlined />}
+                onClick={onSave}
+                disabled={!hasChanges || disabled}
+              >
+                Save
+              </Button>
+            )}
+          </>
         )}
         {headerActions}
       </div>

@@ -10,7 +10,11 @@ import { TAB_KEYS } from '@/constants';
 import type { ScopeItem, ImpactItem } from '@/types';
 import './index.scss';
 
-const ScopeImpactTab: React.FC = () => {
+interface ScopeImpactTabProps {
+  isActionHidden?: boolean;
+}
+
+const ScopeImpactTab: React.FC<ScopeImpactTabProps> = ({ isActionHidden }) => {
   const { setIsChecklistGenerated, setActiveTab } = useAnalysis();
   const [isGenerating, setIsGenerating] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
@@ -100,46 +104,50 @@ const ScopeImpactTab: React.FC = () => {
       {/* Fireworks Animation */}
       <FireworksAnimation show={showFireworks} />
 
-      <div className="scope-impact-tab__header">
-        <div className="generate-section">
-          <div className="generate-icon-left">
-            <FileDoneOutlined />
-          </div>
-          <div className="button-wrapper">
-            <Button
-              variant="primary"
-              size="large"
-              onClick={handleGenerate}
-              disabled={isGenerating || !isReadOnly}
-              className={`generate-button ${isGenerating ? 'is-generating' : ''}`}
-            >
-              {isGenerating ? (
-                <AnimatedText
-                  text="Generating..."
-                  className="generating-text"
-                />
-              ) : (
-                'Generate Checklist'
-              )}
-            </Button>
-          </div>
-          <div className="generate-icon-right">
-            <FileDoneOutlined />
+      {!isActionHidden && (
+        <>
+          <div className="scope-impact-tab__header">
+            <div className="generate-section">
+              <div className="generate-icon-left">
+                <FileDoneOutlined />
+              </div>
+              <div className="button-wrapper">
+                <Button
+                  variant="primary"
+                  size="large"
+                  onClick={handleGenerate}
+                  disabled={isGenerating || !isReadOnly}
+                  className={`generate-button ${isGenerating ? 'is-generating' : ''}`}
+                >
+                  {isGenerating ? (
+                    <AnimatedText
+                      text="Generating..."
+                      className="generating-text"
+                    />
+                  ) : (
+                    'Generate Checklist'
+                  )}
+                </Button>
+              </div>
+              <div className="generate-icon-right">
+                <FileDoneOutlined />
+              </div>
+
+              {/* Edit/Save Button */}
+              <SaveSection
+                isReadOnly={isReadOnly}
+                isSaving={isSaving}
+                isSaveDisabled={isSaveDisabled}
+                onEdit={handleEdit}
+                onSave={handleSave}
+                className="scope-impact-save-section"
+              />
+            </div>
           </div>
 
-          {/* Edit/Save Button */}
-          <SaveSection
-            isReadOnly={isReadOnly}
-            isSaving={isSaving}
-            isSaveDisabled={isSaveDisabled}
-            onEdit={handleEdit}
-            onSave={handleSave}
-            className="scope-impact-save-section"
-          />
-        </div>
-      </div>
-
-      <Divider style={{ margin: 0, borderColor: 'rgba(0, 0, 0, 0.06)' }} />
+          <Divider style={{ margin: 0, borderColor: 'rgba(0, 0, 0, 0.06)' }} />
+        </>
+      )}
 
       <div className="scope-impact-tab__content">
         <div className="scope-impact-tab__section">
@@ -147,6 +155,7 @@ const ScopeImpactTab: React.FC = () => {
             disabled={isReadOnly || isSaving}
             onDataChange={setScopeData}
             onSaveRef={scopeRef}
+            isActionHidden={isActionHidden}
           />
         </div>
 
@@ -159,6 +168,7 @@ const ScopeImpactTab: React.FC = () => {
             disabled={isReadOnly || isSaving}
             onDataChange={setImpactData}
             onSaveRef={impactRef}
+            isActionHidden={isActionHidden}
           />
         </div>
       </div>

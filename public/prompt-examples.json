@@ -1,0 +1,6 @@
+{
+  "BRD": "Extract the content from the file.",
+  "FSD": "Summarize the functional specifications.",
+  "Ticket": "Analyze the ticket requirements and scope.",
+  "Confluence Page": "Analyze the content of the Confluence page."
+}

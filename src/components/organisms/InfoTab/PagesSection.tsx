@@ -16,6 +16,7 @@ interface PagesSectionProps {
   onDiscard: (pageUrl: string) => void;
   onEdit: (pageUrl: string) => void;
   onDelete: (pageUrl: string) => void;
+  promptExamples?: Record<string, string>;
 }
 
 /**
@@ -33,6 +34,7 @@ export const PagesSection: React.FC<PagesSectionProps> = ({
   onDiscard,
   onEdit,
   onDelete,
+  promptExamples,
 }) => {
   return (
     <>
@@ -72,6 +74,7 @@ export const PagesSection: React.FC<PagesSectionProps> = ({
                       onDiscard={onDiscard}
                       onEdit={onEdit}
                       onDelete={onDelete}
+                      promptExamples={promptExamples}
                     />
                   );
                 })}

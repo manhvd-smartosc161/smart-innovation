@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { message } from 'antd';
 import type { AnalysisData } from '@/types';
 import { TAB_KEYS } from '@/constants';
@@ -17,7 +17,11 @@ import { TicketSelectionModal } from './TicketSelectionModal';
 import { PageSelectionModal } from './PageSelectionModal';
 import './index.scss';
 
-const InfoTab: React.FC = () => {
+interface InfoTabProps {
+  isActionHidden?: boolean;
+}
+
+const InfoTab: React.FC<InfoTabProps> = ({ isActionHidden }) => {
   const { setIsAnalysed, setActiveTab } = useAnalysis();
   const [overallObjective, setOverallObjective] = useState<string>('');
 
@@ -37,6 +41,18 @@ const InfoTab: React.FC = () => {
     confluencePages: [] as typeof pageMgmt.pages,
     overallObjective: '',
   });
+
+  // Prompt examples state
+  const [promptExamples, setPromptExamples] = useState<Record<string, string>>(
+    {}
+  );
+
+  useEffect(() => {
+    fetch('/prompt-examples.json')
+      .then((res) => res.json())
+      .then((data) => setPromptExamples(data))
+      .catch((err) => console.error('Failed to load prompt examples:', err));
+  }, []);
 
   // Analysis state
   const [showFireworks, setShowFireworks] = useState(false);
@@ -171,18 +187,20 @@ const InfoTab: React.FC = () => {
 
   return (
     <div className="info-tab">
-      <AnalyseSection
-        isAnalysing={isAnalysing}
-        showFireworks={showFireworks}
-        isAnalyseDisabled={isAnalyseDisabled}
-        analyseTooltip={getAnalyseTooltip()}
-        onAnalyse={handleAnalyse}
-        isReadOnly={isReadOnly}
-        isSaving={isSaving}
-        isSaveDisabled={isSaveDisabled}
-        onEdit={handleEdit}
-        onSave={handleSave}
-      />
+      {!isActionHidden && (
+        <AnalyseSection
+          isAnalysing={isAnalysing}
+          showFireworks={showFireworks}
+          isAnalyseDisabled={isAnalyseDisabled}
+          analyseTooltip={getAnalyseTooltip()}
+          onAnalyse={handleAnalyse}
+          isReadOnly={isReadOnly}
+          isSaving={isSaving}
+          isSaveDisabled={isSaveDisabled}
+          onEdit={handleEdit}
+          onSave={handleSave}
+        />
+      )}
 
       {/* Scrollable Content */}
       <div className="info-tab-content">
@@ -196,7 +214,7 @@ const InfoTab: React.FC = () => {
           uploads={fileUpload.uploads}
           disabled={isReadOnly || isSaving}
           hasEditingFile={fileUpload.hasEditingFile}
-          onAdd={fileUpload.handleAdd}
+          onAdd={() => fileUpload.handleAdd(promptExamples['BRD'])}
           onFileTypeChange={fileUpload.handleFileTypeChange}
           onFileChange={fileUpload.handleFileChange}
           onPromptChange={fileUpload.handlePromptChange}
@@ -204,6 +222,7 @@ const InfoTab: React.FC = () => {
           onDiscard={fileUpload.handleDiscard}
           onEdit={fileUpload.handleEdit}
           onDelete={fileUpload.handleDelete}
+          promptExamples={promptExamples}
         />
 
         <TicketsSection
@@ -216,6 +235,7 @@ const InfoTab: React.FC = () => {
           onDiscard={ticketMgmt.handleDiscard}
           onEdit={ticketMgmt.handleEdit}
           onDelete={ticketMgmt.handleDelete}
+          promptExamples={promptExamples}
         />
 
         <PagesSection
@@ -228,6 +248,7 @@ const InfoTab: React.FC = () => {
           onDiscard={pageMgmt.handleDiscard}
           onEdit={pageMgmt.handleEdit}
           onDelete={pageMgmt.handleDelete}
+          promptExamples={promptExamples}
         />
       </div>
 
@@ -235,13 +256,17 @@ const InfoTab: React.FC = () => {
       <TicketSelectionModal
         visible={ticketMgmt.modalVisible}
         selectedTicketIds={ticketMgmt.tickets.map((t) => t.ticketId)}
-        onOk={ticketMgmt.handleSelectionOk}
+        onOk={(ids) =>
+          ticketMgmt.handleSelectionOk(ids, promptExamples['Ticket'])
+        }
         onCancel={() => ticketMgmt.setModalVisible(false)}
       />
       <PageSelectionModal
         visible={pageMgmt.modalVisible}
         selectedPageUrls={pageMgmt.pages.map((p) => p.url)}
-        onOk={pageMgmt.handleSelectionOk}
+        onOk={(urls) =>
+          pageMgmt.handleSelectionOk(urls, promptExamples['Confluence Page'])
+        }
         onCancel={() => pageMgmt.setModalVisible(false)}
       />
     </div>

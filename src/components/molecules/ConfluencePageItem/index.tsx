@@ -18,6 +18,7 @@ interface ConfluencePageItemProps {
   onDiscard: (pageUrl: string) => void;
   onEdit: (pageUrl: string) => void;
   onDelete: (pageUrl: string) => void;
+  promptExamples?: Record<string, string>;
 }
 
 export const ConfluencePageItem: React.FC<ConfluencePageItemProps> = ({
@@ -28,12 +29,26 @@ export const ConfluencePageItem: React.FC<ConfluencePageItemProps> = ({
   onDiscard,
   onEdit,
   onDelete,
+  promptExamples,
 }) => {
   const [localPrompt, setLocalPrompt] = useState(page.prompt || '');
 
   React.useEffect(() => {
     setLocalPrompt(page.prompt || '');
   }, [page.prompt]);
+
+  // Auto-fill prompt when entering edit mode with empty prompt
+  React.useEffect(() => {
+    if (page.isEditing && promptExamples && promptExamples['Confluence Page']) {
+      const example = promptExamples['Confluence Page'];
+      // Auto-fill if empty or if the current prompt is one of the other examples
+      const isStandard = Object.values(promptExamples).includes(localPrompt);
+      if (!localPrompt || !localPrompt.trim() || isStandard) {
+        setLocalPrompt(example);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page.isEditing, promptExamples]);
 
   const handleAccept = () => {
     if (!localPrompt || !localPrompt.trim()) {

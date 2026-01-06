@@ -8,12 +8,14 @@ interface ImpactProps {
   disabled?: boolean;
   onDataChange?: (data: ImpactItem[]) => void;
   onSaveRef?: React.Ref<{ save: () => void }>;
+  isActionHidden?: boolean;
 }
 
 export const Impact: React.FC<ImpactProps> = ({
   disabled,
   onDataChange,
   onSaveRef,
+  isActionHidden,
 }) => {
   return (
     <BaseTable<ImpactItem>
@@ -27,6 +29,7 @@ export const Impact: React.FC<ImpactProps> = ({
       disabled={disabled}
       onDataChange={onDataChange}
       onSaveRef={onSaveRef}
+      isActionHidden={isActionHidden}
     />
   );
 };
