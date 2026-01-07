@@ -5,8 +5,8 @@
 
   &__header {
     flex-shrink: 0;
-    padding: var(--spacing-sm) var(--spacing-xl);
-    background: var(--gradient-warm);
+    padding: var(--spacing-sm) var(--spacing-xl) 0;
+    background: transparent;
 
     .generate-section {
       position: relative;
@@ -30,7 +30,7 @@
       // Glassmorphism effect
       backdrop-filter: var(--glass-backdrop-blur);
       -webkit-backdrop-filter: var(--glass-backdrop-blur);
-      box-shadow: var(--shadow-glass);
+      // box-shadow: var(--shadow-glass);
       border-radius: var(--radius-4xl);
       border: var(--glass-border);
 
@@ -273,22 +273,22 @@
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: var(--spacing-md);
+    padding: 0 var(--spacing-md) var(--spacing-lg);
     @include flex-column;
-    gap: var(--spacing-sm);
-    background: var(--gradient-warm);
+    gap: var(--spacing-lg);
+    background: transparent;
   }
 
   &__section {
     background: var(--color-bg-base);
     border-radius: var(--radius-2xl);
     padding: var(--spacing-md) var(--spacing-xl);
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+    box-shadow: var(--shadow-md);
     max-height: 500px;
     @include flex-column;
     overflow: hidden;
     flex-shrink: 0;
-    margin: var(--spacing-sm);
+    margin: 0 var(--spacing-sm);
 
     // Remove extra padding and styling from nested tabs
     .scope-tab,

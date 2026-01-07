@@ -1,8 +1,7 @@
 import React from 'react';
-import { Divider } from 'antd';
 import { PlusOutlined, CloudUploadOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd';
-import { Button } from '@/components/atoms';
+import { Button, Card } from '@/components/atoms';
 import { FileUploadItem } from '@/components/molecules';
 import type { FileType, UploadedFile } from '@/types';
 import { INFO_TAB_LABELS, INFO_TAB_BUTTONS } from '@/constants';
@@ -42,57 +41,54 @@ export const FileUploadSection: React.FC<FileUploadSectionProps> = ({
   promptExamples,
 }) => {
   return (
-    <>
-      <Divider />
-      <div className="info-section">
-        <div className="section-header">
-          <h3>
-            <CloudUploadOutlined />
-            {INFO_TAB_LABELS.UPLOAD_FILES}
-          </h3>
-          <Button
-            variant="primary"
-            icon={<PlusOutlined />}
-            onClick={onAdd}
-            disabled={disabled || hasEditingFile}
-          >
-            {INFO_TAB_BUTTONS.ADD_UPLOAD}
-          </Button>
-        </div>
-        <div className="section-content">
-          {uploads.length === 0 ? (
-            <div className="empty-message">
-              No files uploaded yet. Click "Add Upload" to upload a file.
-            </div>
-          ) : (
-            <div className="uploads-container">
-              {uploads.map((upload) => {
-                const isDisabled =
-                  disabled || (hasEditingFile && !upload.isEditing);
-                return (
-                  <FileUploadItem
-                    key={upload.id}
-                    id={upload.id}
-                    fileType={upload.fileType}
-                    fileName={upload.file?.name || null}
-                    prompt={upload.prompt}
-                    isEditing={upload.isEditing}
-                    isDisabled={isDisabled}
-                    onFileTypeChange={onFileTypeChange}
-                    onFileChange={onFileChange}
-                    onPromptChange={onPromptChange}
-                    onAccept={onAccept}
-                    onDiscard={onDiscard}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
-                    promptExamples={promptExamples}
-                  />
-                );
-              })}
-            </div>
-          )}
-        </div>
+    <Card>
+      <div className="section-header">
+        <h3>
+          <CloudUploadOutlined />
+          {INFO_TAB_LABELS.UPLOAD_FILES}
+        </h3>
+        <Button
+          variant="primary"
+          icon={<PlusOutlined />}
+          onClick={onAdd}
+          disabled={disabled || hasEditingFile}
+        >
+          {INFO_TAB_BUTTONS.ADD_UPLOAD}
+        </Button>
       </div>
-    </>
+      <div className="section-content">
+        {uploads.length === 0 ? (
+          <div className="empty-message">
+            No files uploaded yet. Click "Add Upload" to upload a file.
+          </div>
+        ) : (
+          <div className="uploads-container">
+            {uploads.map((upload) => {
+              const isDisabled =
+                disabled || (hasEditingFile && !upload.isEditing);
+              return (
+                <FileUploadItem
+                  key={upload.id}
+                  id={upload.id}
+                  fileType={upload.fileType}
+                  fileName={upload.file?.name || null}
+                  prompt={upload.prompt}
+                  isEditing={upload.isEditing}
+                  isDisabled={isDisabled}
+                  onFileTypeChange={onFileTypeChange}
+                  onFileChange={onFileChange}
+                  onPromptChange={onPromptChange}
+                  onAccept={onAccept}
+                  onDiscard={onDiscard}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  promptExamples={promptExamples}
+                />
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </Card>
   );
 };

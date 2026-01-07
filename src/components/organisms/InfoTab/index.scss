@@ -3,194 +3,179 @@
   height: 100%;
   width: 100%;
   padding-top: var(--spacing-sm);
-  background: var(--gradient-warm);
+  background: transparent;
   box-sizing: border-box;
   overflow: hidden;
 
-  .info-section {
+  // Section styling (header and content inside cards)
+  .section-header {
+    @include flex-between;
     margin-bottom: var(--spacing-md);
-    background: var(--color-bg-base);
-    border-radius: var(--radius-2xl);
-    padding: var(--spacing-lg);
-    box-shadow: var(--shadow-md);
-    transition: all var(--duration-normal) var(--ease-in-out);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--color-border-lighter);
 
-    &:hover {
-      box-shadow: var(--shadow-lg);
+    h3 {
+      margin: 0;
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+      letter-spacing: var(--letter-spacing-tight);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
     }
 
-    .section-header {
-      @include flex-between;
-      margin-bottom: var(--spacing-md);
-      padding-bottom: var(--spacing-sm);
-      border-bottom: 2px solid var(--color-border-lighter);
+    .ant-btn-primary {
+      @include button-primary;
+    }
+  }
 
-      h3 {
-        margin: 0;
-        font-size: var(--font-size-xl);
-        font-weight: var(--font-weight-bold);
-        color: var(--color-text-primary);
-        letter-spacing: var(--letter-spacing-tight);
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-sm);
-      }
+  .section-content {
+    .empty-message {
+      color: var(--color-text-tertiary);
+      font-style: italic;
+      padding: var(--spacing-lg);
+      text-align: center;
+      background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+      border: 2px dashed var(--color-border-base);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-size-sm);
+      transition: all var(--duration-normal) ease;
 
-      .ant-btn-primary {
-        @include button-primary;
+      &:hover {
+        border-color: var(--color-primary);
+        background: linear-gradient(135deg, #f0f7ff 0%, #e6f4ff 100%);
       }
     }
 
-    .section-content {
-      .empty-message {
-        color: var(--color-text-tertiary);
-        font-style: italic;
-        padding: var(--spacing-lg);
-        text-align: center;
-        background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
-        border: 2px dashed var(--color-border-base);
+    .overall-objective-input {
+      @include input-base;
+    }
+
+    .uploads-container {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: var(--spacing-md);
+      background: var(--gradient-cool);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-xl);
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.02);
+      @include custom-scrollbar;
+    }
+
+    .selected-items-container {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: var(--spacing-md);
+      background: var(--gradient-cool);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-xl);
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.02);
+      @include custom-scrollbar;
+    }
+
+    .selected-items-list {
+      @include flex-column;
+      gap: var(--spacing-sm);
+
+      .selected-item {
+        padding: var(--spacing-md);
+        border: 2px solid var(--color-border-light);
         border-radius: var(--radius-lg);
-        font-size: var(--font-size-sm);
-        transition: all var(--duration-normal) ease;
+        background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+        box-shadow: var(--shadow-sm);
+        transition: all var(--duration-normal) var(--ease-in-out);
 
-        &:hover {
+        &:hover:not(.disabled) {
           border-color: var(--color-primary);
-          background: linear-gradient(135deg, #f0f7ff 0%, #e6f4ff 100%);
+          box-shadow: 0 4px 12px rgba(24, 144, 255, 0.15);
+          transform: translateY(-2px);
         }
-      }
 
-      .overall-objective-input {
-        @include input-base;
-      }
+        &.editing {
+          border-color: var(--color-primary);
+          background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+        }
 
-      .uploads-container {
-        max-height: 400px;
-        overflow-y: auto;
-        padding: var(--spacing-md);
-        background: var(--gradient-cool);
-        border: 1px solid var(--color-border-light);
-        border-radius: var(--radius-xl);
-        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.02);
-        @include custom-scrollbar;
-      }
+        &.disabled {
+          opacity: 0.5;
+          pointer-events: none;
+          cursor: not-allowed;
 
-      .selected-items-container {
-        max-height: 400px;
-        overflow-y: auto;
-        padding: var(--spacing-md);
-        background: var(--gradient-cool);
-        border: 1px solid var(--color-border-light);
-        border-radius: var(--radius-xl);
-        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.02);
-        @include custom-scrollbar;
-      }
-
-      .selected-items-list {
-        @include flex-column;
-        gap: var(--spacing-sm);
-
-        .selected-item {
-          padding: var(--spacing-md);
-          border: 2px solid var(--color-border-light);
-          border-radius: var(--radius-lg);
-          background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
-          box-shadow: var(--shadow-sm);
-          transition: all var(--duration-normal) var(--ease-in-out);
-
-          &:hover:not(.disabled) {
-            border-color: var(--color-primary);
-            box-shadow: 0 4px 12px rgba(24, 144, 255, 0.15);
-            transform: translateY(-2px);
-          }
-
-          &.editing {
-            border-color: var(--color-primary);
-            background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
-          }
-
-          &.disabled {
-            opacity: 0.5;
+          * {
             pointer-events: none;
-            cursor: not-allowed;
-
-            * {
-              pointer-events: none;
-            }
           }
+        }
 
-          .item-header {
-            @include flex-between;
-            margin-bottom: var(--spacing-sm);
-            flex-wrap: wrap;
+        .item-header {
+          @include flex-between;
+          margin-bottom: var(--spacing-sm);
+          flex-wrap: wrap;
+          gap: var(--spacing-sm);
+
+          .item-actions {
+            @include flex-start;
             gap: var(--spacing-sm);
-
-            .item-actions {
-              @include flex-start;
-              gap: var(--spacing-sm);
-            }
-
-            .item-id {
-              font-weight: var(--font-weight-bold);
-              color: var(--color-primary);
-              font-size: var(--font-size-lg);
-              padding: var(--spacing-xs) var(--spacing-md);
-              background: linear-gradient(135deg, #e6f4ff 0%, #bae0ff 100%);
-              border-radius: var(--radius-md);
-              letter-spacing: var(--letter-spacing-wide);
-            }
-
-            .item-url {
-              font-size: var(--font-size-sm);
-              color: var(--color-text-secondary);
-              word-break: break-all;
-              flex: 1;
-              margin-right: var(--spacing-md);
-              padding: 6px var(--spacing-md);
-              background: var(--color-bg-spotlight);
-              border-radius: var(--radius-md);
-              font-family: var(--font-family-code);
-              min-width: 0;
-            }
-
-            .ant-btn {
-              transition: all var(--duration-fast) ease;
-              flex-shrink: 0;
-
-              &:hover {
-                transform: scale(1.15);
-                color: var(--color-error) !important;
-              }
-            }
           }
 
-          .ant-input {
-            @include input-base;
+          .item-id {
+            font-weight: var(--font-weight-bold);
+            color: var(--color-primary);
+            font-size: var(--font-size-lg);
+            padding: var(--spacing-xs) var(--spacing-md);
+            background: linear-gradient(135deg, #e6f4ff 0%, #bae0ff 100%);
+            border-radius: var(--radius-md);
+            letter-spacing: var(--letter-spacing-wide);
           }
+
+          .item-url {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            word-break: break-all;
+            flex: 1;
+            margin-right: var(--spacing-md);
+            padding: 6px var(--spacing-md);
+            background: var(--color-bg-spotlight);
+            border-radius: var(--radius-md);
+            font-family: var(--font-family-code);
+            min-width: 0;
+          }
+
+          .ant-btn {
+            transition: all var(--duration-fast) ease;
+            flex-shrink: 0;
+
+            &:hover {
+              transform: scale(1.15);
+              color: var(--color-error) !important;
+            }
+          }
+        }
+
+        .ant-input {
+          @include input-base;
         }
       }
     }
   }
 
-  // Styling for Ant Design Divider
-  .ant-divider {
-    margin: var(--spacing-md) 0;
-    border-color: var(--color-border-light);
-    border-width: 1px;
-
-    &::before,
-    &::after {
-      border-color: var(--color-border-light);
-    }
-  }
-
-  // Scrollable content container
+  // Scrollable content container -> No longer a card, just a scrollable area
   .info-tab-content {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 0 var(--spacing-xl) var(--spacing-3xl) var(--spacing-xl);
+    padding: 0 var(--spacing-xl) var(--spacing-xl);
     -webkit-overflow-scrolling: touch;
     @include custom-scrollbar;
+
+    // Add spacing between cards
+    .card {
+      margin-bottom: var(--spacing-lg);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
   }
 
   .analyse-section {
@@ -215,7 +200,10 @@
     backdrop-filter: var(--glass-backdrop-blur);
     -webkit-backdrop-filter: var(--glass-backdrop-blur);
 
-    box-shadow: var(--shadow-glass);
+    // Shadow below header for depth
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.08),
+      0 2px 6px rgba(0, 0, 0, 0.04);
 
     border-radius: var(--radius-4xl);
     border: var(--glass-border);
@@ -511,10 +499,6 @@
     .info-tab-content {
       padding: 0 24px 60px 24px;
     }
-
-    .info-section {
-      padding: 20px;
-    }
   }
 
   @media (max-width: 768px) {
@@ -522,48 +506,42 @@
       padding: 0 16px 40px 16px;
     }
 
-    .info-section {
-      padding: 16px;
-      margin-bottom: 16px;
-      border-radius: 12px;
+    .section-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
 
-      .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-
-        h3 {
-          font-size: 18px;
-        }
-
-        .ant-btn-primary {
-          width: 100%;
-        }
+      h3 {
+        font-size: 18px;
       }
 
-      .section-content {
-        .selected-items-list {
-          .selected-item {
-            padding: 12px;
+      .ant-btn-primary {
+        width: 100%;
+      }
+    }
 
-            .item-header {
-              flex-direction: column;
-              align-items: flex-start;
+    .section-content {
+      .selected-items-list {
+        .selected-item {
+          padding: 12px;
 
-              .item-id {
-                font-size: 14px;
-              }
+          .item-header {
+            flex-direction: column;
+            align-items: flex-start;
 
-              .item-url {
-                margin-right: 0;
-                margin-bottom: 8px;
-                font-size: 12px;
-                width: 100%;
-              }
+            .item-id {
+              font-size: 14px;
+            }
 
-              .ant-btn {
-                align-self: flex-end;
-              }
+            .item-url {
+              margin-right: 0;
+              margin-bottom: 8px;
+              font-size: 12px;
+              width: 100%;
+            }
+
+            .ant-btn {
+              align-self: flex-end;
             }
           }
         }
@@ -608,19 +586,14 @@
       padding: 0 12px 32px 12px;
     }
 
-    .info-section {
-      padding: 12px;
-      border-radius: 8px;
+    .section-header {
+      h3 {
+        font-size: 16px;
+      }
 
-      .section-header {
-        h3 {
-          font-size: 16px;
-        }
-
-        .ant-btn-primary {
-          height: 32px;
-          font-size: 14px;
-        }
+      .ant-btn-primary {
+        height: 32px;
+        font-size: 14px;
       }
     }
 

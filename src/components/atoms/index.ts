@@ -5,3 +5,4 @@ export * from './Button';
 export * from './TextArea';
 export * from './Select';
 export * from './AnimatedText';
+export * from './Card';

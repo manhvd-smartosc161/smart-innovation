@@ -1,7 +1,6 @@
 import React from 'react';
-import { Divider } from 'antd';
 import { PlusOutlined, ReadOutlined } from '@ant-design/icons';
-import { Button } from '@/components/atoms';
+import { Button, Card } from '@/components/atoms';
 import { ConfluencePageItem } from '@/components/molecules';
 import type { ConfluencePage } from '@/types';
 import { INFO_TAB_LABELS, INFO_TAB_BUTTONS } from '@/constants';
@@ -37,55 +36,52 @@ export const PagesSection: React.FC<PagesSectionProps> = ({
   promptExamples,
 }) => {
   return (
-    <>
-      <Divider />
-      <div className="info-section">
-        <div className="section-header">
-          <h3>
-            <ReadOutlined />
-            {INFO_TAB_LABELS.SELECT_RELATED_CONFLUENCE_PAGES}
-          </h3>
-          <Button
-            variant="primary"
-            icon={<PlusOutlined />}
-            onClick={onOpenModal}
-            disabled={disabled || hasEditingPage}
-          >
-            {INFO_TAB_BUTTONS.ADD_PAGES}
-          </Button>
-        </div>
-        <div className="section-content">
-          {pages.length === 0 ? (
-            <p className="empty-message">
-              No pages selected yet. Click "Add Pages" to select from available
-              pages.
-            </p>
-          ) : (
-            <div className="selected-items-container">
-              <div className="selected-items-list">
-                {pages.map((page) => {
-                  const isDisabled =
-                    disabled ||
-                    pages.some((p) => p.url !== page.url && p.isEditing);
-                  return (
-                    <ConfluencePageItem
-                      key={page.id}
-                      page={page}
-                      isDisabled={isDisabled}
-                      onPromptChange={onPromptChange}
-                      onAccept={onAccept}
-                      onDiscard={onDiscard}
-                      onEdit={onEdit}
-                      onDelete={onDelete}
-                      promptExamples={promptExamples}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </div>
+    <Card>
+      <div className="section-header">
+        <h3>
+          <ReadOutlined />
+          {INFO_TAB_LABELS.SELECT_RELATED_CONFLUENCE_PAGES}
+        </h3>
+        <Button
+          variant="primary"
+          icon={<PlusOutlined />}
+          onClick={onOpenModal}
+          disabled={disabled || hasEditingPage}
+        >
+          {INFO_TAB_BUTTONS.ADD_PAGES}
+        </Button>
       </div>
-    </>
+      <div className="section-content">
+        {pages.length === 0 ? (
+          <div className="empty-message">
+            No pages selected yet. Click "Add Pages" to select from available
+            pages.
+          </div>
+        ) : (
+          <div className="selected-items-container">
+            <div className="selected-items-list">
+              {pages.map((page) => {
+                const isDisabled =
+                  disabled ||
+                  pages.some((p) => p.url !== page.url && p.isEditing);
+                return (
+                  <ConfluencePageItem
+                    key={page.id}
+                    page={page}
+                    isDisabled={isDisabled}
+                    onPromptChange={onPromptChange}
+                    onAccept={onAccept}
+                    onDiscard={onDiscard}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    promptExamples={promptExamples}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    </Card>
   );
 };

@@ -145,7 +145,13 @@ const ScopeImpactTab: React.FC<ScopeImpactTabProps> = ({ isActionHidden }) => {
             </div>
           </div>
 
-          <Divider style={{ margin: 0, borderColor: 'rgba(0, 0, 0, 0.06)' }} />
+          <Divider
+            style={{
+              margin:
+                'var(--spacing-md) calc(-1 * var(--spacing-xl)) var(--spacing-md)',
+              borderColor: 'rgba(0, 0, 0, 0.06)',
+            }}
+          />
         </>
       )}
 

@@ -46,9 +46,9 @@
       }
     }
     &.status-resolved {
-      color: var(--color-success) !important;
+      color: #8b5cf6 !important;
       .icon {
-        color: var(--color-success) !important;
+        color: #8b5cf6 !important;
       }
     }
     &.status-approved {
@@ -100,9 +100,9 @@
               display: flex !important;
               align-items: center !important;
               &.status-resolved {
-                color: var(--color-success) !important;
+                color: #8b5cf6 !important;
                 .icon {
-                  color: var(--color-success) !important;
+                  color: #8b5cf6 !important;
                 }
               }
               &.status-approved {
@@ -296,7 +296,7 @@
       color: var(--color-error);
     }
     &.status-resolved .icon {
-      color: var(--color-success);
+      color: #8b5cf6;
     }
     &.status-approved .icon {
       color: var(--color-success);

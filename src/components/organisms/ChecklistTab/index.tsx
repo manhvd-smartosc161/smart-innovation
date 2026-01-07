@@ -320,7 +320,13 @@ const ChecklistTab: React.FC<ChecklistTabProps> = ({ isActionHidden }) => {
             />
           </div>
 
-          <Divider />
+          <Divider
+            style={{
+              margin:
+                'var(--spacing-md) calc(-1 * var(--spacing-xl)) var(--spacing-md)',
+              borderColor: 'rgba(0, 0, 0, 0.06)',
+            }}
+          />
         </>
       )}
 

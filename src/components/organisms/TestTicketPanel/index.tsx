@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useEffect } from 'react';
-import { Tabs, Modal, Spin } from 'antd';
+import { Steps, Modal, Spin } from 'antd';
 import {
   ExclamationCircleOutlined,
   RocketOutlined,
@@ -96,23 +96,6 @@ export const TestTicketPanel: React.FC<{ workflowStatus: string }> = ({
     }
   }, [activeTab, setActiveTab]);
 
-  const items = allItems.filter((item) => {
-    if (item.key === TAB_KEYS.INITIALIZATION) return true;
-    if (item.key === TAB_KEYS.SCOPE_AND_IMPACT) return isAnalysed;
-    if (item.key === TAB_KEYS.CHECKLIST)
-      return isAnalysed && isChecklistGenerated;
-    if (item.key === TAB_KEYS.TEST_CASES)
-      return isAnalysed && isChecklistGenerated && isTestCasesGenerated;
-    if (item.key === TAB_KEYS.TEST_CASE_DETAILS)
-      return (
-        isAnalysed &&
-        isChecklistGenerated &&
-        isTestCasesGenerated &&
-        selectedTestCaseId !== null
-      );
-    return false;
-  });
-
   const handleTabChange = (newTab: string) => {
     // Check for unsaved changes
     const unsavedItems: string[] = [];
@@ -199,12 +182,39 @@ export const TestTicketPanel: React.FC<{ workflowStatus: string }> = ({
 
   return (
     <div className="test-case-panel">
-      <Tabs
-        activeKey={activeTab}
-        onChange={handleTabChange}
-        items={items}
-        className="panel-tabs"
-        tabBarGutter={32}
+      <Steps
+        current={allItems.findIndex((item) => item.key === activeTab)}
+        onChange={(current) => handleTabChange(allItems[current].key)}
+        items={allItems.map((item) => {
+          let disabled = false;
+          if (item.key === TAB_KEYS.SCOPE_AND_IMPACT && !isAnalysed)
+            disabled = true;
+          else if (
+            item.key === TAB_KEYS.CHECKLIST &&
+            (!isAnalysed || !isChecklistGenerated)
+          )
+            disabled = true;
+          else if (
+            item.key === TAB_KEYS.TEST_CASES &&
+            (!isAnalysed || !isChecklistGenerated || !isTestCasesGenerated)
+          )
+            disabled = true;
+          else if (
+            item.key === TAB_KEYS.TEST_CASE_DETAILS &&
+            (!isAnalysed ||
+              !isChecklistGenerated ||
+              !isTestCasesGenerated ||
+              selectedTestCaseId === null)
+          )
+            disabled = true;
+
+          return {
+            title: item.label,
+            disabled,
+          };
+        })}
+        className="panel-steps"
+        style={{ marginBottom: 10 }}
       />
       {renderContent()}
     </div>

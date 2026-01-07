@@ -1,7 +1,6 @@
 import React from 'react';
-import { Divider } from 'antd';
 import { PlusOutlined, TagsOutlined } from '@ant-design/icons';
-import { Button } from '@/components/atoms';
+import { Button, Card } from '@/components/atoms';
 import { TicketItem } from '@/components/molecules';
 import type { RelatedTicket } from '@/types';
 import { INFO_TAB_LABELS, INFO_TAB_BUTTONS } from '@/constants';
@@ -37,54 +36,51 @@ export const TicketsSection: React.FC<TicketsSectionProps> = ({
   promptExamples,
 }) => {
   return (
-    <>
-      <Divider />
-      <div className="info-section">
-        <div className="section-header">
-          <h3>
-            <TagsOutlined />
-            {INFO_TAB_LABELS.SELECT_RELATED_TICKETS}
-          </h3>
-          <Button
-            variant="primary"
-            icon={<PlusOutlined />}
-            onClick={onOpenModal}
-            disabled={disabled || hasEditingTicket}
-          >
-            {INFO_TAB_BUTTONS.ADD_TICKETS}
-          </Button>
-        </div>
-        <div className="section-content">
-          {tickets.length === 0 ? (
-            <p className="empty-message">
-              No tickets selected yet. Click "Add Tickets" to select from
-              available tickets.
-            </p>
-          ) : (
-            <div className="selected-items-container">
-              <div className="selected-items-list">
-                {tickets.map((ticket) => {
-                  const isDisabled =
-                    disabled || (hasEditingTicket && !ticket.isEditing);
-                  return (
-                    <TicketItem
-                      key={ticket.id}
-                      ticket={ticket}
-                      isDisabled={isDisabled}
-                      onPromptChange={onPromptChange}
-                      onAccept={onAccept}
-                      onDiscard={onDiscard}
-                      onEdit={onEdit}
-                      onDelete={onDelete}
-                      promptExamples={promptExamples}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </div>
+    <Card>
+      <div className="section-header">
+        <h3>
+          <TagsOutlined />
+          {INFO_TAB_LABELS.SELECT_RELATED_TICKETS}
+        </h3>
+        <Button
+          variant="primary"
+          icon={<PlusOutlined />}
+          onClick={onOpenModal}
+          disabled={disabled || hasEditingTicket}
+        >
+          {INFO_TAB_BUTTONS.ADD_TICKETS}
+        </Button>
       </div>
-    </>
+      <div className="section-content">
+        {tickets.length === 0 ? (
+          <div className="empty-message">
+            No tickets selected yet. Click "Add Tickets" to select from
+            available tickets.
+          </div>
+        ) : (
+          <div className="selected-items-container">
+            <div className="selected-items-list">
+              {tickets.map((ticket) => {
+                const isDisabled =
+                  disabled || (hasEditingTicket && !ticket.isEditing);
+                return (
+                  <TicketItem
+                    key={ticket.id}
+                    ticket={ticket}
+                    isDisabled={isDisabled}
+                    onPromptChange={onPromptChange}
+                    onAccept={onAccept}
+                    onDiscard={onDiscard}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    promptExamples={promptExamples}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    </Card>
   );
 };

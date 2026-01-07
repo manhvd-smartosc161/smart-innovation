@@ -1,0 +1,20 @@
+.card {
+  background: var(--color-bg-base);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-xl);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    0 1px 4px rgba(0, 0, 0, 0.04);
+  transition: all var(--duration-normal) var(--ease-in-out);
+  width: 100%;
+  box-sizing: border-box;
+
+  &.card-hoverable {
+    &:hover {
+      box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.06);
+      transform: translateY(-1px);
+    }
+  }
+}

@@ -111,7 +111,7 @@ $breakpoints: (
   backdrop-filter: blur($blur);
   -webkit-backdrop-filter: blur($blur);
   border: 2px solid rgba(255, 255, 255, 0.18);
-  box-shadow: var(--shadow-glass);
+  // box-shadow: var(--shadow-glass);
 }
 
 // ============================================

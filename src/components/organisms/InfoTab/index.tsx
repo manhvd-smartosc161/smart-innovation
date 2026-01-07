@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { message } from 'antd';
+import { message, Divider } from 'antd';
 import type { AnalysisData } from '@/types';
 import { TAB_KEYS } from '@/constants';
 import { useAnalysis } from '@/stores';
@@ -199,6 +199,16 @@ const InfoTab: React.FC<InfoTabProps> = ({ isActionHidden }) => {
           isSaveDisabled={isSaveDisabled}
           onEdit={handleEdit}
           onSave={handleSave}
+        />
+      )}
+
+      {!isActionHidden && (
+        <Divider
+          style={{
+            margin:
+              'var(--spacing-md) calc(-1 * var(--spacing-xl)) var(--spacing-md)',
+            borderColor: 'rgba(0, 0, 0, 0.06)',
+          }}
         />
       )}
 
