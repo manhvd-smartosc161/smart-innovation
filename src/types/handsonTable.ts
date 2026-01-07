@@ -32,7 +32,7 @@ export interface HandsonTableProps<T extends Record<string, any>> {
   onRowAdd?: (newRow: T) => void;
   onRowDelete?: (deletedRows: T[]) => void;
   createEmptyRow: (existingData: T[]) => T;
-  title?: string;
+  title?: React.ReactNode;
   showHistory?: boolean;
   onHistoryClick?: () => void;
   highlightedCells?: Set<string>;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { NodeIndexOutlined } from '@ant-design/icons';
 import { StepItem } from '@/components/molecules';
 import type { TestStep } from '@/types';
 import { useAnalysis } from '@/stores';
@@ -114,7 +115,10 @@ export const TestStepsSection: React.FC = () => {
 
   return (
     <div className="steps-section-container">
-      <h3 className="steps-title">Steps</h3>
+      <h3 className="steps-title">
+        <NodeIndexOutlined style={{ marginRight: '8px' }} />
+        Steps
+      </h3>
 
       <div className="steps-content">
         <div className="step-execute-header"># STEP TO EXECUTE</div>

@@ -1,21 +1,38 @@
 .ticket-list-item {
-  @include flex-center;
-  padding: var(--spacing-sm) var(--spacing-md);
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
   cursor: pointer;
-  border-bottom: 1px solid var(--color-border-lighter);
-  transition: all var(--duration-normal);
+  border-radius: 8px;
+  margin: 4px 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent; /* Prevent layout shift on border change */
+  position: relative;
 
   &:hover {
-    background-color: var(--color-bg-elevated);
+    background-color: rgba(0, 0, 0, 0.04);
   }
 
   &.selected {
-    background-color: #c3d9fc73;
-    border-right: 3px solid var(--color-primary);
+    background-color: var(--color-primary-bg-light, rgba(24, 144, 255, 0.1));
+    border-color: rgba(24, 144, 255, 0.2); // Subtle border
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 60%;
+      width: 4px;
+      background-color: var(--color-primary);
+      border-radius: 0 4px 4px 0;
+    }
 
     .ticket-id {
       color: var(--color-primary);
-      font-weight: var(--font-weight-semibold);
+      font-weight: 600;
+      transform: translateX(4px);
     }
 
     .ticket-icon {
@@ -24,36 +41,56 @@
   }
 
   .ticket-icon {
-    margin-right: var(--spacing-sm);
-    font-size: var(--font-size-base);
+    margin-right: 12px;
+    font-size: 16px;
     color: var(--color-text-tertiary);
-    @include flex-center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
   }
 
   .ticket-info {
     flex: 1;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
     .ticket-id {
-      font-size: var(--font-size-xs);
+      font-size: 14px;
       color: var(--color-text-primary);
-      font-weight: var(--font-weight-medium);
+      font-weight: 500;
+      transition: all 0.2s;
+      line-height: 1.4;
     }
 
+    // Optional: if title is re-enabled later
     .ticket-title {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--color-text-tertiary);
-      @include truncate;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
     }
   }
 
   .ticket-actions {
-    margin-left: var(--spacing-sm);
+    margin-left: 12px;
     opacity: 0;
-    transition: opacity var(--duration-normal);
+    transform: translateX(-10px);
+    transition: all 0.2s ease;
 
     .more-btn {
       color: var(--color-text-tertiary);
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+
       &:hover {
         color: var(--color-text-primary);
         background-color: rgba(0, 0, 0, 0.06);
@@ -63,5 +100,6 @@
 
   &:hover .ticket-actions {
     opacity: 1;
+    transform: translateX(0);
   }
 }

@@ -11,6 +11,31 @@
 
     .ant-tabs-nav {
       margin-bottom: 0;
+
+      .ant-tabs-nav-list {
+        gap: 10px;
+      }
+
+      .ant-tabs-tab {
+        padding: 12px 0;
+        margin: 0 32px 0 0 !important;
+        transition: color 0.3s;
+
+        &:hover {
+          color: var(--color-primary);
+        }
+
+        &.ant-tabs-tab-active {
+          .ant-tabs-tab-btn {
+            color: var(--color-primary);
+            font-weight: var(--font-weight-semibold, 600);
+          }
+        }
+
+        .anticon {
+          margin-right: -5px !important;
+        }
+      }
     }
 
     @include respond-below('md') {

@@ -31,6 +31,9 @@
         font-weight: var(--font-weight-bold);
         color: var(--color-text-primary);
         letter-spacing: var(--letter-spacing-tight);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
       }
 
       .ant-btn-primary {

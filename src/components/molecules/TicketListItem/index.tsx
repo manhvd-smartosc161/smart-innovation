@@ -9,6 +9,7 @@ import {
   CloseOutlined,
   CheckCircleOutlined,
   RocketOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons';
 import { Button, Dropdown, type MenuProps } from 'antd';
 import type { TicketStatus } from '@/types';
@@ -32,6 +33,7 @@ interface TicketListItemProps {
   onResolve?: (ticketId: string) => void;
   onCancel?: (ticketId: string) => void;
   onCreateExecution?: (ticketId: string) => void;
+  onDelete?: (ticketId: string) => void;
 }
 
 export const TicketListItem: React.FC<TicketListItemProps> = ({
@@ -51,8 +53,23 @@ export const TicketListItem: React.FC<TicketListItemProps> = ({
   onResolve,
   onCancel,
   onCreateExecution,
+  onDelete,
 }) => {
   const getMenuItems = (): MenuProps['items'] => {
+    const deleteItem: MenuProps['items'] = [
+      {
+        type: 'divider',
+      },
+      {
+        key: 'delete',
+        label: 'Delete',
+        icon: <DeleteOutlined />,
+        danger: true,
+        onClick: () => onDelete?.(id),
+        className: 'menu-item-delete',
+      },
+    ];
+
     switch (status) {
       case 'Drafting':
         return [
@@ -129,6 +146,7 @@ export const TicketListItem: React.FC<TicketListItemProps> = ({
             onClick: () => onExportToGoogleSheets?.(id),
             className: 'menu-item-export',
           },
+          ...deleteItem,
         ];
 
       case 'Reviewing':
@@ -154,6 +172,7 @@ export const TicketListItem: React.FC<TicketListItemProps> = ({
             onClick: () => onCancel?.(id),
             className: 'menu-item-cancel',
           },
+          ...deleteItem,
         ];
 
       case 'Rejected':
@@ -165,6 +184,7 @@ export const TicketListItem: React.FC<TicketListItemProps> = ({
             onClick: () => onResolve?.(id),
             className: 'menu-item-resolve',
           },
+          ...deleteItem,
         ];
 
       case 'Resolved':
@@ -176,6 +196,7 @@ export const TicketListItem: React.FC<TicketListItemProps> = ({
             onClick: () => onRequestReview?.(id),
             className: 'menu-item-request-review',
           },
+          ...deleteItem,
         ];
 
       case 'Approved':
@@ -187,6 +208,7 @@ export const TicketListItem: React.FC<TicketListItemProps> = ({
             onClick: () => onCreateExecution?.(id),
             className: 'menu-item-create-execution',
           },
+          ...deleteItem,
         ];
 
       case 'Cancelled':
@@ -198,6 +220,7 @@ export const TicketListItem: React.FC<TicketListItemProps> = ({
             onClick: () => onRequestReview?.(id),
             className: 'menu-item-request-review',
           },
+          ...deleteItem,
         ];
 
       default:

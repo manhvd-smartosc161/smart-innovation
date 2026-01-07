@@ -1,5 +1,6 @@
 import React from 'react';
 import { Divider } from 'antd';
+import { AimOutlined } from '@ant-design/icons';
 import { TextArea } from '@/components/atoms';
 import { INFO_TAB_LABELS } from '@/constants';
 
@@ -22,7 +23,10 @@ export const OverallObjectiveSection: React.FC<
       <Divider />
       <div className="info-section">
         <div className="section-header">
-          <h3>{INFO_TAB_LABELS.OVERALL_OBJECTIVE}</h3>
+          <h3>
+            <AimOutlined />
+            {INFO_TAB_LABELS.OVERALL_OBJECTIVE}
+          </h3>
         </div>
         <div className="section-content">
           <TextArea

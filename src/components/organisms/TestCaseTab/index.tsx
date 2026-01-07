@@ -2,7 +2,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { message, Tooltip } from 'antd';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from 'antd';
-import { HistoryOutlined } from '@ant-design/icons';
+import { HistoryOutlined, ExperimentOutlined } from '@ant-design/icons';
 import {
   HandsonTable,
   type HandsonColumnConfig,
@@ -418,7 +418,11 @@ const TestCaseTab: React.FC<TestCaseTabProps> = ({ isActionHidden }) => {
       {/* Save Section Header */}
       <div className="test-case-table-content">
         <HandsonTable
-          title="Test Cases"
+          title={
+            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <ExperimentOutlined /> Test Cases
+            </span>
+          }
           columns={columns}
           dataSource={data}
           onDataChange={handleDataChange}

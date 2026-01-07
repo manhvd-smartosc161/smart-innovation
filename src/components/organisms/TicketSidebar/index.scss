@@ -1,93 +1,305 @@
 .ticket-sidebar {
   height: 100%;
+
+  // Robust Label Styling (Lifted out of nesting)
+  .status-option-label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    width: 100%;
+
+    .icon {
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent !important;
+      padding: 0 !important;
+    }
+
+    // Specific Colors
+    &.status-drafting {
+      color: var(--color-primary) !important;
+      .icon {
+        color: var(--color-primary) !important;
+      }
+    }
+    &.status-reviewing {
+      color: var(--color-info) !important;
+      .icon {
+        color: var(--color-info) !important;
+      }
+    }
+    &.status-cancelled {
+      color: var(--color-warning) !important;
+      .icon {
+        color: var(--color-warning) !important;
+      }
+    }
+    &.status-rejected {
+      color: var(--color-error) !important;
+      .icon {
+        color: var(--color-error) !important;
+      }
+    }
+    &.status-resolved {
+      color: var(--color-success) !important;
+      .icon {
+        color: var(--color-success) !important;
+      }
+    }
+    &.status-approved {
+      color: var(--color-success) !important;
+      .icon {
+        color: var(--color-success) !important;
+      }
+    }
+  }
   @include flex-column;
   background-color: var(--color-bg-base);
   border-right: 1px solid var(--color-border-lighter);
 
   .ticket-sidebar-header {
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: 16px;
     border-bottom: 1px solid var(--color-border-lighter);
     flex-shrink: 0;
+    background: var(--color-bg-base);
 
-    .search-box {
-      @include flex-center;
-      border: 1px solid var(--color-border-base);
-      border-radius: var(--radius-md);
-      padding: var(--spacing-xs);
+    .header-card {
+      background: #f3f4f6; // Specific light gray from image vibe (Tailwind Slate-100 ish)
+      border-radius: 16px; // More rounded
+      padding: 6px;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
 
-      .ant-input {
+      &:hover {
+        border-color: rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      }
+
+      // --- ROW 1: STATUS ---
+      .status-row {
+        margin-bottom: 4px;
+        padding: 0 4px; // Align with search box internal padding
+
+        .status-select {
+          width: 100%;
+
+          .ant-select-selector {
+            background-color: transparent !important;
+            height: 40px !important;
+            padding: 0 4px !important;
+            border: none !important;
+            box-shadow: none !important;
+
+            .ant-select-selection-item {
+              padding-right: 0 !important;
+              display: flex !important;
+              align-items: center !important;
+              &.status-resolved {
+                color: var(--color-success) !important;
+                .icon {
+                  color: var(--color-success) !important;
+                }
+              }
+              &.status-approved {
+                color: var(--color-success) !important;
+                .icon {
+                  color: var(--color-success) !important;
+                }
+              }
+            }
+          }
+        }
+
+        // Custom Arrow - Chevron Down
+        .custom-arrow {
+          width: 8px;
+          height: 8px;
+          border-bottom: 2px solid var(--color-text-primary);
+          border-right: 2px solid var(--color-text-primary);
+          transform: rotate(45deg);
+          margin-right: 4px;
+          margin-bottom: 2px;
+          opacity: 0.8;
+          transition: all 0.2s;
+        }
+
+        &:hover .custom-arrow {
+          border-color: var(--color-text-primary);
+        }
+
+        &.ant-select-open .custom-arrow {
+          transform: rotate(-135deg);
+          margin-bottom: -4px;
+        }
+      }
+    }
+
+    // --- ROW 2: SEARCH ---
+    .search-row {
+      display: flex;
+      align-items: center;
+      background: #ffffff; // Pure white
+      img {
+        opacity: 0;
+      } // Hack if any default icons appear
+      border-radius: 12px;
+      padding: 6px 12px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+      border: 1px solid transparent;
+      transition: all 0.2s;
+      height: 44px;
+
+      &:focus-within {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.1);
+      }
+
+      .search-input {
+        flex: 1;
         border: none;
         box-shadow: none;
-        padding: var(--spacing-xs) var(--spacing-sm);
+        padding: 0 8px;
+        background: transparent;
+        font-size: 14px;
+        color: var(--color-text-secondary);
+
+        input {
+          background: transparent;
+        }
 
         &:focus {
           box-shadow: none;
         }
+
+        &::placeholder {
+          color: var(--color-text-quaternary);
+        }
       }
 
-      .header-icon-btn {
-        padding: var(--spacing-xs) var(--spacing-sm);
-        height: auto;
-        flex-shrink: 0;
-        border: none;
-        box-shadow: none !important;
-        outline: none !important;
-
-        &:focus {
-          border: none;
-          box-shadow: none !important;
-          outline: none !important;
-        }
-
-        &:active,
-        &.ant-dropdown-open {
-          border: none;
-          box-shadow: none !important;
-          outline: none !important;
-          background-color: var(--color-bg-elevated);
-          color: var(--color-text-primary);
-        }
+      .add-btn {
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        color: var(--color-text-secondary);
+        opacity: 0.6;
+        transition: all 0.2s;
 
         &:hover {
-          background-color: var(--color-bg-spotlight);
+          opacity: 1;
+          background-color: rgba(0, 0, 0, 0.04);
           color: var(--color-text-primary);
         }
-
-        &.ant-btn-dangerous {
-          color: var(--color-error);
-
-          &:hover,
-          &:focus,
-          &:active {
-            background-color: var(--color-error-bg-light);
-            color: var(--color-error);
-          }
-        }
       }
     }
   }
+}
 
-  .ticket-list {
-    flex: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+.ticket-list {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
 
-  @include respond-below('md') {
-    .ticket-sidebar-header {
-      padding: var(--spacing-sm) var(--spacing-md);
+@include respond-below('md') {
+  .ticket-sidebar-header {
+    padding: var(--spacing-sm) var(--spacing-md);
 
-      .search-box {
-        .ant-input {
-          font-size: var(--font-size-base);
-        }
+    .search-box {
+      .ant-input {
+        font-size: var(--font-size-base);
       }
     }
   }
+}
 
-  @include respond-below('sm') {
-    .ticket-sidebar-header {
-      padding: var(--spacing-sm);
+@include respond-below('sm') {
+  .ticket-sidebar-header {
+    padding: var(--spacing-sm);
+  }
+}
+
+.status-select-dropdown {
+  padding: 8px !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important; // Softer, deeper shadow
+
+  .ant-select-item {
+    border-radius: 10px !important;
+    margin-bottom: 4px !important;
+    padding: 10px 12px !important; // More comfortably spacious
+    min-height: 44px !important;
+    transition: all 0.2s ease;
+
+    &:last-child {
+      margin-bottom: 0 !important;
+    }
+
+    // Hover state
+    &.ant-select-item-option-active {
+      background-color: var(--color-bg-layout) !important;
+      transform: translateX(2px); // Subtle movement
+    }
+
+    // Selected state
+    &.ant-select-item-option-selected {
+      background-color: var(--color-primary-bg-light) !important;
+      font-weight: 600;
+
+      .status-option-label {
+        // Enhance contrast if needed, but keeping colors is better
+      }
+    }
+
+    .ant-select-item-option-content {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  // Label Styling inside Dropdown
+  .status-option-label {
+    display: flex;
+    align-items: center;
+    gap: 12px; // Match Sidebar Header gap
+    font-size: 15px;
+    width: 100%;
+
+    .icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      padding: 0;
+      transition: all 0.3s ease;
+    }
+
+    // Default / Drafting
+    &.status-drafting .icon {
+      color: var(--color-primary);
+    }
+    &.status-reviewing .icon {
+      color: var(--color-info);
+    }
+    &.status-cancelled .icon {
+      color: var(--color-warning);
+    }
+    &.status-rejected .icon {
+      color: var(--color-error);
+    }
+    &.status-resolved .icon {
+      color: var(--color-success);
+    }
+    &.status-approved .icon {
+      color: var(--color-success);
     }
   }
 }
@@ -274,6 +486,23 @@
       color: #6d28d9 !important;
       .anticon {
         transform: translateY(-3px) scale(1.1);
+      }
+    }
+  }
+
+  // Red: Delete
+  .menu-item-delete {
+    color: var(--color-error) !important;
+
+    .anticon {
+      color: var(--color-error) !important;
+    }
+
+    &:hover {
+      background: var(--color-error-bg-light) !important;
+      color: var(--color-error-dark) !important;
+      .anticon {
+        transform: scale(1.1);
       }
     }
   }

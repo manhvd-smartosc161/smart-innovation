@@ -1,6 +1,6 @@
 import React from 'react';
 import { Divider } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, CloudUploadOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd';
 import { Button } from '@/components/atoms';
 import { FileUploadItem } from '@/components/molecules';
@@ -46,7 +46,10 @@ export const FileUploadSection: React.FC<FileUploadSectionProps> = ({
       <Divider />
       <div className="info-section">
         <div className="section-header">
-          <h3>{INFO_TAB_LABELS.UPLOAD_FILES}</h3>
+          <h3>
+            <CloudUploadOutlined />
+            {INFO_TAB_LABELS.UPLOAD_FILES}
+          </h3>
           <Button
             variant="primary"
             icon={<PlusOutlined />}

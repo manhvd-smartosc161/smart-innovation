@@ -1,6 +1,10 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { message, Divider } from 'antd';
-import { FileTextOutlined, ExperimentOutlined } from '@ant-design/icons';
+import {
+  FileTextOutlined,
+  ExperimentOutlined,
+  CheckCircleOutlined,
+} from '@ant-design/icons';
 import { Button, AnimatedText } from '@/components/atoms';
 import { FireworksAnimation, SaveSection } from '@/components/molecules';
 import {
@@ -322,7 +326,11 @@ const ChecklistTab: React.FC<ChecklistTabProps> = ({ isActionHidden }) => {
 
       <div className="checklist-content">
         <HandsonTable
-          title="Checklist"
+          title={
+            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <CheckCircleOutlined /> Checklist
+            </span>
+          }
           columns={columns}
           dataSource={data}
           onDataChange={handleDataChange}

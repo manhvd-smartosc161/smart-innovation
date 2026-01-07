@@ -1,4 +1,5 @@
 import React from 'react';
+import { AimOutlined } from '@ant-design/icons';
 import { BaseTable } from '../BaseTable';
 import { MOCK_SCOPE_DATA } from '@/mock';
 import type { ScopeItem } from '@/types';
@@ -20,6 +21,7 @@ export const Scope: React.FC<ScopeProps> = ({
   return (
     <BaseTable<ScopeItem>
       title="Scope"
+      icon={<AimOutlined />}
       tabKey="Scope"
       idPrefix="SCO."
       idLength={5}

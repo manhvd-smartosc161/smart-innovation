@@ -1,14 +1,69 @@
 import React, { useState, useMemo } from 'react';
-import { Input } from 'antd';
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Input, Select } from 'antd';
+import {
+  PlusOutlined,
+  FormOutlined,
+  EyeOutlined,
+  StopOutlined,
+  CloseCircleOutlined,
+  CheckCircleOutlined,
+  LikeOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
 import { Button } from '@/components/atoms';
 import { TicketListItem } from '@/components/molecules';
 import type { TicketStatus } from '@/types';
+import { WORKFLOW_TAB_KEYS, WORKFLOW_TAB_LABELS } from '@/constants';
 import { MOCK_TICKETS_BY_STATUS } from '@/mock/ticket';
 import './index.scss';
 
-export const TicketSidebar: React.FC<{ activeTab: string }> = ({
+interface TicketSidebarProps {
+  activeTab: string;
+  onStatusChange: (status: string) => void;
+}
+
+const statusOptions = [
+  {
+    value: WORKFLOW_TAB_KEYS.DRAFTING,
+    label: WORKFLOW_TAB_LABELS.DRAFTING,
+    icon: <FormOutlined />,
+    className: 'status-drafting',
+  },
+  {
+    value: WORKFLOW_TAB_KEYS.REVIEWING,
+    label: WORKFLOW_TAB_LABELS.REVIEWING,
+    icon: <EyeOutlined />,
+    className: 'status-reviewing',
+  },
+  {
+    value: WORKFLOW_TAB_KEYS.CANCELLED,
+    label: WORKFLOW_TAB_LABELS.CANCELLED,
+    icon: <StopOutlined />,
+    className: 'status-cancelled',
+  },
+  {
+    value: WORKFLOW_TAB_KEYS.REJECTED,
+    label: WORKFLOW_TAB_LABELS.REJECTED,
+    icon: <CloseCircleOutlined />,
+    className: 'status-rejected',
+  },
+  {
+    value: WORKFLOW_TAB_KEYS.RESOLVED,
+    label: WORKFLOW_TAB_LABELS.RESOLVED,
+    icon: <CheckCircleOutlined />,
+    className: 'status-resolved',
+  },
+  {
+    value: WORKFLOW_TAB_KEYS.APPROVED,
+    label: WORKFLOW_TAB_LABELS.APPROVED,
+    icon: <LikeOutlined />,
+    className: 'status-approved',
+  },
+];
+
+export const TicketSidebar: React.FC<TicketSidebarProps> = ({
   activeTab,
+  onStatusChange,
 }) => {
   // Get tickets based on active tab
   const tickets = useMemo(
@@ -79,22 +134,51 @@ export const TicketSidebar: React.FC<{ activeTab: string }> = ({
     // TODO: Implement export to Google Sheets logic
   };
 
+  const handleDelete = (ticketId: string) => {
+    console.log('Delete clicked for ticket:', ticketId);
+    // TODO: Implement delete logic
+  };
+
   return (
     <div className="ticket-sidebar">
       <div className="ticket-sidebar-header">
-        <div className="search-box">
-          <Input placeholder="" />
-          <Button
-            variant="text"
-            icon={<PlusOutlined />}
-            className="header-icon-btn"
-          />
-          <Button
-            variant="text"
-            icon={<DeleteOutlined />}
-            danger
-            className="header-icon-btn"
-          />
+        <div className="header-card">
+          <div className="status-row">
+            <Select
+              value={activeTab}
+              onChange={onStatusChange}
+              className="status-select"
+              popupClassName="status-select-dropdown"
+              listHeight={400} // Ensure all items show without scroll
+              bordered={false}
+              suffixIcon={<div className="custom-arrow" />}
+              options={statusOptions.map((opt) => ({
+                value: opt.value,
+                label: (
+                  <div className={`status-option-label ${opt.className}`}>
+                    <span className="icon">{opt.icon}</span>
+                    {opt.label}
+                  </div>
+                ),
+              }))}
+            />
+          </div>
+          <div className="search-row">
+            <Input
+              placeholder="Search..."
+              prefix={
+                <SearchOutlined
+                  style={{ color: 'var(--color-text-quaternary)' }}
+                />
+              }
+              className="search-input"
+            />
+            <Button
+              variant="text"
+              icon={<PlusOutlined />}
+              className="add-btn"
+            />
+          </div>
         </div>
       </div>
       <div className="ticket-list">
@@ -118,6 +202,7 @@ export const TicketSidebar: React.FC<{ activeTab: string }> = ({
             onResolve={handleResolve}
             onCancel={handleCancel}
             onCreateExecution={handleCreateExecution}
+            onDelete={handleDelete}
           />
         ))}
       </div>

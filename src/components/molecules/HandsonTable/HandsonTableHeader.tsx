@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 
 interface HandsonTableHeaderProps {
-  title?: string;
+  title?: React.ReactNode;
   onAddRow: () => void;
   onRemoveRows: () => void;
   onUndo: () => void;

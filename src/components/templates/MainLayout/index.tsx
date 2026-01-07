@@ -40,7 +40,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
 
       <Layout className="main-body">
         {!isMobile && leftSidebar && (
-          <Sider width={250} theme="light" className="main-sider">
+          <Sider width={320} theme="light" className="main-sider">
             {leftSidebar}
           </Sider>
         )}

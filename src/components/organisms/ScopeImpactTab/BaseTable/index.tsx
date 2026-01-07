@@ -16,7 +16,14 @@ export interface BaseTableProps<T extends Record<string, any>> {
   /**
    * Table title
    */
+  /**
+   * Table title
+   */
   title: string;
+  /**
+   * Table icon
+   */
+  icon?: React.ReactNode;
   /**
    * Tab key for tracking changes
    */
@@ -70,6 +77,7 @@ export interface BaseTableProps<T extends Record<string, any>> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function BaseTable<T extends Record<string, any>>({
   title,
+  icon,
   tabKey,
   idPrefix,
   idLength,
@@ -335,7 +343,17 @@ export function BaseTable<T extends Record<string, any>>({
     <div className={`system-component-table ${tabKey.toLowerCase()}-tab`}>
       <div className={`${tabKey.toLowerCase()}-content`}>
         <HandsonTable<T>
-          title={title}
+          title={
+            icon ? (
+              <span
+                style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+              >
+                {icon} {title}
+              </span>
+            ) : (
+              title
+            )
+          }
           columns={columns}
           dataSource={data}
           onDataChange={handleDataChange}

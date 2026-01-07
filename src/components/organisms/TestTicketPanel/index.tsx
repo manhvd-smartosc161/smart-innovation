@@ -1,6 +1,13 @@
 import React, { lazy, Suspense, useEffect } from 'react';
 import { Tabs, Modal, Spin } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import {
+  ExclamationCircleOutlined,
+  RocketOutlined,
+  AimOutlined,
+  CheckSquareOutlined,
+  BugOutlined,
+  FileTextOutlined,
+} from '@ant-design/icons';
 
 // Lazy load tab components for code splitting
 const InfoTab = lazy(() => import('@/components/organisms/InfoTab'));
@@ -18,11 +25,31 @@ import { useAnalysis } from '@/stores';
 import './index.scss';
 
 const allItems = [
-  { key: TAB_KEYS.INITIALIZATION, label: TAB_LABELS.INITIALIZATION },
-  { key: TAB_KEYS.SCOPE_AND_IMPACT, label: TAB_LABELS.SCOPE_AND_IMPACT },
-  { key: TAB_KEYS.CHECKLIST, label: TAB_LABELS.CHECKLIST },
-  { key: TAB_KEYS.TEST_CASES, label: TAB_LABELS.TEST_CASES },
-  { key: TAB_KEYS.TEST_CASE_DETAILS, label: TAB_LABELS.TEST_CASE_DETAILS },
+  {
+    key: TAB_KEYS.INITIALIZATION,
+    label: TAB_LABELS.INITIALIZATION,
+    icon: <RocketOutlined />,
+  },
+  {
+    key: TAB_KEYS.SCOPE_AND_IMPACT,
+    label: TAB_LABELS.SCOPE_AND_IMPACT,
+    icon: <AimOutlined />,
+  },
+  {
+    key: TAB_KEYS.CHECKLIST,
+    label: TAB_LABELS.CHECKLIST,
+    icon: <CheckSquareOutlined />,
+  },
+  {
+    key: TAB_KEYS.TEST_CASES,
+    label: TAB_LABELS.TEST_CASES,
+    icon: <BugOutlined />,
+  },
+  {
+    key: TAB_KEYS.TEST_CASE_DETAILS,
+    label: TAB_LABELS.TEST_CASE_DETAILS,
+    icon: <FileTextOutlined />,
+  },
 ];
 
 // Loading fallback component
@@ -177,6 +204,7 @@ export const TestTicketPanel: React.FC<{ workflowStatus: string }> = ({
         onChange={handleTabChange}
         items={items}
         className="panel-tabs"
+        tabBarGutter={32}
       />
       {renderContent()}
     </div>

@@ -25,16 +25,51 @@
   .ant-tabs-nav {
     margin-bottom: 0;
 
+    &::before {
+      border-bottom: none;
+    }
+
     .ant-tabs-nav-wrap {
       overflow: visible;
     }
 
     .ant-tabs-nav-list {
       white-space: nowrap;
+      gap: 8px;
+    }
+
+    .ant-tabs-tab {
+      padding: 6px 16px;
+      margin: 0 !important;
+      border-radius: 6px !important;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+
+      &:hover {
+        color: var(--color-primary);
+        background: rgba(0, 0, 0, 0.04);
+      }
+
+      &.ant-tabs-tab-active {
+        background: var(--color-primary-bg, #e6f7ff);
+        color: var(--color-primary, #1890ff);
+        font-weight: var(--font-weight-medium, 500);
+
+        .ant-tabs-tab-btn {
+          color: currentColor;
+        }
+      }
+
+      .anticon {
+        margin-right: -5px !important;
+      }
+    }
+
+    .ant-tabs-ink-bar {
+      display: none;
     }
   }
 }
-
 .content-area {
   padding: var(--spacing-xl);
   margin: 0 auto;

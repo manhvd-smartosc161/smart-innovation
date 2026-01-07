@@ -1,6 +1,6 @@
 import React from 'react';
 import { Divider } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, ReadOutlined } from '@ant-design/icons';
 import { Button } from '@/components/atoms';
 import { ConfluencePageItem } from '@/components/molecules';
 import type { ConfluencePage } from '@/types';
@@ -41,7 +41,10 @@ export const PagesSection: React.FC<PagesSectionProps> = ({
       <Divider />
       <div className="info-section">
         <div className="section-header">
-          <h3>{INFO_TAB_LABELS.SELECT_RELATED_CONFLUENCE_PAGES}</h3>
+          <h3>
+            <ReadOutlined />
+            {INFO_TAB_LABELS.SELECT_RELATED_CONFLUENCE_PAGES}
+          </h3>
           <Button
             variant="primary"
             icon={<PlusOutlined />}

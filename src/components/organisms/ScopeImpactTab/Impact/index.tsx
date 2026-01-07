@@ -1,4 +1,5 @@
 import React from 'react';
+import { ThunderboltOutlined } from '@ant-design/icons';
 import { BaseTable } from '../BaseTable';
 import { MOCK_IMPACT_DATA } from '@/mock';
 import type { ImpactItem } from '@/types';
@@ -20,6 +21,7 @@ export const Impact: React.FC<ImpactProps> = ({
   return (
     <BaseTable<ImpactItem>
       title="Impact"
+      icon={<ThunderboltOutlined />}
       tabKey="Impact"
       idPrefix="IMP."
       idLength={5}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Row, Col, Space } from 'antd';
-import { SaveOutlined } from '@ant-design/icons';
+import { SaveOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/atoms';
 import { FormSelect, TiptapEditor } from '@/components/molecules';
@@ -56,7 +56,10 @@ export const TestDetailsForm: React.FC<TestDetailsFormProps> = ({
   return (
     <div className="details-form-container">
       <div className="details-header">
-        <h2 className="details-title">Details</h2>
+        <h2 className="details-title">
+          <InfoCircleOutlined style={{ marginRight: '8px' }} />
+          Details
+        </h2>
         <Space>
           {!isActionHidden && (
             <>
